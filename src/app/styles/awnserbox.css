@@ -1,0 +1,131 @@
+.awnser-box {
+    border-radius: 4px;
+    border: 1px solid var(--Base-3);
+    /* overflow: hidden; */
+    cursor: pointer;
+    /* min-width: 500px; */
+}
+.awnser-box-header, .awnser-box-body {
+    padding: 20px;
+}
+.awnser-box-body {
+    border-top: 1px solid var(--Base-3);
+}
+.awnser-box--question, .awnser-box--awnser {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.awnser-box-footer {
+    padding: 12px 20px;
+    border-top: 1px solid var(--Base-4);
+    background: var(--Base-1);
+}
+.awnser-box--company {
+    width: 21px;
+    height: 21px;
+    border: 1px solid #EBEBEB;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.awnser-box--company img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+.awnser-box-footer p {
+    color: var(--Base-10);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+}
+.awnser-box .date {
+    color: var(--Base-8);
+}
+.date-space {
+    width: 14px;
+    height: 20px;
+    position: relative;
+}
+.date-space::after {
+    position: absolute;
+    content: '';
+    background-color: var(--Base-8);
+    width: 2.5px;
+    height: 2.5px;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.awnser-box-footer p + svg {
+    transform: scale(.8); transform-origin: center;
+}
+.awnser-box:hover .awnser-box--question {
+    color: var(--Blue-5);
+    text-decoration: underline;
+    transition: all .3s;
+}
+.mbforskeleton{
+    margin-bottom: 15px;
+}
+.skeletonRequestBody{
+    height: 46px;
+    padding: 12px;
+    border-top: 1px solid var(--Base-3);
+}
+.skeletonRequestHeader{
+    height: auto
+}
+/* MEDIES QUERIES */
+@media only screen and (max-width: 767px) { 
+    .mbforskeleton{
+        margin-bottom: 0px;
+    }
+    .skeletonRequestBody{
+        height: 76px;
+        padding: 12px;
+    }
+    .skeletonRequestHeader{
+        height: 44px !important;
+    }
+    .awnser-box-header, .awnser-box-body, .awnser-box-footer {
+        padding: 12px;
+    }
+    .awnser-box--question, .awnser-box--awnser {
+        font-size: 14px;
+        line-height: 20px;
+    }
+    .awnser-box-footer--actions {
+        gap: 6px !important;
+    }
+    .awnser-box-footer--actions > div {
+        gap: 4px !important;
+    }
+    .awnser-box-footer > div {
+        gap: 10px 6px;
+        flex-wrap: wrap;
+    }
+    .awnser-box:hover .awnser-box--question {
+        color: var(--Base-10);
+    }
+    .awnser-box{
+        min-width: auto;
+    }
+}
+.searchBarImageContainer {
+    width: 16px;
+    height: 17px;
+    border: 1px solid #EBEBEB;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: red;
+}
+.searchBarImageContainer img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+

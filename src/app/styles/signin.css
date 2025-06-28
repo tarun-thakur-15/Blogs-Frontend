@@ -1,0 +1,591 @@
+.ant-modal.sign-in-modal {
+    width: 438px !important;
+  }
+  .ant-modal.sign-in-modal.verify {
+    width: 458px !important;
+  }
+  .ant-modal.sign-in-modal .ant-modal-content {
+    padding: 70px;
+    min-height: 509px;
+  }
+  .ant-modal.sign-in-modal.success .ant-modal-body {
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+    flex: 1;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+  }
+  .ant-modal.sign-in-modal.success .ant-modal-body .success-gif {
+    color: transparent;
+    position: absolute;
+    left: -180px;
+    max-width: 650px;
+    top: -72px;
+    z-index: -1;
+  }
+  .ant-modal.sign-in-modal.success .success-text {
+    background: white;
+    margin-bottom: 11px;
+    padding: 8px 0;
+  }
+  .ant-modal.sign-in-modal.success .ant-modal-content {
+    display: flex;
+    flex-direction: column;
+  }
+  .ant-modal.sign-in-modal.login .ant-modal-content {
+    min-height: auto;
+  }
+  .sign-logo {
+    margin-bottom: 22px;
+  }
+  .ant-modal .ant-form-item {
+    margin-bottom: 16px;
+  }
+  .ant-modal .ant-form-item:nth-last-child(2) {
+    margin-bottom: 24px;
+  }
+  .ant-modal .ant-form-item:last-child {
+    margin-bottom: 20px;
+  }
+  .ant-modal .form-itemm-custom .ant-form-item:last-child {
+    margin-bottom: 28px;
+  }
+  .ant-modal .ant-input-affix-wrapper {
+    border-radius: 4px;
+    border: 1px solid var(--Base-2, #eaeef2);
+    background: var(--Base-1, #f6f8fa);
+    padding: 8px 10px;
+  }
+  .ant-modal .ant-input-affix-wrapper.ant-input-affix-wrapper-focused {
+    box-shadow: none !important;
+  }
+  .ant-modal .ant-input-affix-wrapper input.ant-input {
+    background: var(--Base-1, #f6f8fa);
+  }
+  .ant-modal .ant-input-affix-wrapper .ant-input-prefix {
+    margin-right: 6px;
+  }
+  .ant-modal form:not(.updateSeo) button.ant-btn:not(.ant-btn-text) {
+    padding: 10px 16px;
+    width: 100%;
+    height: 38px;
+  }
+  .sign-in-modal--feilds .sign-in-modal--header {
+    margin-bottom: 22px;
+  }
+  .verify .sign-in-modal--header h2 {
+    margin-bottom: 12px;
+  }
+  .sign-in-modal--feilds p.varify--text {
+    color: var(--Base-9);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22px;
+  }
+  .verify .sign-in-modal--feilds p.varify--text {
+    color: var(--Base-6);
+    letter-spacing: 0.14px;
+  }
+  .verify .sign-in-modal--feilds p.varify--text span {
+    color: var(--Base-10);
+    font-weight: 500;
+  }
+  .sign-in-modal--feilds p a,
+  .sign-in-modal--feilds p span {
+    color: var(--Blue-6);
+    cursor: pointer;
+  }
+  .ant-modal .ant-modal-content .ant-modal-close {
+    background-color: transparent !important;
+    right: -30px;
+    top: 0;
+  }
+  .ant-modal .ant-modal-close svg path {
+    color: white;
+  }
+  .otp {
+    margin-bottom: 24px;
+  }
+  .otp > div {
+    gap: 16px;
+  }
+  .otp > div input {
+    width: 36px !important;
+    height: 38px;
+    border-radius: 4px;
+    border: 1px solid var(--Base-2, #eaeef2);
+    background: var(--Base-1, #f6f8fa);
+    padding: 8px 10px;
+  }
+  .otp > div input:focus {
+    border-color: var(--Blue-4);
+    box-shadow: none;
+    outline: none;
+    caret-color: var(--Blue-6);
+  }
+  .otp.error > div input {
+    border: 1px solid var(--Red-5, #fa4549) !important;
+  }
+  .success-text {
+    color: var(--grey-grey-90, #0d0d0f);
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 28px;
+  }
+  .success-text-para {
+    color: var(--grey-grey-50, #616b8a);
+    text-align: center;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 22px;
+    margin-top: 10px;
+  }
+  .success-text-para span {
+    font-weight: 500;
+    color: #0d0d0f;
+  }
+  .success-gif {
+    max-width: 100%;
+    height: auto;
+  }
+  /* CREATE MODAL */
+  .create-modal.ant-modal .ant-modal-body {
+    min-height: 463px;
+    display: flex;
+    flex-direction: column;
+  }
+  .create-modal.ant-modal.default .ant-modal-body {
+    min-height: 500px;
+  }
+  .create-modal.ant-modal.addMember .ant-modal-body {
+    min-height: fit-content;
+  }
+  .create-modal--header {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--Base-3);
+    margin-bottom: 20px;
+  }
+  .create-modal--header.seo {
+    margin-bottom: 28px;
+  }
+  .type-question {
+    line-height: 24px;
+    border: none;
+    caret-color: var(--Blue-5);
+    outline: none;
+    min-height: 64px;
+    width: 100%;
+    margin-bottom: 20px;
+    resize: none;
+  
+    /* color: var(--Base-4, #afb8c1); */
+    color: rgb(26, 25, 25);
+  
+    font-family: "Noto Sans";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 160%; /* 38.4px */
+    letter-spacing: 0.1px;
+  }
+  .type-question + .ant-flex {
+    margin-bottom: 24px;
+    margin-top: -4px;
+  }
+  .type-question + .ant-flex img {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .type-question + .ant-flex p {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+  }
+  .type-question::placeholder {
+    color: #afb8c1;
+  }
+  .ant-modal.create-modal {
+    width: 668px !important;
+  }
+  .modal-footer--btns {
+    margin-top: auto;
+  }
+  .modal-footer--btns .ant-btn {
+    min-width: 75px;
+  }
+  .ant-modal.create-modal .ant-modal-content {
+    padding: 24px 30px 30px;
+  }
+  .create-faq--list {
+    gap: 28px;
+    margin-top: 8px;
+    margin-bottom: 28px;
+  }
+  .create-faq--list h5 {
+    margin-bottom: 16px;
+  }
+  .create-faq--list button:hover,
+  .create-faq--list button {
+    background-color: var(--Base-1);
+  }
+  .create-faq--list button.selected {
+    border: 1px solid var(--Blue-6);
+    background-color: var(--Blue-1);
+  }
+  .create-faq--list button.selected span {
+    color: var(--Blue-5);
+  }
+  .save-draft.ant-modal .ant-modal-content {
+    padding: 50px;
+  }
+  .ant-modal-root .ant-modal-centered .save-draft.ant-modal {
+    max-width: 430px !important;
+  }
+  .ant-modal-root .ant-modal-centered .save-draft.ant-modal.update {
+    max-width: 416px !important;
+  }
+  .save-draft.update.ant-modal .ant-modal-content {
+    padding: 40px;
+  }
+  .save-draft.update.ant-modal .ant-modal-content .ant-modal-body {
+    gap: 24px;
+    text-align: left;
+    align-items: flex-start;
+  }
+  .save-draft.ant-modal .ant-modal-content .ant-modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    text-align: center;
+  }
+  .save-draft.ant-modal .ant-modal-content .ant-modal-body h3 {
+    margin-bottom: 8px;
+  }
+  .save-draft.ant-modal .ant-modal-content .select-icon {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    z-index: 1;
+  }
+  .save-draft.ant-modal.update .ant-modal-content .ant-modal-body h3 {
+    margin-bottom: 0;
+  }
+  .save-draft.ant-modal .ant-modal-content .ant-modal-body > .ant-flex .ant-btn,
+  .save-draft.ant-modal .ant-modal-content .ant-modal-body > .ant-flex {
+    width: 100%;
+  }
+  .save-draft.ant-modal.update form {
+    width: 100%;
+  }
+  /* ASK QUESTION */
+  .ask--question--info {
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    padding: 16px;
+    border: 1px solid var(--primary-primary-40, #b7cbfd);
+    background: var(--primary-primary-51, #eef3fe);
+    justify-content: space-between;
+  }
+  .ask--question--info > .ant-flex {
+    max-width: 540px;
+    width: 100%;
+  }
+  .ask--question--info h5 {
+    color: var(--Base-11);
+    opacity: 1;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  .ask--question--info ul {
+    padding-left: 15px;
+  }
+  .ask--question--info ul li {
+    color: var(--grey-grey-70, #3e3e44);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+  }
+  .question-que {
+    color: var(--grey-grey-60, #57575e);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: -0.15px;
+  }
+  .question-que span {
+    font-weight: 700;
+    color: var(--grey-grey-80, #262629);
+  }
+  .related-question-list {
+    padding-bottom: 16px;
+    margin-bottom: 12px;
+    padding-top: 16px;
+    border-bottom: 1px solid var(--Base-2, #eaeef2);
+  }
+  .related-question-list:first-child {
+    padding-top: 0;
+  }
+  .related-question-list p {
+    color: var(--Base-10, #24292f);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+  }
+  .related-question-list p.related-question-list--quesion {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    margin-bottom: 16px;
+  }
+  .related-questions--inner + .checkbox-custom {
+    margin: 20px 0;
+  }
+  .ask-question--success {
+    position: absolute;
+    bottom: 97px;
+    background: white;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    min-height: 70px;
+  }
+  .loading .ant-modal-content {
+    position: relative;
+  }
+  .loading .ant-modal-content::after {
+    position: absolute;
+    content: "";
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: white;
+    opacity: 0.8;
+    z-index: 1;
+    border-radius: 8px;
+  }
+  .related-questions--inner {
+    max-height: 380px;
+    scrollbar-width: thin;
+    scrollbar-color: #c2c2c2 #ffffff;
+    overflow-y: scroll;
+  }
+  .related-questions--inner::-webkit-scrollbar {
+    width: 0.2em;
+  }
+  .related-questions--inner::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  .related-questions--inner::-webkit-scrollbar-thumb {
+    background-color: #c2c2c2;
+    border-radius: 6px;
+  }
+  h4.member-modal-heading {
+    color: var(--Base-11, #0e1012);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 24px;
+  }
+  .memberSelectAdd {
+    font-size: 13px !important;
+  }
+  .memberSelectAdd img {
+    width: 22px;
+    height: 22px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  .otp input::placeholder {
+    color: var(--Base-5, #8c959f);
+  }
+  .otp input::-ms-input-placeholder {
+    color: var(--Base-5, #8c959f);
+  }
+  
+  @media only screen and (max-width: 767px) {
+    .ant-modal .ant-modal-content .ant-modal-close {
+      right: 10px;
+      top: 10px;
+    }
+    .ant-modal.sign-in-modal .ant-modal-content {
+      padding: 16px 30px;
+      border-radius: 0;
+    }
+    .ant-modal-root .ant-modal {
+      margin: 0 auto !important;
+      max-width: 100vw !important;
+    }
+    .ant-modal-content,
+    .ant-modal.sign-in-modal.login .ant-modal-content {
+      min-height: 100vh !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+    }
+    .ant-modal.sign-in-modal {
+      width: 100% !important;
+    }
+    .ant-modal .ant-modal-close svg path {
+      color: var(--Base-11);
+    }
+    .ant-modal h2 {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 160%;
+      letter-spacing: 0.1px;
+    }
+    .success-gif {
+      position: absolute;
+      max-width: 650px;
+      transform: translateX(-50%);
+      left: 50%;
+    }
+    .ant-modal.sign-in-modal.success .ant-modal-body .success-gif {
+      transform: translateX(-50%);
+      left: 50%;
+      top: 0;
+    }
+    .ant-modal.sign-in-modal.success .ant-modal-body {
+      align-items: center;
+    }
+    .ant-modal.sign-in-modal.success .success-text {
+      margin-bottom: 0;
+      padding: 8px 0;
+      position: absolute;
+      top: 358px;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 280px;
+    }
+    .ant-modal-root .ant-modal-wrap.ant-modal-centered {
+      z-index: 99999999999;
+    }
+    .ant-modal-root .ant-modal-centered .save-draft.ant-modal.update,
+    .ant-modal-root .ant-modal-centered .save-draft.ant-modal {
+      max-width: 100vw !important;
+    }
+    .ant-modal-root
+      .ant-modal-centered
+      .save-draft.ant-modal.update
+      .ant-modal-content,
+    .ant-modal-root
+      .ant-modal-centered
+      .create-modal.ant-modal
+      .ant-modal-content {
+      justify-content: flex-start !important;
+    }
+    .ant-modal-root .ant-modal-centered .save-draft.ant-modal.update h3 {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 30px;
+      opacity: 1;
+    }
+    .save-draft.update.ant-modal .ant-modal-content,
+    .ant-modal.create-modal .ant-modal-content {
+      padding: 16px;
+    }
+    .save-draft.update.ant-modal .ant-modal-content .ant-modal-body {
+      gap: 38px;
+    }
+    .save-draft.update.ant-modal .ant-modal-content .ant-modal-body > .ant-flex {
+      position: relative;
+    }
+    .save-draft.update.ant-modal
+      .ant-modal-content
+      .ant-modal-body
+      > .ant-flex::after {
+      background-color: var(--Base-3);
+      position: absolute;
+      content: "";
+      left: 0;
+      top: 44px;
+      height: 1px;
+      width: 100%;
+    }
+    .save-draft.update.ant-modal .ant-modal-close-x {
+      display: none;
+    }
+    .modal-footer--btns {
+      margin-top: 16px !important;
+    }
+    .modal-footer--btns > .ant-flex {
+      gap: 12px !important;
+    }
+    .modal-footer--btns > .ant-flex > button {
+      min-width: calc(50% - 6px);
+    }
+    .ant-modal.create-modal .ant-modal-content .ant-modal-close {
+      right: 20px;
+      top: 20px;
+    }
+    .create-faq--list {
+      margin-bottom: 4px;
+    }
+    .ant-modal .ant-modal-content {
+      border-radius: 0 !important;
+    }
+    .create-modal.ant-modal.default .ant-modal-body {
+      min-height: fit-content;
+    }
+    .question--header--modal {
+      flex-direction: column;
+      align-items: flex-start !important;
+    }
+    .related-question-list {
+      border-radius: 4px;
+      border: 1px solid var(--Base-3, #d0d7de);
+      background: #fff;
+      padding: 0;
+    }
+    .related-question-list > * {
+      padding: 12px;
+    }
+    .related-question-list p.related-question-list--quesion {
+      margin-bottom: 0;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    .related-question-list > div {
+      border-top: 1px solid var(--Base-4, #ebecef);
+    }
+    .checkbox-custom .ant-checkbox-wrapper span {
+      font-size: 12px;
+    }
+    .related-questions--inner + .checkbox-custom {
+      margin: 10px 0 15px;
+    }
+    .ask-question--success .success-text {
+      padding: 0 16px;
+      margin-bottom: 24px;
+    }
+    .success-text-para {
+      width: 284px;
+      margin: 0 auto;
+    }
+    .ask-question--success {
+      top: 375px;
+      bottom: 120px;
+    }
+    .ant-modal-root .ant-modal {
+      overflow-x: hidden;
+    }
+    .otp > div {
+      justify-content: space-between;
+      gap: 2px !important;
+      max-width: 330px;
+    }
+    .sampleModal .ant-modal-content {
+      min-height: auto !important;
+      padding-left: 16px !important;
+      padding-right: 16px !important;
+    }
+  }
+  

@@ -1,0 +1,1009 @@
+.containerSection1 {
+  min-width: 100%;
+  /* padding: 0 24px; */
+  max-width: 100%;
+  margin: 0 auto;
+  background-color: white;
+}
+.sect1 {
+  display: flex;
+  flex-direction: row-reverse;
+  background-color: white;
+  height: "100vh";
+}
+.sect2 {
+  display: flex;
+  background-color: #faedcb;
+  height: 100vh;
+}
+.StreetSign {
+  object-fit: cover;
+  height: calc(100vh - 68.19px);
+  width: 100%;
+}
+.SectImage {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  display: block;
+}
+.sect1left {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+}
+.SectionTextDiv {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 23px;
+}
+.sect1Inner {
+  height: 100%;
+  /* width: 470px; */
+  width: 26vw;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
+  gap: 40px;
+}
+.outerDiv {
+  display: flex;
+  /* height: 604px; */
+  align-items: center;
+  gap: 30px;
+  width: 100%;
+}
+.textDiv {
+  display: flex;
+  width: 470px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 50px;
+  flex-shrink: 0;
+}
+.text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+  align-self: stretch;
+}
+.heading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 14px;
+  align-self: stretch;
+}
+.section1Span {
+  color: var(--Base-8, #424a53);
+  font-family: "Noto Sans";
+  /* font-size: 14px; */
+  font-size: 0.729vw;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 26px;
+}
+.h1Section1 {
+  color: var(--Base-11, #0e1012);
+  font-family: "Noto Sans";
+  /* font-size: 57px; */
+  font-size: 2.8vw;
+  font-style: normal;
+  font-weight: 600;
+  /* line-height: 68px; */
+  line-height: 1.2em;
+  letter-spacing: -1px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.pSection1 {
+  color: var(--Base-6, #6e7781);
+  font-family: "Noto Sans";
+  /* font-size: 16px; */
+  font-size: 0.833vw;
+  font-style: normal;
+  font-weight: 400;
+  /* line-height: 26px; */
+  line-height: 1.354vw;
+}
+.buttonGetStarted {
+  display: flex;
+  /* padding: 11px 16px; */
+  padding: 0.573vw 0.833vw;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.208vw;
+  background: var(--Blue-6, #0969da);
+  border: none;
+}
+.buttonGetStarted:hover {
+  background-color: #0958d9;
+  cursor: pointer;
+}
+.btnText {
+  color: var(--Base-1, #fff);
+  text-align: center;
+  font-family: "Noto Sans";
+  /* font-size: 13px; */
+  font-size: 0.679vw;
+  font-style: normal;
+  font-weight: 600;
+  /* line-height: 18px; */
+  line-height: 0.938vw;
+}
+@font-face {
+  font-family: "Normaliq";
+  src: url("/public/fonts/Normaliq\ Black.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+.normaliq-font {
+  font-family: "Normaliq", sans-serif;
+}
+.arrowImageSize {
+  height: 1.25vw;
+  width: 1.25vw;
+}
+
+/* -------Section 2 css-------- */
+.containerSection2 {
+  min-width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+.pSection2 {
+  color: #b38a20;
+  text-align: center;
+  /* font-size: 44px; */
+  font-size: 2.29vw;
+  font-style: normal;
+  font-weight: 600;
+  /* line-height: 58px; */
+  line-height: 3.02vw;
+  letter-spacing: -1px;
+  /* width: 470px; */
+  width: 33vw;
+}
+.section2Btn {
+  /* padding: 11px 16px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    background: #c89103;
+    color: var(--Base-1, #fff);
+    text-align: center;
+    font-family: "Noto Sans";
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 18px;
+    border: none;
+    display: flex; */
+
+  display: flex;
+  /* padding: 14px 16px; */
+  padding: 0.73vw 0.833vw;
+  justify-content: center;
+  align-items: center;
+  /* border-radius: 4px; */
+  border-radius: 0.208vw;
+  background: #c89103;
+  border: none;
+}
+
+.section2Btn:hover {
+  background-color: #a77906;
+  cursor: pointer;
+}
+.sect2AbsoluteImage {
+  position: absolute;
+  top: 85%;
+  left: 59%;
+  transform: translateX(-50%);
+  /* height: 21px; */
+  height: 1.095vw;
+  /* width: 130px; */
+  width: 7.77vw;
+}
+/* ----------section 3 css---------------- */
+.support {
+  position: relative;
+  display: inline-block;
+  color: #b38a20;
+  text-align: center;
+  /* font-size: 44px; */
+  font-size: 2.29vw;
+  font-style: normal;
+  font-weight: 600;
+  /* line-height: 58px; */
+  line-height: 3.02vw;
+  letter-spacing: -2px;
+}
+.faq {
+  position: relative;
+  display: inline-block;
+  color: var(--Purple-9, #3e1f79);
+  text-align: center;
+  /* font-size: 44px; */
+  font-size: 2.29vw;
+  font-style: normal;
+  font-weight: 600;
+  /* line-height: 58px; */
+  line-height: 3.02vw;
+  letter-spacing: -2px;
+}
+.containerSection3 {
+  display: flex;
+  flex-direction: row-reverse;
+  background-color: #ddc2f7;
+  height: 100vh;
+}
+.pSection3 {
+  color: var(--Purple-9, #3e1f79);
+  text-align: center;
+  font-size: 2.29vw;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 3.02vw;
+  letter-spacing: -1px;
+  width: 26vw;
+}
+.section3Btn {
+  display: inline-flex;
+  /* padding: 14px 16px; */
+  padding: 0.73vw 0.833vw;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.208vw;
+  background: #3e1f79;
+  color: var(--Base-1, #fff);
+  text-align: center;
+  font-family: "Noto Sans";
+  /* font-size: 13px; */
+  font-size: 0.679vw;
+  font-style: normal;
+  font-weight: 600;
+  /* line-height: 18px; */
+  line-height: 0.938vw;
+  border: none;
+}
+.section3Btn:hover {
+  background: #31195f;
+  cursor: pointer;
+}
+.sect3AbsoluteImage {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  /* height: 25px; */
+  height: 1.3vw;
+  /* width: 120px; */
+  width: 6.25vw;
+}
+/* ----------section 4 css---------------- */
+.containerSection4 {
+  min-width: 100%;
+  /* padding: 0 24px; */
+  max-width: 100%;
+  margin: 0 auto;
+  background-color: #d6eff5;
+}
+.dot {
+  position: relative;
+  display: inline-block;
+  color: var(--Blue-8, #033d8b);
+  text-align: center;
+  font-size: 44px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 58px;
+  letter-spacing: -2px;
+}
+.pSection4 {
+  color: var(--Blue-8, #033d8b);
+  text-align: center;
+  font-size: 2.29vw;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 3.02vw;
+  letter-spacing: -1px;
+  /* width: 470px; */
+  width: 24.48vw;
+}
+.section4Btn {
+  display: inline-flex;
+  /* padding: 14px 16px; */
+  padding: 0.73vw 0.833vw;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.208vw;
+  background: #033d8b;
+  color: var(--Base-1, #fff);
+  text-align: center;
+  font-family: "Noto Sans";
+  /* font-size: 13px; */
+  font-size: 0.679vw;
+  font-style: normal;
+  font-weight: 600;
+  /* line-height: 18px; */
+  line-height: 0.938vw;
+  border: none;
+}
+.section4Btn:hover {
+  background-color: #023579;
+  cursor: pointer;
+}
+.sect4 {
+  display: flex;
+  background-color: #d6eff5;
+  height: 100vh;
+}
+.sect4AbsoluteImage {
+  position: absolute;
+  top: 37%;
+  left: 321%;
+  transform: translateX(-50%);
+  height: 83px;
+  width: 92px;
+}
+/* ----------section 5 css---------------- */
+.personalized {
+  position: relative;
+  display: inline-block;
+  color: var(--Pink-7, #99286e);
+  text-align: center;
+  /* font-size: 44px; */
+  font-size: 2.29vw;
+  font-style: normal;
+  font-weight: 600;
+  /* line-height: 58px; */
+  line-height: 3.02vw;
+  letter-spacing: -1px;
+}
+.containerSection5 {
+  min-width: 100%;
+  /* padding: 0 24px; */
+  max-width: 100%;
+  margin: 0 auto;
+  background-color: #f8e7e9;
+}
+.pSection5 {
+  color: var(--Pink-7, #99286e);
+  text-align: center;
+  /* font-size: 44px; */
+  font-size: 2.29vw;
+  font-style: normal;
+  font-weight: 600;
+  /* line-height: 58px; */
+  line-height: 3.02vw;
+  letter-spacing: -1px;
+  /* width: 500px; */
+  width: 27.04vw;
+}
+.section5Btn {
+  display: inline-flex;
+  /* padding: 14px 16px; */
+  padding: 0.73vw 0.833vw;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.208vw;
+  background: #99286e;
+  color: var(--Base-1, #fff);
+  text-align: center;
+  font-family: "Noto Sans";
+  /* font-size: 13px; */
+  font-size: 0.679vw;
+  font-style: normal;
+  font-weight: 600;
+  /* line-height: 18px; */
+  line-height: 0.938vw;
+  border: none;
+}
+.section5Btn:hover {
+  background: #8d2565;
+  cursor: pointer;
+}
+.sect5 {
+  display: flex;
+  flex-direction: row-reverse;
+  background-color: #f8e7e9;
+  height: 100vh;
+}
+.sect5AbsoluteImage {
+  /* height: 5px; */
+  height: 0.26vw;
+  /* width: 307px; */
+  width: 16vw;
+
+  position: absolute;
+  top: 100%;
+  left: 92%;
+  transform: translateX(-50%);
+}
+/* ----------section 6 css---------------- */
+.sect6AbsoluteImage {
+  display: none;
+  position: absolute;
+  top: 85%;
+  left: 59%;
+  transform: translateX(-50%);
+  height: 21px;
+  width: 130px;
+}
+.faqPage {
+  position: relative;
+  display: inline-block;
+  color: #1e3294;
+  text-align: center;
+  /* font-size: 44px; */
+  font-size: 2.29vw;
+  font-style: normal;
+  font-weight: 600;
+  /* line-height: 58px; */
+  line-height: 3.02vw;
+  letter-spacing: -1px;
+}
+.pSection6 {
+  color: #1e3294;
+  text-align: center;
+  font-size: 2.29vw;
+  font-style: normal;
+  font-weight: 600;
+  /* line-height: 58px; */
+  line-height: 3.02vw;
+  letter-spacing: -1px;
+  /* width: 493px; */
+  width: 25.68vw;
+}
+.section6Btn {
+  display: inline-flex;
+  /* padding: 14px 16px; */
+  padding: 0.73vw 0.833vw;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.208vw;
+  background: #1e3294;
+  color: var(--Base-1, #fff);
+  text-align: center;
+  font-family: "Noto Sans";
+  /* font-size: 13px; */
+  font-size: 0.679vw;
+  font-style: normal;
+  font-weight: 600;
+  /* line-height: 18px; */
+  line-height: 0.938vw;
+  border: none;
+}
+.section6Btn:hover {
+  background: #1a2c81;
+  cursor: pointer;
+}
+.sect6 {
+  display: flex;
+  background-color: #eef1ff;
+  height: 100vh;
+}
+/* ----------section 7 css---------------- */
+.pSection7 {
+  color: var(--Base-11, #0e1012);
+  text-align: center;
+  /* font-size: 44px; */
+  font-size: 2.29vw;
+  font-style: normal;
+  font-weight: 600;
+  /* line-height: 58px; */
+  line-height: 3.02vw;
+  letter-spacing: -1px;
+  /* width: 450px; */
+  width: 23.44vw;
+  text-align: start;
+}
+.SignUpHome {
+  border-radius: 8px;
+  border: 1px solid #eaeaea;
+  background: #fff;
+  box-shadow: 0px 0px 0px 0px rgba(39, 44, 48, 0.08),
+    0px 4px 8px 0px rgba(39, 44, 48, 0.12);
+  width: 400px;
+  height: 442px;
+  display: flex;
+  justify-content: center;
+}
+.SigninBg {
+  background: var(--Base-1, #f6f8fa);
+}
+.SectionImageParent {
+  width: 50%;
+}
+.SigninInner {
+  display: flex;
+  align-items: center;
+}
+.SignInOuter {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sect7 {
+  display: flex;
+  background-color: #f6f8fa;
+  height: 100vh;
+}
+.QnalyLogo {
+  /* width: 168px;
+    height: 49px; */
+
+  width: max-content;
+  /* height: 30px; */
+  height: 1.56vw;
+}
+.GetOtpBtn {
+  width: 100%;
+  height: 38px !important;
+}
+.ahacl {
+  text-align: center;
+  font-size: 14px;
+}
+/* ----------------Images classes----------------- */
+.SectImageSection3 {
+  object-fit: contain;
+  height: 100%;
+  width: 100%;
+  display: block;
+}
+
+.SectImageMobile {
+  object-fit: contain;
+  height: 100%;
+  width: 100%;
+  display: none;
+}
+/* -----------------------Media Query for Mobile----------------------- */
+@media only screen and (max-width: 767px) {
+  .section6Btn {
+    font-size: 13px;
+    line-height: 18px;
+    padding: 14px 16px;
+    border-radius: 4px;
+  }
+  .section5Btn {
+    font-size: 13px;
+    line-height: 18px;
+    padding: 14px 16px;
+    border-radius: 4px;
+  }
+  .section4Btn {
+    font-size: 13px;
+    line-height: 18px;
+    padding: 14px 16px;
+    border-radius: 4px;
+  }
+  .section3Btn {
+    font-size: 13px;
+    line-height: 18px;
+    padding: 14px 16px;
+    border-radius: 4px;
+  }
+  .section2Btn {
+    padding: 14px 16px;
+    border-radius: 4px;
+  }
+  .arrowImageSize {
+    height: 24px;
+    width: 24px;
+  }
+  .btnText {
+    font-size: 13px;
+  }
+  .buttonGetStarted {
+    padding: 11px 16px;
+    border-radius: 4px;
+  }
+  .section1Span {
+    font-size: 14px;
+  }
+  .ahacl {
+    font-size: 12px;
+  }
+  .h1Section1 {
+    color: var(--Base-11, #0e1012);
+    font-size: 31px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 40px; /* 129.032% */
+  }
+  .pSection1 {
+    color: var(--Base-6, #6e7781);
+    font-family: "Noto Sans";
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 26px;
+  }
+  .sect6,
+  .sect4 {
+    flex-direction: column;
+    height: auto;
+  }
+  .sect1,
+  .sect2,
+  .sect5,
+  .containerSection3 {
+    flex-direction: column-reverse;
+    height: auto;
+  }
+  .sect7 {
+    flex-direction: column;
+    align-items: center;
+  }
+  .SectionImageParent {
+    width: 100%;
+  }
+  .sect1left {
+    width: 100%;
+  }
+  .pSection2 {
+    text-align: center;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+    width: 470px;
+    max-width: 300px;
+  }
+  .pSection3 {
+    text-align: center;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+    width: auto;
+  }
+  .dot {
+    text-align: center;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+  }
+  .pSection4 {
+    text-align: center;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+    width: 304px;
+  }
+  .personalized {
+    text-align: center;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+  }
+  .pSection5 {
+    text-align: center;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+    width: auto;
+  }
+  .faqPage {
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+  }
+  .pSection6 {
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+    width: auto;
+  }
+  .pSection7 {
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    width: auto;
+  }
+  .SectionTextDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 60px 17px 24px 17px;
+  }
+  .sect3AbsoluteImage {
+    position: absolute;
+
+    height: 18px;
+    width: 106px;
+
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .sect2AbsoluteImage {
+    top: 85%;
+    left: 61%;
+    height: 14px;
+    width: 112px;
+  }
+  .sect4AbsoluteImage {
+    position: absolute;
+    left: 288%;
+    top: 37%;
+    height: 53.8px;
+    width: 71.2px;
+  }
+  .sect5AbsoluteImage {
+    position: absolute;
+    left: 50%;
+    top: 89%;
+    height: 5px;
+    width: 187px;
+  }
+  .sect6AbsoluteImage {
+    display: inline-block;
+    top: 85%;
+    left: 51%;
+    height: 14px;
+    width: 112px;
+  }
+  .QnalyLogo {
+    display: none;
+  }
+
+  .StreetSign {
+    object-fit: cover;
+    height: auto;
+    width: 100%;
+  }
+  .containerSection1 {
+    padding-left: 23px;
+    padding-right: 23px;
+    padding-top: 28px;
+  }
+  .text {
+    gap: 2px;
+  }
+  .sect1Inner {
+    gap: 24px;
+    width: 470px;
+  }
+  .sect1 {
+    gap: 20px;
+  }
+  .containerSection1 {
+    margin-top: 63px;
+  }
+  .SectImageMobile {
+    display: block;
+  }
+  .SectImage {
+    display: none;
+  }
+  .SectImageSection3 {
+    display: none;
+  }
+  .SignInOuter {
+    width: 300px;
+  }
+  .sect7 {
+    height: auto;
+    padding-bottom: 30px;
+  }
+  .support,
+  .faq {
+    font-size: 28px;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+  }
+}
+/* -----------------Media Query for Tablet------------------- */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .section6Btn {
+    font-size: 13px;
+    line-height: 18px;
+    padding: 14px 16px;
+    border-radius: 4px;
+  }
+  .section5Btn {
+    font-size: 13px;
+    line-height: 18px;
+    padding: 14px 16px;
+    border-radius: 4px;
+  }
+  .section4Btn {
+    font-size: 13px;
+    line-height: 18px;
+    padding: 14px 16px;
+    border-radius: 4px;
+  }
+  .section3Btn {
+    font-size: 13px;
+    line-height: 18px;
+    padding: 14px 16px;
+    border-radius: 4px;
+  }
+  .section2Btn {
+    padding: 14px 16px;
+    border-radius: 4px;
+  }
+  .sect2AbsoluteImage {
+    height: 21px;
+    width: 130px;
+  }
+  .arrowImageSize {
+    height: 24px;
+    width: 24px;
+  }
+  .btnText {
+    font-size: 13px;
+  }
+  .buttonGetStarted {
+    padding: 11px 16px;
+    border-radius: 4px;
+  }
+  .section1Span {
+    font-size: 14px;
+  }
+  .h1Section1 {
+    color: var(--Base-11, #0e1012);
+    font-size: 31px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 40px; /* 129.032% */
+  }
+  .pSection1 {
+    color: var(--Base-6, #6e7781);
+    font-family: "Noto Sans";
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 26px;
+  }
+  .support {
+    text-align: center;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+    width: auto;
+  }
+  .pSection2 {
+    text-align: center;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+    width: auto;
+  }
+  .faq {
+    text-align: center;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+    width: auto;
+  }
+  .pSection3 {
+    text-align: center;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+    width: auto;
+  }
+  .dot {
+    text-align: center;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+  }
+  .pSection4 {
+    text-align: center;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+    width: auto;
+  }
+  .personalized {
+    text-align: center;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+  }
+  .pSection5 {
+    text-align: center;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+    width: auto;
+  }
+  .faqPage {
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+  }
+  .pSection6 {
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0.1px;
+    width: auto;
+  }
+  .pSection7 {
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px;
+    width: auto;
+  }
+  .sect1Inner {
+    padding-left: 20px;
+    width: 470px;
+  }
+}
+/* //--------media query for Tablet--------- */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .sect4AbsoluteImage {
+    position: absolute;
+    top: 16%;
+    left: 347%;
+    transform: translateX(-50%);
+    height: 83px;
+    width: 92px;
+  }
+  .sect5AbsoluteImage {
+    height: 5px;
+    width: 187px;
+    left: 10%;
+  }
+  .sect3AbsoluteImage {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 16px;
+    width: 90px;
+  }
+}

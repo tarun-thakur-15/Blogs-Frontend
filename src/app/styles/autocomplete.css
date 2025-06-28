@@ -1,0 +1,133 @@
+.home-search {
+    border-radius: 4px !important;
+    border: 1px solid var(--Base-2) !important;
+    background-color: var(--Base-1) !important;
+    padding: 10px !important;
+}
+.home-search input {
+    background: var(--Base-1) !important;
+}
+.ant-select.ant-select-auto-complete {
+    width: 100% !important;
+    height: fit-content;
+    margin-bottom: 60px;
+}
+.ant-select.ant-select-auto-complete .ant-input-prefix {
+    margin-right: 8px;
+}
+.ant-select-dropdown.ant-select-dropdown-placement-bottomRight, .ant-select-dropdown-placement-topRight {
+    border-radius: 6px;
+    padding: 16px 0 24px;
+    background: white;
+    border-radius: 4px;
+}
+.ant-select-dropdown.ant-select-dropdown-placement-bottomRight .rc-virtual-list-holder-inner, .ant-select-dropdown.ant-select-dropdown-placement-topRight .rc-virtual-list-holder-inner{
+    gap: 12px;
+}
+.ant-select-dropdown.ant-select-dropdown-placement-bottomRight .ant-select-item.ant-select-item-option, .ant-select-dropdown.ant-select-dropdown-placement-topRight .ant-select-item.ant-select-item-option {
+    padding: 6px 16px;
+    border-radius: 0;
+}
+.ant-select-dropdown.ant-select-dropdown-placement-bottomRight .ant-auto-option, .ant-select-dropdown.ant-select-dropdown-placement-topRight .ant-auto-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.ant-select-dropdown.ant-select-dropdown-placement-bottomRight .ant-auto-option p, .ant-select-dropdown.ant-select-dropdown-placement-topRight .ant-auto-option p {
+    color: var(--Base-9);
+    font-family: var(--font-noto);
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 165%;
+    letter-spacing: -0.15px;
+}
+.ant-select-dropdown.ant-select-dropdown-placement-bottomRight .ant-auto-option p.search, .ant-select-dropdown.ant-select-dropdown-placement-topRight .ant-auto-option p.search {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 620px;
+}
+.ant-select-dropdown.ant-select-dropdown-placement-bottomRight .ant-auto-option img, .ant-select-dropdown.ant-select-dropdown-placement-topRight .ant-auto-option img {
+    width: 14px;
+    height: 14px;
+    object-fit: cover;
+}
+body.autocomplete-opened {
+    position: relative;
+}
+body.autocomplete-opened::before {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100%;
+    background-color: black;
+    opacity: .7;
+    z-index: 1014;
+}
+/* .ant-select.ant-select-auto-complete {
+    position: relative;
+    z-index: 99999;
+} */
+
+.modal-opened .ant-select.ant-select-auto-complete {
+    z-index: 0 !important;
+}
+.ant-select-selection-search .ant-input-suffix {
+    border-radius: 4px;
+    background: var(--Base-2);
+    padding: 1.5px 4.73px 2.5px 4px;
+}
+
+@media only screen and (max-width: 767px) {
+    body.autocomplete-opened header {
+        z-index: 1;
+    }
+    .ant-select.ant-select-auto-complete {
+        margin-bottom: 12px;
+    }
+    .ant-select.ant-select-auto-complete {
+        margin-bottom: 16px;
+    }
+
+    .autocomplete-outer.show {
+        position: fixed;
+        top: 0;
+        z-index: 9999999999;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: white;
+        transition: all .3s;
+        padding: 0 16px;
+    }
+    body.autocomplete-opened {
+        max-height: 100vh;
+        overflow-y: hidden;
+    }
+    .ant-select-dropdown.ant-select-dropdown-placement-bottomRight, .ant-select-dropdown-placement-topRight {
+        z-index: 99999999999;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+    .ant-select-dropdown.ant-select-dropdown-placement-bottomRight .ant-select-item.ant-select-item-option, .ant-select-dropdown.ant-select-dropdown-placement-topRight .ant-select-item.ant-select-item-option {
+        padding: 6px 10px;
+    }
+    /* .ant-input-affix-wrapper:hover */
+    .autocomplete-outer.show .home-search {
+        border: none !important;
+        border-bottom: 1px solid var(--Base-3) !important;
+        border-color: var(--Base-3) !important;
+        box-shadow: none !important;
+        background-color: transparent !important;
+        padding: 15px 0 12px !important;
+        border-radius: 0 !important;
+    }
+    .autocomplete-outer.show .ant-select-selection-search .ant-input-suffix {
+        display: none !important;
+    }
+    .autocomplete-outer.show .home-search input.ant-input {
+        background-color: transparent !important;
+    }
+}

@@ -1,103 +1,190 @@
+"use client";
+import React, { useEffect, useState } from "react";
+import "./styles/homepage.css";
 import Image from "next/image";
+import Arrow from "../assets/images/arrow1.png";
+import Vector3 from "../assets/images/Vector3.png";
+import ImageTwo from "../assets/images/BlogImageTwo-removebg-preview.png";
+import ImageFour from "../assets/images/BlogImageFour-removebg-preview.png";
+import ImageFive from "../assets/images/BlogImageFive-removebg-preview.png";
+import ImageSix from "../assets/images/BlogImageSix-removebg-preview.png";
+import LogInModal from "./Components/LogInModal";
+import Cookies from "js-cookie";
+import SignInModal from "./Components/SignInModal";
+const Home: React.FC = () => {
+  const [email, setEmail] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
+  const [fullName, setFullName] = useState<string | null>(null);
+  useEffect(() => {
+    console.log("useEffect called");
+    const storedEmail = Cookies.get("email");
+    const storedUsername = Cookies.get("username");
+    const storedFullName = Cookies.get("fullname");
+    const accessToken = Cookies.get("accessToken");
+    console.log("storedEmail is ", storedEmail);
+    console.log("storedUsername is ", storedUsername);
+    console.log("storedFullName is ", storedFullName);
+    console.log("accessToken is ", accessToken);
 
-export default function Home() {
+    if (storedEmail && storedUsername && storedFullName && accessToken) {
+      setEmail(storedEmail);
+      setUsername(storedUsername);
+      setFullName(storedFullName);
+      setIsLoggedIn(true);
+      console.log("values assigned to states");
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+    setIsLoginModalOpen(false);
+    document.body.classList.add("modal-opened");
+  };
+  const showLoginModal = () => {
+    setIsModalOpen(false);
+    setIsLoginModalOpen(true);
+    document.body.classList.add("modal-opened");
+  };
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+    <>
+      {/* ------------------section 1--------------------- */}
+      <section>
+        <div className="containerSection1 sect1">
+          <div className="SectionImageParent">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              src={ImageTwo}
+              alt="section"
+              className="StreetSign fade-image"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
+          <div className="sect1left">
+            <div className="sect1Inner">
+              <div>
+                <div className="text">
+                  <div className="heading">
+                    <span className="section1Span">
+                      Where Words Shape the World
+                    </span>
+                    <h1 className="h1Section1 normaliq-font">
+                      Your Voice, Your Story — Share It With Millions
+                    </h1>
+                  </div>
+                  <div className="description">
+                    <p className="pSection1 ">
+                      Discover a platform where your ideas spark conversations
+                      and inspire change. Write today. Be heard.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="">
+                <button onClick={showLoginModal} className="buttonGetStarted">
+                  <span className="btnText">Get Started</span>
+                  <Image
+                    src={Arrow}
+                    alt="Get-Started"
+                    height={24}
+                    width={24}
+                    className="arrowImageSize"
+                  ></Image>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </section>
+      {/* ----------------section 2------------------ */}
+      <section>
+        <div className="containerSection5 sect5">
+          <div className="SectionImageParent">
+            <Image src={ImageFive} alt="section" className="SectImage" />
+            <Image src={ImageFive} alt="section" className="SectImageMobile" />
+          </div>
+          <div className="SectionImageParent">
+            <div className="SectionTextDiv">
+              <div>
+                <p className="pSection5 normaliq-font">
+                  Your Story Deserves This Spotlight.
+                </p>
+              </div>
+              <button onClick={showLoginModal} className="section5Btn">
+                Get Started
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* ----------------section 3------------------ */}
+      <section>
+        <div className="containerSection4 sect4">
+          <div className="SectionImageParent">
+            <div className="SectionTextDiv">
+              <div>
+                <p className="pSection4 normaliq-font">
+                  Got a story, an idea, or an experience to share? Publish your
+                  blog and connect with a community that values your perspective
+                  <span className="dot normaliq-font">
+                    .
+                    {/* <Image
+                      src={Vector3}
+                      alt="Vector"
+                      className="sect4AbsoluteImage"
+                    /> */}
+                  </span>
+                </p>
+              </div>
+              <button onClick={showLoginModal} className="section4Btn">
+                Get Started
+              </button>
+            </div>
+          </div>
+          <div className="SectionImageParent">
+            <Image src={ImageFour} alt="section" className="SectImage" />
+            <Image src={ImageFour} alt="section" className="SectImageMobile" />
+          </div>
+        </div>
+      </section>
+      {/* ----------------section 4------------------ */}
+      <section>
+        <div className="containerSection2 sect6">
+          <div className="SectionImageParent">
+            <div className="SectionTextDiv">
+              <div>
+                <p className="pSection6 normaliq-font">
+                  Your ideas deserve the world’s attention. Start a blog that
+                  inspires, informs, and leaves a mark.
+                </p>
+              </div>
+              <button onClick={showLoginModal} className="section6Btn">
+                Get Started
+              </button>
+            </div>
+          </div>
+          <div className="SectionImageParent">
+            {/* <Image src={Section6Image} alt="section" className="SectImage" /> */}
+            <Image src={ImageSix} alt="section" className="SectImage" />
+            <Image src={ImageSix} alt="section" className="SectImageMobile" />
+          </div>
+        </div>
+      </section>
+      <SignInModal
+        setIsModalOpen={setIsModalOpen}
+        showLoginModal={showLoginModal}
+        isModalOpen={isModalOpen}
+      />
+      <LogInModal
+        setIsModalOpen={setIsLoginModalOpen}
+        showSignModal={showModal}
+        isModalOpen={isLoginModalOpen}
+      />
+    </>
   );
-}
+};
+
+export default Home;
+// ------------------
