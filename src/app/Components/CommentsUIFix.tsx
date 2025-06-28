@@ -17,7 +17,7 @@ import SelectDrop from "../../../public/images/select-drop.svg";
 import bydefaultUserImage from "../../assets/images/not-logged-in-user.png";
 import { Toaster, toast } from "sonner";
 import Link from "next/link";
-import Options from "../../../public/images/Options.svg";
+import OptionsHorizontal from "../../../public/images/OptionsHorizontal.svg";
 
 interface CommentItem {
   _id: string;
@@ -211,7 +211,7 @@ export default function Comments({
                     toggleDropdown(comment._id);
                   }}
                 >
-                  <Options className="optionIconSize" height={20} width={20} />
+                  <OptionsHorizontal className="optionIconSize" height={20} width={20} />
                 </button>
 
                 {/* Delete Dropdown */}

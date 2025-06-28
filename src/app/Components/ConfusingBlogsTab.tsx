@@ -23,7 +23,6 @@ import SignInModal from "../Components/SignInModal";
 import LogInModal from "../Components/LogInModal";
 import moment from "moment";
 import Link from "next/link";
-import Options from "../../../public/images/options.svg";
 
 interface Fly {
   id: number;

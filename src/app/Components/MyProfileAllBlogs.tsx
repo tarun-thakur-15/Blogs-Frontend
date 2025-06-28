@@ -19,9 +19,7 @@ import "../styles/awnserbox.css";
 // Images
 
 import notLoggedInIcon from "../../assets/images/not-logged-in-user.png";
-import Like from "../../../public/images/like.svg";
 import Comment from "../../../public/images/comment.svg";
-import BoxIcon from "../../../public/images/box.svg";
 import BoxIconPng from "../../assets/images/box.png";
 import SignInModal from "../Components/SignInModal";
 import LogInModal from "../Components/LogInModal";

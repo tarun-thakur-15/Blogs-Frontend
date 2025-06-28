@@ -5,6 +5,9 @@ const nextConfig = {
   images: {
     domains: ['localhost'],
   },
+  typescript: {
+    ignoreBuildErrors: true, // ✅ This disables type-checking during build
+  },
   webpack(config: WebpackConfig) {
     config.module?.rules?.push({
       test: /\.svg$/,

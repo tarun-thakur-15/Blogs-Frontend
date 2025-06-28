@@ -14,7 +14,6 @@ import { getPerticularBlog, getComments } from "../services/api";
 import ReadTTS from "../Components/ReadTTS";
 import { cn } from "@/lib/utils";
 // Images
-import Profile from "../../../public/images/profile.svg";
 import Divider from "../../assets/images/divider.png";
 import { cookies } from "next/headers";
 import FaqPageActions from "../Components/FaqPageActions";
@@ -25,12 +24,17 @@ import LoginToRead from "../../assets/images/LoginToRead.jpeg";
 import LoginToReadFullBlog from "../Components/LoginToReadFullBlog";
 import Listen from "./../../../public/images/Listen.svg";
 
-interface PageProps {
-  params: { slug: string };
-}
+// interface PageProps {
+//   params: { slug: string };
+// }
+// type Props = {
+//   params: {
+//     slug: string;
+//   };
+// };
 
-const BlogDetailPage = async ({ params }: PageProps) => {
-  const { slug } = await params;
+export default async function BlogDetailPage({ params }: { params: { slug: string } }) {
+  const { slug } = params;
 
   // Get token from cookies server side
   const cookieStore = await cookies();
@@ -198,4 +202,4 @@ const BlogDetailPage = async ({ params }: PageProps) => {
   );
 };
 
-export default BlogDetailPage;
+
