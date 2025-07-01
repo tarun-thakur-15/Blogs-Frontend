@@ -3,7 +3,9 @@ import Cookies from "js-cookie";
 import { SignUpSchema, Login, VerifyOtp, changePassword, ResendOtp, ReactionPayload, CreateBlog, PostCommentInterface, EditAboutSchema, DraftPayload,
   DraftResponse } from "./schema";
 
-const url = "http://localhost:8000/api";
+const url = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
+console.log("API URL:", process.env.NEXT_PUBLIC_API_BASE_URL);
+console.log("API URL:", url);
 const accessToken = Cookies.get("accessToken");
 import { redirect } from 'next/navigation';
 export const signUpUser = async (userData: SignUpSchema) => {
