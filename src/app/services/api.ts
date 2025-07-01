@@ -7,7 +7,7 @@ const url = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
 console.log("API URL:", process.env.NEXT_PUBLIC_API_BASE_URL);
 console.log("API URL:", url);
 const accessToken = Cookies.get("accessToken");
-import { redirect } from 'next/navigation';
+import { redirect } from 'next/navigation'; 
 export const signUpUser = async (userData: SignUpSchema) => {
     try {
         const response = await axios.post(`${url}/signup`, userData, {
