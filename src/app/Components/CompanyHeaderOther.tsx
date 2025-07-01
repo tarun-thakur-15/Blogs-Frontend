@@ -51,7 +51,7 @@ export default function CompanyHeaderOther({
   totalBlogs,
   blogSlug,
 }: CompanyHeaderOtherProps) {
-  const backendBaseUrl = "http://localhost:8000/";
+  const backendBaseUrl = "https://blogs-backend-ftie.onrender.com/";
   // State for Followers Modal
   const [isSubscriberListModalOpen, setIsSubscriberListModalOpen] =
     useState(false);

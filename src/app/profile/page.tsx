@@ -9,7 +9,7 @@ import { cookies } from "next/headers";
 import ClientTabsWrapper from "../Components/ClientTabsWrapper";
 
 export default async function CompanyPage() {
-  const backendBaseURL = "http://localhost:8000";
+  const backendBaseURL = "https://blogs-backend-ftie.onrender.com/";
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value || "";
   const usernameFromCookies = cookieStore.get("username")?.value!;

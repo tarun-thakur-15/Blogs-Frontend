@@ -41,7 +41,7 @@ export default function Comments({
   initialTotalComments,
   blogAuthor,
 }: CommentsProps) {
-  const backendBaseUrl = "http://localhost:8000/";
+  const backendBaseUrl = "https://blogs-backend-ftie.onrender.com/";
   const profileImage = Cookies.get("profileImage");
   const accessToken = Cookies.get("accessToken");
   const [comments, setComments] = useState<CommentItem[]>(initialComments);

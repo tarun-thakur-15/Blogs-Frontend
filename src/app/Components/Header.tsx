@@ -45,7 +45,7 @@ interface CommentsProps {
 }
 
 export default function Header() {
-  const backendBaseUrl = "http:localhost:8000";
+  const backendBaseUrl = "https://blogs-backend-ftie.onrender.com/";
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
