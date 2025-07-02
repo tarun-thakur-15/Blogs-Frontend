@@ -338,7 +338,7 @@ header {
     overflow: hidden;
     color: var(--Base-10, #24292f);
     text-overflow: ellipsis;
-    font-family: "Noto Sans";
+    font-family: cursive;
     font-size: 14px;
     font-style: normal;
     font-weight: 600;
@@ -348,7 +348,7 @@ header {
     overflow: hidden;
     color: #61605d;
     text-overflow: ellipsis;
-    font-family: "Noto Sans";
+    font-family: cursive;
     font-size: 14px;
     font-style: normal;
     font-weight: 600;
@@ -361,7 +361,7 @@ header {
   }
   .notificationDay {
     color: var(--Base-7, #57606a);
-    font-family: "Noto Sans";
+    font-family: cursive;
     font-size: 13px;
     font-style: normal;
     font-weight: 400;
@@ -374,7 +374,7 @@ header {
     overflow: hidden;
     color: var(--Base-10, #24292f);
     text-overflow: ellipsis;
-    font-family: "Noto Sans";
+    font-family: cursive;
     font-size: 13px;
     font-style: normal;
     font-weight: 600;
@@ -384,7 +384,7 @@ header {
     overflow: hidden;
     color: var(--Blue-5, #218bff);
     text-overflow: ellipsis;
-    font-family: "Noto Sans";
+    font-family: cursive;
     font-size: 13px;
     font-style: normal;
     font-weight: 600;
@@ -524,7 +524,7 @@ header {
     border: none;
     color: var(--Base-1, #fff);
     text-align: center;
-    font-family: "Noto Sans";
+    font-family: cursive;
     font-size: 13px;
     font-style: normal;
     font-weight: 600;
@@ -552,7 +552,7 @@ header {
   }
   .createFaqBtn {
     color: var(--Base-11, #0e1012);
-    font-family: "Noto Sans";
+    font-family: cursive;
     font-size: 14px;
     font-style: normal;
     font-weight: 600;
@@ -562,7 +562,7 @@ header {
   }
   .selectCtgyBtn {
     color: var(--Base-9, #32383f);
-    font-family: "Noto Sans";
+    font-family: cursive;
     font-size: 13px;
     font-style: normal;
     font-weight: 500;
@@ -571,7 +571,7 @@ header {
   }
   .ql-editor::before {
     /* color: var(--Base-4, #AFB8C1)!important; */
-    font-family: "Noto Sans" !important;
+    font-family: cursive !important;
     font-size: 15px !important;
     font-style: normal !important;
     font-weight: 400 !important;

@@ -254,7 +254,7 @@
 }
 .trending-section-title{
   color: var(--Base-11, #0E1012);
-font-family: "Noto Sans";
+font-family: cursive;
 font-size: 16px;
 font-style: normal;
 font-weight: 600;
@@ -796,7 +796,7 @@ opacity: 0.9;
 }
 .topPicksSpan {
   color: var(--Base-11, #0e1012);
-  font-family: "Noto Sans";
+  font-family: cursive;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -805,7 +805,7 @@ opacity: 0.9;
 }
 .HotTopicsLinks {
   color: var(--Blue-6, var(--base-color-blue-5, #0969da));
-  font-family: "Noto Sans";
+  font-family: cursive;
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -815,7 +815,7 @@ opacity: 0.9;
 .YourInterestLinksTechnology {
   color: var(--Blue-6, var(--base-color-blue-5, #0969da));
   white-space: nowrap;
-  font-family: "Noto Sans";
+  font-family: cursive;
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -826,7 +826,7 @@ opacity: 0.9;
 .YourInterestLinksNature {
   color: var(--Blue-6, var(--base-color-blue-5, #0969da));
   white-space: nowrap;
-  font-family: "Noto Sans";
+  font-family: cursive;
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -837,7 +837,7 @@ opacity: 0.9;
 .YourInterestLinksTravel {
   color: var(--Blue-6, var(--base-color-blue-5, #0969da));
   white-space: nowrap;
-  font-family: "Noto Sans";
+  font-family: cursive;
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -898,7 +898,7 @@ opacity: 0.9;
 
 .search-span {
   color: var(--Base-5, #8c959f);
-  font-family: "Noto Sans";
+  font-family: cursive;
   font-size: 32px;
   font-style: normal;
   font-weight: 600;
@@ -928,7 +928,7 @@ opacity: 0.9;
 }
 .number-of-subscribers {
   color: var(--Base-7, #57606a);
-  font-family: "Noto Sans";
+  font-family: cursive;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -946,7 +946,7 @@ opacity: 0.9;
   background: var(--Base-2, #eaeef2);
   color: var(--Base-10, #24292f);
   text-align: center;
-  font-family: "Noto Sans";
+  font-family: cursive;
   font-size: 13px;
   font-style: normal;
   font-weight: 600;
@@ -954,7 +954,7 @@ opacity: 0.9;
 }
 .company-name {
   color: var(--Base-11, #0e1012);
-  font-family: "Noto Sans";
+  font-family: cursive;
   font-size: 13px;
   font-style: normal;
   font-weight: 600;
@@ -977,7 +977,7 @@ opacity: 0.9;
   overflow: hidden;
   color: var(--Base-10, #24292f);
   text-overflow: ellipsis;
-  font-family: "Noto Sans";
+  font-family: cursive;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -1055,7 +1055,7 @@ opacity: 0.9;
   overflow: hidden;
   color: var(--Base-10, #24292f);
   text-overflow: ellipsis;
-  font-family: "Noto Sans";
+  font-family: cursive;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -1076,7 +1076,7 @@ opacity: 0.9;
   gap: 4px;
   color: var(--Base-10, #24292f);
   text-align: center;
-  font-family: "Noto Sans";
+  font-family: cursive;
   font-size: 13px;
   font-style: normal;
   font-weight: 600;
@@ -1088,7 +1088,7 @@ opacity: 0.9;
   overflow: hidden;
   color: var(--Base-10, #24292f);
   text-overflow: ellipsis;
-  font-family: "Noto Sans";
+  font-family: cursive;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -1097,7 +1097,7 @@ opacity: 0.9;
 .ant-tabs-tab-btn {
   color: var(--Base-11, #0e1012);
   text-align: center;
-  font-family: "Noto Sans";
+  font-family: cursive;
   font-size: 13px;
   font-style: normal;
   font-weight: 600;
