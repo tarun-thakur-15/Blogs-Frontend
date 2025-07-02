@@ -713,6 +713,7 @@ export const changeProfilePicture = async (file: File, token?: string) => {
 };
 export const saveDraft = async (payload: DraftPayload) => {
   try {
+     console.log("accessToken being sent:", accessToken); 
     const response = await axios.post<DraftResponse>(
       `${url}/saveDraft`,
       payload,

@@ -3,7 +3,7 @@ import type { Configuration as WebpackConfig } from 'webpack';
 
 const nextConfig = {
   images: {
-    domains: ['localhost'],
+    domains: ['localhost', 'blogs-backend-ftie.onrender.com'],
   },
   typescript: {
     ignoreBuildErrors: true, // ✅ This disables type-checking during build
