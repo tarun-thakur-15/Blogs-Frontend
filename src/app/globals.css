@@ -6,7 +6,7 @@
 
 :root {
   --max-width: 832px;
-  --font-noto: cursive, sans-serif;
+  --font-noto: "Noto Sans", sans-serif;
   --Base-11: #0e1012;
   --Blue-1: #ddf4ff;
   --Blue-4: #54aeff;
@@ -627,7 +627,7 @@ textarea.ant-input {
 }
 .followersSpan {
   color: var(--Base-11, #0e1012);
-  font-family: cursive;
+  font-family: "Noto Sans";
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -711,7 +711,7 @@ textarea.ant-input {
 }
 .followerName {
   color: var(--Base-11, #0e1012);
-  font-family: cursive;
+  font-family: "Noto Sans";
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -720,7 +720,7 @@ textarea.ant-input {
 }
 .followerUsername {
   color: var(--Base-8, #424a53);
-  font-family: cursive;
+  font-family: "Noto Sans";
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -742,7 +742,7 @@ textarea.ant-input {
 }
 .ant-tour-title {
   color: #fff;
-  font-family: cursive;
+  font-family: "Noto Sans";
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -750,7 +750,7 @@ textarea.ant-input {
 }
 .ant-tour-description {
   color: #fff;
-  font-family: cursive;
+  font-family: "Noto Sans";
   font-size: 13px;
   font-style: normal;
   font-weight: 400;
@@ -924,7 +924,7 @@ textarea.ant-input {
 }
 .showmore {
   color: var(--Base-10, #24292f);
-  font-family: cursive;
+  font-family: "Noto Sans";
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -952,7 +952,7 @@ textarea.ant-input {
 .followText {
   color: var(--Base-10, #24292f);
   text-align: center;
-  font-family: cursive;
+  font-family: "Noto Sans";
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -976,7 +976,7 @@ textarea.ant-input {
   color: var(--Base-8, #424a53);
 
   /* Meta */
-  font-family: cursive;
+  font-family: "Noto Sans";
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
