@@ -259,7 +259,7 @@ export default function AllBlogsUserPage({
                         <div className="awnser-box--company">
                           <Image
                             src={
-                              `http://localhost:8000/${blog.author.profileImage}` ||
+                              `https://blogs-backend-ftie.onrender.com/${blog.author.profileImage}` ||
                               notLoggedInIcon
                             }
                             alt="Placeholder avatar"

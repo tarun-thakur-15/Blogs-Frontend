@@ -58,7 +58,7 @@ const CustomAutoComplete: React.FC = () => {
                     src={
                       blog.author.profileImage?.startsWith("http")
                         ? blog.author.profileImage
-                        : `http://localhost:8000/${blog.author.profileImage}`
+                        : `https://blogs-backend-ftie.onrender.com/${blog.author.profileImage}`
                     }
                     alt={blog.author.fullName}
                     width={32}
@@ -108,7 +108,7 @@ const CustomAutoComplete: React.FC = () => {
                   src={
                     user.profileImage?.startsWith("http")
                       ? user.profileImage
-                      : `http://localhost:8000/${user.profileImage}`
+                      : `https://blogs-backend-ftie.onrender.com/${user.profileImage}`
                   }
                   alt={user.fullName}
                   width={36}

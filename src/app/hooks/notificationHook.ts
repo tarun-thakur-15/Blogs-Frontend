@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 
 export function useNotifications(userId: string) {
   const [notifications, setNotifications] = useState<any[]>([]);
-  const socket = io("http://localhost:8000"); // adjust URL as needed
+  const socket = io("https://blogs-backend-ftie.onrender.com"); // adjust URL as needed
 
   useEffect(() => {
 

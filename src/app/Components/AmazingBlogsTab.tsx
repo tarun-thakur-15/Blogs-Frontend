@@ -197,7 +197,7 @@ export default function AmazingBlogsTab({
                       <Flex gap={2} align="center">
                         <div className="awnser-box--company">
                           <Image
-                            src={`http://localhost:8000/${blog.author.profileImage}` || notLoggedInIcon}
+                            src={`https://blogs-backend-ftie.onrender.com/${blog.author.profileImage}` || notLoggedInIcon}
                             alt="Placeholder avatar"
                             width={40}
                             height={40}

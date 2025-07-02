@@ -122,7 +122,7 @@ const BlogDetailPage = async ({ params }: PageProps) => {
                         <div className="awnser-box--company">
                           <Image
                             className=""
-                            src={ `http://localhost:8000/${blogData.author.profileImage}` ||  DefaultImage}
+                            src={ `https://blogs-backend-ftie.onrender.com/${blogData.author.profileImage}` ||  DefaultImage}
                             alt="Tarun"
                             width={40}
                             height={40}

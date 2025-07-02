@@ -54,6 +54,7 @@ interface FaqsForUserPageProps {
 }
 
 const FaqsForUserPage: React.FC<FaqsForUserPageProps> = ({ initialBlogs }) => {
+  const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
   // Use a mapping of blogId to an array of fly objects
   const [flyMap, setFlyMap] = useState<Record<string, Fly[]>>({});
   const router = useRouter();
@@ -243,7 +244,7 @@ const FaqsForUserPage: React.FC<FaqsForUserPageProps> = ({ initialBlogs }) => {
                       <Flex gap={2} align="center">
                         <div className="awnser-box--company">
                           <Image
-                            src={ `http://localhost:8000/${blog.author.profileImage}` || notLoggedInIcon}
+                            src={ `${backendBaseUrl}/${blog.author.profileImage}` || notLoggedInIcon}
                             alt="Placeholder avatar"
                             width={40}
                             height={40}

@@ -70,7 +70,7 @@ export default function CompanyHeader({
   const followingLoadMoreRef = useRef<HTMLDivElement | null>(null);
   const [followingQuery, setFollowingQuery] = useState("");
 
-  const baseUrl = "http://localhost:8000/";
+  const baseUrl = "https://blogs-backend-ftie.onrender.com/";
   const encodedImagePath = encodeURI(profileImage); // Handles spaces properly
   const fullImageUrl = `${baseUrl}${encodedImagePath}`;
 

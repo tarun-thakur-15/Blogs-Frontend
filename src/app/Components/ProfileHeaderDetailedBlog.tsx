@@ -251,7 +251,7 @@ export default function ProfileHeaderDetailedBlog({
             <div className="file-upload">
               
               <Image
-                src={`http://localhost:8000/${profileImage}` || bydefaultUser}
+                src={`https://blogs-backend-ftie.onrender.com/${profileImage}` || bydefaultUser}
                 alt="profile picture"
                 width={68}
                 height={68}

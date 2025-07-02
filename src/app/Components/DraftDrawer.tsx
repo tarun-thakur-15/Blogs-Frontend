@@ -121,7 +121,7 @@ const [contentValue, setContentValue] = useState(content || "");
         <div className="leftBtns">
           <div className="createFaqProfileImageContainer">
             <Image
-              src={`http://localhost:8000/${ProfileImage}` || DefaultImage}
+              src={`https://blogs-backend-ftie.onrender.com/${ProfileImage}` || DefaultImage}
               alt="Profile Image"
               className="createFaqProfileImage"
               width={40}
