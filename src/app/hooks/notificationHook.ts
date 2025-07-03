@@ -10,7 +10,7 @@ export function useNotifications(userId: string) {
 
     socket.emit("join", userId);
     socket.on("newNotification", (notification) => {
-      console.log("Received new notification:", notification);
+      
       setNotifications((prev) => [notification, ...prev]);
     });
 

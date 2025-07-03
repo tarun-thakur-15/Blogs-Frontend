@@ -95,7 +95,7 @@ export default function DislikedBlogsTab({
   const handleClickForBlog =
     (blogId: string, emoji: string) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      console.log(`Button clicked for blog ${blogId} with emoji ${emoji}`);
+      
       const id = Date.now();
       const button = e.currentTarget;
       const startX = button.offsetLeft + button.offsetWidth / 2;

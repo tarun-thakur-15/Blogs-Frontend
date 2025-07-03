@@ -43,17 +43,17 @@ export default function FaqDrawer({
   const ProfileImage = Cookies.get("profileImage");
   //function to post the blog by calling createBlog api
   const handlePostBlog = async () => {
-    console.log("handlePostBlog function called");
+
     if (isPostDisabled) {
       toast.error(
         "Incomplete Information: Please ensure Topic, Title, and at least 500 words of content are provided."
       );
-      console.log("reached on toaster");
+      
       return;
     }
     setLoading(true);
     try {
-      console.log("reached inside try block");
+     
       const blogData = { topic, title, content };
       const token = Cookies.get("accessToken");
       const result = await createBlog(blogData, token);

@@ -229,7 +229,7 @@ export default function CompanyHeader({
     try {
       // Call the API function to change the profile picture
       const response = await changeProfilePicture(file);
-      console.log("Profile picture updated:", response.msg);
+
 
       // Update the local state with the new profile image path (assumed to be returned in response)
       window.location.reload();

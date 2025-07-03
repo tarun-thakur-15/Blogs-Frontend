@@ -67,7 +67,7 @@ const SignInModal: React.FC<CustomModalProps> = ({
         password: values.password, // password remains the same
       };
       const response = await signUpUser(signUpData);
-      console.log("Sign up response:", response);
+    
       setLoading(false);
       setEmailForOtp(values.mail);
       // For now, we move to the OTP verification step (formLevel 1)
@@ -88,7 +88,7 @@ const SignInModal: React.FC<CustomModalProps> = ({
         otp: String(enteredOtp),
       };
       const response = await verifyUser(payload);
-      console.log("OTP Verification response:", response);
+   
       setOtpLoading(false);
       // After successful verification set the necessary informaion in Cookies:-
       Cookies.set("email", response.email, { expires: 7 });
@@ -117,7 +117,7 @@ const SignInModal: React.FC<CustomModalProps> = ({
         email: form.getFieldValue("mail"),
       };
       const response = await resedOtp(payload);
-      console.log("Resend OTP response:", response);
+      
       setOtpLoading(false);
       setShowResendMessage(true);
       // Restart the countdown for resending OTP

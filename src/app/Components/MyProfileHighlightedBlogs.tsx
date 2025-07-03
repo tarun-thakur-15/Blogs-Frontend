@@ -98,10 +98,10 @@ export default function MyProfileHighlightedBlogs({
     reactionType: ReactionPayload["reactionType"],
     blogId: string
   ) => {
-    console.log("handleReaction called for:", slug, reactionType);
+
     try {
       const result = await reactToBlog(slug, { reactionType }, AccessToken);
-      console.log("Reaction updated:", result);
+     
       // Update the local state with the new reaction counts for the blog that was updated
       setBlogs((prevBlogs) =>
         prevBlogs.map((blog) =>
@@ -118,7 +118,7 @@ export default function MyProfileHighlightedBlogs({
   const handleClickForBlog =
     (blogId: string, emoji: string) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      console.log(`Button clicked for blog ${blogId} with emoji ${emoji}`);
+     
       const id = Date.now();
       const button = e.currentTarget;
       const startX = button.offsetLeft + button.offsetWidth / 2;
@@ -235,7 +235,7 @@ export default function MyProfileHighlightedBlogs({
       // Call the toggleHighlight API function
       const result = await toggleHighlight(slug);
       toast.success(result.msg);
-      console.log(result.msg);
+      
       // Wait for 1 second before refreshing the highlighted blogs
       setTimeout(async () => {
         const data = await getHighlightedBlogs(0, 10, username, AccessToken);
@@ -243,7 +243,7 @@ export default function MyProfileHighlightedBlogs({
           setBlogs(data.blogs);
           // Optionally update the offsetRef if required:
           offsetRef.current = data.blogs.length;
-          console.log("api called again");
+         
         }
       }, 1000);
     } catch (error: any) {
@@ -255,10 +255,7 @@ export default function MyProfileHighlightedBlogs({
   };
 
   const toggleDropdown = (blogId: any) => {
-    console.log(
-      "reached inside toggleDropdown function and blogId is ",
-      blogId
-    );
+
     // Toggle the dropdown for the specific blog
     setIsDropdownOpen((prev) => (prev === blogId ? null : blogId));
   };
@@ -453,9 +450,11 @@ export default function MyProfileHighlightedBlogs({
                         <Flex
                           gap={12}
                           align="center"
+                          className="h-[18px]"
                           style={{ position: "relative" }}
                         >
                           <div
+                          className="h-full"
                             ref={dropdownRef}
                             style={{
                               position: "relative",

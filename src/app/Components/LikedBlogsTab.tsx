@@ -95,7 +95,7 @@ export default function LikedBlogsTab({
   const handleClickForBlog =
     (blogId: string, emoji: string) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      console.log(`Button clicked for blog ${blogId} with emoji ${emoji}`);
+      
       const id = Date.now();
       const button = e.currentTarget;
       const startX = button.offsetLeft + button.offsetWidth / 2;
@@ -163,10 +163,7 @@ export default function LikedBlogsTab({
   }, [loadMoreBlogs, loadingMore, hasMore]);
 
   const toggleDropdown = (blogId: any) => {
-    console.log(
-      "reached inside toggleDropdown function and blogId is ",
-      blogId
-    );
+    
     // Toggle the dropdown for the specific blog
     setIsDropdownOpen((prev) => (prev === blogId ? null : blogId));
   };

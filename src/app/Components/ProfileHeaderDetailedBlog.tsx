@@ -181,7 +181,7 @@ export default function ProfileHeaderDetailedBlog({
     try {
       const token = Cookies.get("accessToken");
       const res = await toggleFavourite(blogSlug, token);
-      console.log("Favourite toggled:", res);
+   
       // Optionally update local UI state or display a notification
     } catch (error) {
       console.error("Error toggling favourite:", error);
@@ -194,7 +194,7 @@ export default function ProfileHeaderDetailedBlog({
       const token = Cookies.get("accessToken");
       const res = await toggleFollow(username, token);
       toast.success(res?.msg || `You have ${localIsFollowed ? 'unfollowed' : 'followed'} ${username} successfully! 🎉`);
-      console.log("Follow status toggled:", res);
+    
     } catch (error: any) {
             toast.error(error.message || "Failed to update follow status. Please try again. ❌");
       setLocalIsFollowed((prev) => !prev);

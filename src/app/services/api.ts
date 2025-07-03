@@ -4,8 +4,6 @@ import { SignUpSchema, Login, VerifyOtp, changePassword, ResendOtp, ReactionPayl
   DraftResponse } from "./schema";
 
 const url = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
-console.log("API URL:", process.env.NEXT_PUBLIC_API_BASE_URL);
-console.log("API URL:", url);
 const accessToken = Cookies.get("accessToken");
 import { redirect } from 'next/navigation'; 
 export const signUpUser = async (userData: SignUpSchema) => {
@@ -164,7 +162,7 @@ export const getAllBlogs = async (offset = 0, limit = 10, token?: string) => {
           ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
         },
       });
-      console.log("getHighlightedBlogs response is", response.data);
+     
       return response.data;
     } catch (error) {
       redirect('/something-went-wrong');
@@ -299,7 +297,7 @@ export const getAllBlogs = async (offset = 0, limit = 10, token?: string) => {
           },
         }
       );
-      console.log("getUserBlogs api called");
+    
       return response.data; // expected to return an object like { blogs: [...] }
     } catch (error) {
       redirect('/something-went-wrong');
@@ -342,7 +340,7 @@ export const getAllBlogs = async (offset = 0, limit = 10, token?: string) => {
           },
         }
       );
-      console.log("getBlogsByTopic api called", response.data);
+  
       return response.data; // Expected to return an object like { blogs: [...] }
     } catch (error) {
       redirect('/something-went-wrong');
@@ -358,7 +356,7 @@ export const getAllBlogs = async (offset = 0, limit = 10, token?: string) => {
           ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
         },
       });
-      console.log("createBlog api called:- ", response.data);
+    
       return response.data;
     } catch (error) {
       redirect('/something-went-wrong');
@@ -379,7 +377,7 @@ export const searchBlogsAndUsers = async (
       },
     });
 
-    console.log("RAW API response", response.data); // ✅ Debug raw API response
+    
     return response.data; // ✅ Return both blogs + users
   } catch (error) {
     redirect("/something-went-wrong");
@@ -494,7 +492,7 @@ export const getNotifications = async (token?: string, offset: number = 0, limit
         ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
       },
     });
-    console.log( "getNotification response is:- " , response.data);
+
     return response.data; // { notifications: [...] }
   } catch (error) {
     redirect('/something-went-wrong');
@@ -515,7 +513,7 @@ export const markAllNotificationsAsRead = async () => {
         },
       }
     );
-    console.log("markAllNotificationsAsRead api response:- ", response.data);
+
     return response.data;
   } catch (error) {
     redirect('/something-went-wrong');
@@ -543,7 +541,7 @@ export const getAllArchivedBlogs = async (offset = 0, limit = 10, token?: string
   const accessToken = token || Cookies.get("accessToken");
   
   try {
-    console.log("getAllArchivedBlogs api called");
+
     const response = await axios.get(`${url}/getArchivedBlogs?offset=${offset}&limit=${limit}`, {
       headers: {
         "Content-Type": "application/json",
@@ -615,7 +613,7 @@ export const getLikedBlogs = async (offset = 0, limit = 10, token?: string) => {
         ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
       },
     });
-    console.log("getLikedBlogs api called");
+   
     return response.data;
   } catch (error) {
     redirect('/something-went-wrong');
@@ -633,7 +631,7 @@ export const getDislikedBlogs = async (offset = 0, limit = 10, token?: string) =
         ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
       },
     });
-    console.log("getDislikedBlogs api called");
+  
     return response.data;
   } catch (error) {
     redirect('/something-went-wrong');
@@ -651,7 +649,7 @@ export const getConfusingBlogs = async (offset = 0, limit = 10, token?: string )
         ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
       },
     });
-    console.log("getConfusingBlogs api called");
+  
     return response.data;
   } catch (error) {
     redirect('/something-went-wrong');
@@ -669,7 +667,7 @@ export const getAmazingBlogs = async (offset = 0, limit = 10, token?: string) =>
         ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
       },
     });
-    console.log("getAmazingBlogs api called");
+  
     return response.data;
   } catch (error) {
     redirect('/something-went-wrong');
@@ -687,7 +685,7 @@ export const getCommentedBlogs = async (offset = 0, limit = 10,username: string,
         ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
       },
     });
-    console.log("getAmazingBlogs api called");
+  
     return response.data;
   } catch (error) {
     redirect('/something-went-wrong');
@@ -713,7 +711,6 @@ export const changeProfilePicture = async (file: File, token?: string) => {
 };
 export const saveDraft = async (payload: DraftPayload) => {
   try {
-     console.log("accessToken being sent:", accessToken); 
     const response = await axios.post<DraftResponse>(
       `${url}/saveDraft`,
       payload,

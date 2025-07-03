@@ -98,7 +98,7 @@ const LogInModal: React.FC<CustomModalProps> = ({
         password: values.password,
       };
       const response = await loginUser(payload);
-      console.log("Login response:", response);
+     
       // Store returned values in cookies
       Cookies.set("accessToken", response.accessToken);
       Cookies.set("email", response.email);

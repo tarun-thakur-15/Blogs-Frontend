@@ -91,10 +91,10 @@ export default function FaqsForUserPage({
     reactionType: ReactionPayload["reactionType"],
     blogId: string
   ) => {
-    console.log("handleReaction called for:", slug, reactionType);
+   
     try {
       const result = await reactToBlog(slug, { reactionType }, AccessToken);
-      console.log("Reaction updated:", result);
+   
       // Update the local state with the new reaction counts for the blog that was updated
       setBlogs((prevBlogs) =>
         prevBlogs.map((blog) =>
@@ -111,7 +111,7 @@ export default function FaqsForUserPage({
   const handleClickForBlog =
     (blogId: string, emoji: string) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      console.log(`Button clicked for blog ${blogId} with emoji ${emoji}`);
+      
       const id = Date.now();
       const button = e.currentTarget;
       const startX = button.offsetLeft + button.offsetWidth / 2;

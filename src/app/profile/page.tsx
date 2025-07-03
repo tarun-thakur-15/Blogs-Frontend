@@ -15,7 +15,7 @@ export default async function CompanyPage() {
   const usernameFromCookies = cookieStore.get("username")?.value!;
   
   const profileData = await getProfileDetails(usernameFromCookies, accessToken);
-  console.log("getProfileDetails response:- ", profileData);
+  
 
   return (
     <main className="main profile">

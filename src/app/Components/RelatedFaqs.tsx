@@ -27,7 +27,7 @@ const RelatedFaqs = () => {
 
   const handleClick =
     (emoji: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
-      console.log(`${emoji} button clicked`);
+
       const id = Date.now();
       const button = e.currentTarget;
       // Calculate starting coordinates relative to the container

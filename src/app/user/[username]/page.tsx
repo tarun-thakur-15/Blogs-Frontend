@@ -71,7 +71,7 @@ export default async function UsernamePage({ params }: UsernamePageProps) {
   // Create dynamic tabs for each topic by fetching blogs for that topic.
   const dynamicTabs = await Promise.all(
     (userTopicsData.topics || []).map(async (topic: string, index: number) => {
-      console.log("topic is:- ", topic);
+     
       return {
         key: `topic-${index}`,
         label: topic,

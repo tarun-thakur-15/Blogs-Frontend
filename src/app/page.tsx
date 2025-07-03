@@ -16,22 +16,18 @@ const Home: React.FC = () => {
   const [username, setUsername] = useState<string | null>(null);
   const [fullName, setFullName] = useState<string | null>(null);
   useEffect(() => {
-    console.log("useEffect called");
+
     const storedEmail = Cookies.get("email");
     const storedUsername = Cookies.get("username");
     const storedFullName = Cookies.get("fullname");
     const accessToken = Cookies.get("accessToken");
-    console.log("storedEmail is ", storedEmail);
-    console.log("storedUsername is ", storedUsername);
-    console.log("storedFullName is ", storedFullName);
-    console.log("accessToken is ", accessToken);
 
     if (storedEmail && storedUsername && storedFullName && accessToken) {
       setEmail(storedEmail);
       setUsername(storedUsername);
       setFullName(storedFullName);
       setIsLoggedIn(true);
-      console.log("values assigned to states");
+ 
     } else {
       setIsLoggedIn(false);
     }

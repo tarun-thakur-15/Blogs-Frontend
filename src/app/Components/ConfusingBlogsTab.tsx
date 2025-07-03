@@ -165,10 +165,6 @@ export default function ConfusingBlogsTab({
   }, [loadMoreBlogs, loadingMore, hasMore]);
 
   const toggleDropdown = (blogId: any) => {
-    console.log(
-      "reached inside toggleDropdown function and blogId is ",
-      blogId
-    );
     // Toggle the dropdown for the specific blog
     setIsDropdownOpen((prev) => (prev === blogId ? null : blogId));
   };

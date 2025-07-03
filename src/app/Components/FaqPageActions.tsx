@@ -100,7 +100,7 @@ export default function FaqPageActions({
   // This function triggers the fly-up animation for this blog only.
   const handleClick =
     (emoji: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
-      console.log(`${emoji} button clicked`);
+      
       const id = Date.now();
       const button = e.currentTarget;
       const startX = button.offsetLeft + button.offsetWidth / 2;
@@ -123,15 +123,10 @@ export default function FaqPageActions({
   const handleReaction = async (
     reactionType: ReactionPayload["reactionType"]
   ) => {
-    console.log(
-      "handleReaction called for slug:",
-      slug,
-      "reactionType:",
-      reactionType
-    );
+   
     try {
       const result = await reactToBlog(slug, { reactionType }, AccessToken);
-      console.log("Reaction updated from API:", result);
+      
       // Update the local reaction state with the API response.
       setReactionState(result.reaction);
     } catch (error) {

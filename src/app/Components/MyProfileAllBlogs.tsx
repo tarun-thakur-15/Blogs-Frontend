@@ -104,10 +104,10 @@ export default function MyProfileAllBlogs({
     reactionType: ReactionPayload["reactionType"],
     blogId: string
   ) => {
-    console.log("handleReaction called for:", slug, reactionType);
+
     try {
       const result = await reactToBlog(slug, { reactionType }, AccessToken);
-      console.log("Reaction updated:", result);
+     
       // Update the local state with the new reaction counts for the blog that was updated
       setBlogs((prevBlogs) =>
         prevBlogs.map((blog) =>
@@ -124,7 +124,7 @@ export default function MyProfileAllBlogs({
   const handleClickForBlog =
     (blogId: string, emoji: string) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      console.log(`Button clicked for blog ${blogId} with emoji ${emoji}`);
+      
       const id = Date.now();
       const button = e.currentTarget;
       const startX = button.offsetLeft + button.offsetWidth / 2;
@@ -235,17 +235,10 @@ export default function MyProfileAllBlogs({
     };
   }, [loadMoreBlogs, loadingMore, hasMore]);
 
-  // const toggleDropdown = (blogId: any) => {
-  //   console.log(
-  //     "reached inside toggleDropdown function and blogId is ",
-  //     blogId
-  //   );
-    
-  //   setIsDropdownOpen((prev) => (prev === blogId ? null : blogId));
-  // };
+
   const toggleDropdown = (id: string | null) => {
   setIsDropdownOpen((prev) => (prev === id ? null : id));
-  console.log("toggleDropdown function called");
+ 
 };
 
 
@@ -253,7 +246,7 @@ export default function MyProfileAllBlogs({
     try {
       setLoading(true);
       const result = await deleteBlog(slug, AccessToken);
-      console.log("Blog deleted:", result);
+  
       toast.success(result.msg || "About Updated Successfully!");
       setTimeout(async () => {
         const data = await getUserBlogs(0, 10, username, AccessToken);
@@ -261,7 +254,7 @@ export default function MyProfileAllBlogs({
           setBlogs(data.blogs);
           // Optionally update the offsetRef if required:
           offsetRef.current = data.blogs.length;
-          console.log("api called again");
+         
         }
       }, 1000);
     } catch (error) {
@@ -278,14 +271,14 @@ export default function MyProfileAllBlogs({
       // Call the toggleHighlight API function
       const result = await toggleHighlight(slug);
       toast.success(result.msg);
-      console.log(result.msg);
+      
       setTimeout(async () => {
         const data = await getUserBlogs(0, 10, username, AccessToken);
         if (data.blogs) {
           setBlogs(data.blogs);
           // Optionally update the offsetRef if required:
           offsetRef.current = data.blogs.length;
-          console.log("api called again");
+         
         }
       }, 1000);
     } catch (error: any) {
@@ -302,7 +295,7 @@ export default function MyProfileAllBlogs({
       // Call the toggleHighlight API function
       const result = await toggleArchieve(slug);
       toast.success(result.msg);
-      console.log(result.msg);
+      
       // Wait for 1 second before refreshing the highlighted blogs
       setTimeout(async () => {
         const data = await getUserBlogs(0, 10, username, AccessToken);
@@ -310,7 +303,7 @@ export default function MyProfileAllBlogs({
           setBlogs(data.blogs);
           // Optionally update the offsetRef if required:
           offsetRef.current = data.blogs.length;
-          console.log("api called again");
+         
         }
       }, 1000);
     } catch (error: any) {
@@ -515,8 +508,9 @@ useEffect(() => {
                           gap={12}
                           align="center"
                           style={{ position: "relative" }}
+                          className="h-[18px]"
                         >
-                          <div
+                          <div className="h-full"
                             ref={(el) => {
                               dropdownRefs.current[blog._id] = el;
                             }}

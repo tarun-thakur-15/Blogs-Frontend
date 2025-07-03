@@ -89,22 +89,18 @@ export default function Header() {
 
   //this useEffect will check for accessToken, email, username, fullname to conditionally display the logged in state
   useEffect(() => {
-    console.log("useEffect called");
+ 
     const storedEmail = Cookies.get("email");
     const storedUsername = Cookies.get("username");
     const storedFullName = Cookies.get("fullname");
     const accessToken = Cookies.get("accessToken");
-    console.log("storedEmail is ", storedEmail);
-    console.log("storedUsername is ", storedUsername);
-    console.log("storedFullName is ", storedFullName);
-    console.log("accessToken is ", accessToken);
 
     if (storedEmail && storedUsername && storedFullName && accessToken) {
       setEmail(storedEmail);
       setUsername(storedUsername);
       setFullName(storedFullName);
       setIsLoggedIn(true);
-      console.log("values assigned to states");
+      
     } else {
       setIsLoggedIn(false);
     }
@@ -143,7 +139,7 @@ export default function Header() {
     setLoadingNotifications(true);
     try {
       const data = await getNotifications(token, offset, 10);
-      console.log("notification data is:- ", data);
+      
       setNotifications(data.notifications);
       setUnreadNotifications(data.unreadCount); // Adjust if API returns a total count separately
     } catch (error) {
@@ -173,7 +169,7 @@ export default function Header() {
 
     try {
       await markAllNotificationsAsRead();
-      console.log("All notifications marked as read successfully.");
+     
     } catch (error) {
       console.error("Error marking notifications as read:", error);
       // **Revert state if API call fails**
@@ -281,6 +277,7 @@ export default function Header() {
                       <Button
                         onClick={() => {
                           router.push("/profile");
+                          NProgress.start();
                           setShowProfile(false);
                         }}
                       >
