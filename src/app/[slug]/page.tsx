@@ -115,7 +115,7 @@ const BlogDetailPage = async ({ params }: PageProps) => {
                   >
                     <Flex
                       gap={6}
-                      align="center"
+                      align="start"
                       className="flex-col lg:flex-row"
                     >
                       <Flex gap={6} align="center">
@@ -129,7 +129,7 @@ const BlogDetailPage = async ({ params }: PageProps) => {
                           />
                         </div>
                         <Link href={`/user/${blogData.author.username}`}>
-                          <Flex gap={4} align="center">
+                          <Flex gap={4} align="start">
                             <h5>By {blogData.author.fullName}</h5>
                           </Flex>
                         </Link>

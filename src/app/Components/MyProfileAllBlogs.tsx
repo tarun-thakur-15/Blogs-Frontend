@@ -43,7 +43,7 @@ export interface BlogPreview {
   previewContent: string;
   slug: string;
   createdAt: string;
-  author: { username: string, profileImage?: string };
+  author: { username: string; profileImage?: string };
   isFavourite: boolean;
   commentCount: number;
   reactions: {
@@ -80,7 +80,7 @@ export default function MyProfileAllBlogs({
   const [selectedReactions, setSelectedReactions] = useState<
     Record<string, ReactionPayload["reactionType"]>
   >({});
-  const [isDropdownOpen, setIsDropdownOpen] = useState(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [highlightloading, setHighlightLoading] = useState(false);
   const [archieveloading, setArchieveLoading] = useState(false);
@@ -235,14 +235,19 @@ export default function MyProfileAllBlogs({
     };
   }, [loadMoreBlogs, loadingMore, hasMore]);
 
-  const toggleDropdown = (blogId: any) => {
-    console.log(
-      "reached inside toggleDropdown function and blogId is ",
-      blogId
-    );
-    // Toggle the dropdown for the specific blog
-    setIsDropdownOpen((prev) => (prev === blogId ? null : blogId));
-  };
+  // const toggleDropdown = (blogId: any) => {
+  //   console.log(
+  //     "reached inside toggleDropdown function and blogId is ",
+  //     blogId
+  //   );
+    
+  //   setIsDropdownOpen((prev) => (prev === blogId ? null : blogId));
+  // };
+  const toggleDropdown = (id: string | null) => {
+  setIsDropdownOpen((prev) => (prev === id ? null : id));
+  console.log("toggleDropdown function called");
+};
+
 
   const handleDeleteBlog = async (slug: string) => {
     try {
@@ -316,6 +321,27 @@ export default function MyProfileAllBlogs({
     }
   };
 
+  // this is for closing dropdown when clicked anywhere outside it 👇
+const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    const openDropdownRef = dropdownRefs.current[isDropdownOpen ?? ""];
+    if (
+      openDropdownRef &&
+      !openDropdownRef.contains(event.target as Node)
+    ) {
+      toggleDropdown(null);
+    }
+  };
+
+  document.addEventListener("click", handleClickOutside);
+  return () => {
+    document.removeEventListener("click", handleClickOutside);
+  };
+}, [isDropdownOpen]);
+
+
   return (
     <>
       <Toaster position="top-right" />
@@ -351,7 +377,10 @@ export default function MyProfileAllBlogs({
                       <Flex gap={2} align="center">
                         <div className="awnser-box--company">
                           <Image
-                            src={ `https://blogs-backend-ftie.onrender.com/${blog.author.profileImage}` || notLoggedInIcon}
+                            src={
+                              `https://blogs-backend-ftie.onrender.com/${blog.author.profileImage}` ||
+                              notLoggedInIcon
+                            }
                             alt="Placeholder avatar"
                             width={40}
                             height={40}
@@ -482,73 +511,90 @@ export default function MyProfileAllBlogs({
                             {blog.commentCount}
                           </p>
                         </Button>
-
-                        <Button
-                          className="optionsBtn"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            toggleDropdown(blog._id);
-                          }}
+                        <Flex
+                          gap={12}
+                          align="center"
+                          style={{ position: "relative" }}
                         >
-                          <Options height={18} width={18} />
-                        </Button>
-                        {isDropdownOpen === blog._id && (
                           <div
-                            className="dropdown"
+                            ref={(el) => {
+                              dropdownRefs.current[blog._id] = el;
+                            }}
                             style={{
-                              position: "absolute",
-                              top: "100%",
-                              right: 0,
-                              backgroundColor: "#fff",
-                              boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.15)",
-                              zIndex: 10,
+                              position: "relative",
+                              display: "inline-block",
                             }}
                           >
-                            <button
-                              className="dropdownBtn"
+                            {/* Button that toggles the dropdown */}
+                            <Button
+                              className="optionsBtn"
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                handleDeleteBlog(blog.slug);
-                                toggleDropdown(null);
+                                toggleDropdown(
+                                  blog._id === isDropdownOpen ? null : blog._id
+                                );
                               }}
-                              disabled={loading}
                             >
-                              <span className="dropdownText">Delete</span>
-                            </button>
-                            <button
-                              className="dropdownBtn"
-                              onClick={async (e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                handleHighlightBlog(blog.slug);
-                                toggleDropdown(null);
+                              <Options height={18} width={18} />
+                            </Button>
+
+                            {/* Dropdown — hidden by default */}
+                            <div
+                              className={`dropdown justify-start items-start ${
+                                isDropdownOpen === blog._id ? "" : "!hidden"
+                              }`}
+                              style={{
+                                position: "absolute",
+                                top: "100%",
+                                right: 0,
+                                backgroundColor: "#fff",
+                                boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.15)",
+                                zIndex: 9999,
                               }}
-                              disabled={highlightloading}
                             >
-                              <span className="dropdownText">
-                                {blog.isHighlighted
-                                  ? "Remove from Highlights"
-                                  : "Add to Highlights"}
-                              </span>
-                            </button>
-                            <button
-                              className="dropdownBtn"
-                              onClick={async (e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                handleArchieveBlog(blog.slug);
-                                toggleDropdown(null);
-                              }}
-                              disabled={archieveloading}
-                            >
-                              <span className="dropdownText">
-                                Add to Archives
-                              </span>
-                            </button>
+                              <button
+                                className="dropdownBtn"
+                                onClick={async (e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  await handleDeleteBlog(blog.slug);
+                                }}
+                                disabled={loading}
+                              >
+                                <span className="dropdownText">Delete</span>
+                              </button>
+                              <button
+                                className="dropdownBtn"
+                                onClick={async (e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  await handleHighlightBlog(blog.slug);
+                                }}
+                                disabled={highlightloading}
+                              >
+                                <span className="dropdownText">
+                                  {blog.isHighlighted
+                                    ? "Remove from Highlights"
+                                    : "Add to Highlights"}
+                                </span>
+                              </button>
+                              <button
+                                className="dropdownBtn"
+                                onClick={async (e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  await handleArchieveBlog(blog.slug);
+                                }}
+                                disabled={archieveloading}
+                              >
+                                <span className="dropdownText">
+                                  Add to Archives
+                                </span>
+                              </button>
+                            </div>
                           </div>
-                        )}
+                        </Flex>
                       </Flex>
                     </Flex>
                   </div>

@@ -41,7 +41,7 @@ export interface BlogPreview {
   previewContent: string;
   slug: string;
   createdAt: string;
-  author: { username: string, profileImage?: string };
+  author: { username: string; profileImage?: string };
   isFavourite: boolean;
   commentCount: number;
   reactions: {
@@ -262,6 +262,25 @@ export default function MyProfileHighlightedBlogs({
     // Toggle the dropdown for the specific blog
     setIsDropdownOpen((prev) => (prev === blogId ? null : blogId));
   };
+  // this is for closing dropdown when clicked anywhere outside it 👇
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        // Close the dropdown
+        toggleDropdown(null); // Pass null or undefined to close
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
       {blogs && blogs.length > 0
@@ -297,7 +316,10 @@ export default function MyProfileHighlightedBlogs({
                       <Flex gap={2} align="center">
                         <div className="awnser-box--company">
                           <Image
-                            src={`https://blogs-backend-ftie.onrender.com/${blog.author.profileImage}` || notLoggedInIcon}
+                            src={
+                              `https://blogs-backend-ftie.onrender.com/${blog.author.profileImage}` ||
+                              notLoggedInIcon
+                            }
                             alt="Placeholder avatar"
                             width={40}
                             height={40}
@@ -428,45 +450,58 @@ export default function MyProfileHighlightedBlogs({
                             {blog.commentCount}
                           </p>
                         </Button>
-
-                        <Button
-                          className="optionsBtn"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            toggleDropdown(blog._id);
-                          }}
+                        <Flex
+                          gap={12}
+                          align="center"
+                          style={{ position: "relative" }}
                         >
-                          <Options height={18} width={18} />
-                        </Button>
-                        {isDropdownOpen === blog._id && (
                           <div
-                            className="dropdown"
+                            ref={dropdownRef}
                             style={{
-                              position: "absolute",
-                              top: "100%",
-                              right: 0,
-                              backgroundColor: "#fff",
-                              boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.15)",
-                              zIndex: 10,
+                              position: "relative",
+                              display: "inline-block",
                             }}
                           >
-                            <button
-                              className="dropdownBtn"
-                              onClick={async (e) => {
+                            <Button
+                              className="optionsBtn"
+                              onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                handleHighlightBlog(blog.slug);
-                                toggleDropdown(null);
+                                toggleDropdown(blog._id);
                               }}
-                              disabled={highlightloading}
                             >
-                              <span className="dropdownText">
-                                Remove from Highlights
-                              </span>
-                            </button>
+                              <Options height={18} width={18} />
+                            </Button>
+                            {isDropdownOpen === blog._id && (
+                              <div
+                                className="dropdown"
+                                style={{
+                                  position: "absolute",
+                                  top: "100%",
+                                  right: 0,
+                                  backgroundColor: "#fff",
+                                  boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.15)",
+                                  zIndex: 10,
+                                }}
+                              >
+                                <button
+                                  className="dropdownBtn"
+                                  onClick={async (e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleHighlightBlog(blog.slug);
+                                    toggleDropdown(null);
+                                  }}
+                                  disabled={highlightloading}
+                                >
+                                  <span className="dropdownText whitespace-nowrap">
+                                    Remove from Highlights
+                                  </span>
+                                </button>
+                              </div>
+                            )}
                           </div>
-                        )}
+                        </Flex>
                       </Flex>
                     </Flex>
                   </div>

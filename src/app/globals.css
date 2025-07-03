@@ -627,7 +627,7 @@ textarea.ant-input {
 }
 .followersSpan {
   color: var(--Base-11, #0e1012);
-  font-family: "Noto Sans";
+  font-family: cursive;
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -711,7 +711,7 @@ textarea.ant-input {
 }
 .followerName {
   color: var(--Base-11, #0e1012);
-  font-family: "Noto Sans";
+  font-family: cursive;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -1184,6 +1184,12 @@ textarea.ant-input {
   border: none;
 }
 @media (max-width: 768px) {
+  :where(.css-dev-only-do-not-override-os2fvf).ant-select-single {
+    width: 100px;
+  }
+  .ant-select:not(.ant-select-auto-complete) .ant-select-selector span.ant-select-selection-item {
+    text-align: end;
+  }
   .responsive-col {
     flex: 1 1 calc(50% - 20px); /* Two items per row on smaller screens */
     max-width: calc(50% - 20px);
@@ -1287,6 +1293,7 @@ textarea.ant-input {
   text-align: start;
   background-color: #f6f8fa !important;
   font-size: 15px !important;
+  white-space: nowrap;
 }
 .activityBarAllignment {
   display: flex;
@@ -1399,4 +1406,7 @@ textarea.ant-input {
   .aboutProfile {
     margin-bottom: 16px;
   }
+}
+.ant-select-dropdown .ant-select-item-option-content {
+  white-space: nowrap !important;
 }

@@ -314,10 +314,10 @@ export default function CompanyHeaderOther({
         open={isSubscriberListModalOpen}
         onCancel={() => setIsSubscriberListModalOpen(false)}
         footer={null}
-        style={{ display: "flex", justifyContent: "center", maxWidth: "100%" }}
-        className="sampleModal"
+        styles={{ body: { height: "100%", overflowY: "auto", padding: "1rem" } }}
+        className="!w-screen !h-screen !m-0 !p-0 !rounded-none sm:!w-auto sm:!h-auto sm:!m-4 sm:!p-6 sm:!rounded-lg"
       >
-        <div className="followersModalParent" style={{ maxWidth: "100%" }}>
+        <div className="followersModalParent" style={{ maxWidth: "100%", width: "100%" }}>
           <div className="followersSpanParent" style={{ maxWidth: "100%" }}>
             <span className="followersSpan">Followers</span>
           </div>
@@ -368,10 +368,10 @@ export default function CompanyHeaderOther({
         open={isFollowingModalOpen}
         onCancel={() => setIsFollowingModalOpen(false)}
         footer={null}
-        style={{ display: "flex", justifyContent: "center", maxWidth: "100%" }}
-        className="sampleModal"
+        styles={{ body: { height: "100%", overflowY: "auto", padding: "1rem" } }}
+        className="!w-screen !h-screen !m-0 !p-0 !rounded-none sm:!w-auto sm:!h-auto sm:!m-4 sm:!p-6 sm:!rounded-lg"
       >
-        <div className="followersModalParent" style={{ maxWidth: "100%" }}>
+        <div className="followersModalParent" style={{ maxWidth: "100%", width: "100%" }}>
           <div className="followersSpanParent" style={{ maxWidth: "100%" }}>
             <span className="followersSpan">Following</span>
           </div>

@@ -531,6 +531,7 @@
     }
     .ant-modal .ant-modal-content {
       border-radius: 0 !important;
+      padding-inline: 0 !important;
     }
     .create-modal.ant-modal.default .ant-modal-body {
       min-height: fit-content;
@@ -587,5 +588,12 @@
       padding-left: 16px !important;
       padding-right: 16px !important;
     }
+    .followersList {
+      min-height: 100%;
+    }
   }
-  
+  @media (min-width: 992px) {
+    :where(.css-dev-only-do-not-override-os2fvf).ant-modal-root .ant-modal {
+      width: 520px !important;
+      justify-self: center;
+    }}
