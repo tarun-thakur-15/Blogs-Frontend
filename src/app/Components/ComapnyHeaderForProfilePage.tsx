@@ -389,7 +389,7 @@ export default function CompanyHeader({
                 <>
                   <Input
                     value={newUsername}
-                    className=" mx-[130px] lg:mw-[250px]"
+                    className=" m-w-full lg:m-w-[130px]"
                     onChange={(e) => setNewUsername(e.target.value)}
                     autoFocus
                     
