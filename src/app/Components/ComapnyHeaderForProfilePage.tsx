@@ -403,14 +403,14 @@ export default function CompanyHeader({
                     <ClipLoader size={20} color="#1677ff" />
                   ) : (
                     <>
-                      <p className="inline-block"
+                      <p className="!inline-block"
                         style={{ color: "green", cursor: "pointer" }}
                         onClick={handleUsernameSave}
                       >
                         ✔️
                       </p>
 
-                      <p className="inline-block"
+                      <p className="!inline-block"
                         style={{ color: "red", cursor: "pointer" }}
                         onClick={handleUsernameCancel}
                       >
