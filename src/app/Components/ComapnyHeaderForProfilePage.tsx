@@ -393,31 +393,43 @@ export default function CompanyHeader({
                 <>
                   <Input
                     value={newUsername}
+                    className=" mx-[130px] lg:mw-[250px]"
                     onChange={(e) => setNewUsername(e.target.value)}
                     autoFocus
-                    style={{ maxWidth: 250 }}
+                    
                     size="middle"
                   />
                   {loading ? (
                     <ClipLoader size={20} color="#1677ff" />
                   ) : (
                     <>
-                    <p style={{ color: "green", cursor: "pointer" }} onClick={handleUsernameSave}>✔️</p>
-                      
-                      <p style={{ color: "red", cursor: "pointer" }} onClick={handleUsernameCancel}>❌</p>
-                      
+                      <p className="inline-block"
+                        style={{ color: "green", cursor: "pointer" }}
+                        onClick={handleUsernameSave}
+                      >
+                        ✔️
+                      </p>
+
+                      <p className="inline-block"
+                        style={{ color: "red", cursor: "pointer" }}
+                        onClick={handleUsernameCancel}
+                      >
+                        ❌
+                      </p>
                     </>
                   )}
                 </>
               ) : (
                 <>
-                  <p className="dark" style={{ cursor: "pointer" }}>
-                    @{username}
-                  </p>
-                  <EditIcon
-                    style={{ cursor: "pointer" }}
-                    onClick={handleUsernameEditClick}
-                  />
+                  <div className="flex">
+                    <p className="dark" style={{ cursor: "pointer" }}>
+                      @{username}
+                    </p>
+                    <EditIcon
+                      style={{ cursor: "pointer" }}
+                      onClick={handleUsernameEditClick}
+                    />
+                  </div>
                 </>
               )}
               {/* ---------- */}
