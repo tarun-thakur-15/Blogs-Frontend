@@ -1,15 +1,6 @@
 "use client";
 import type { StaticImageData } from "next/image";
-import {
-  FC,
-  useState,
-  useLayoutEffect,
-  useContext,
-  forwardRef,
-  useEffect,
-  useRef,
-  useCallback,
-} from "react";
+import { FC, useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import Search from "../../../public/images/search.svg";
 import { Flex, Button, Select, Modal, Input, Skeleton } from "antd";
@@ -265,8 +256,13 @@ export default function CompanyHeader({
     setLoading(true);
     try {
       await updateFullName({ fullName: newFullName });
+       // ✅ Update full name in cookies
+    Cookies.set("fullname", newFullName);
       setIsEditing(false);
       toast.success("Full name updated");
+      setTimeout(() => {
+      window.location.reload();
+    }, 1000); // wait 1s to show the toast before reload
       // Optional: refetch user profile or set fullName state
     } catch (error) {
       toast.error("Something went wrong");
@@ -289,8 +285,13 @@ export default function CompanyHeader({
       const token = Cookies.get("accessToken");
       const payload: EditUsernameSchema = { username: newUsername };
       await updateUsername(payload, token || "");
+      // ✅ Update the username in cookies
+      Cookies.set("username", newUsername);
       toast.success("Username updated successfully");
       setIsusernameEditing(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000); // delay a bit to let toast show before reload
     } catch (err: any) {
       toast.error(err.message || "Something went wrong");
     } finally {
@@ -368,14 +369,9 @@ export default function CompanyHeader({
                 </>
               ) : (
                 <>
-                  <h3
-                    className="company-header-name"
-                    
-                  >
-                    {fullName}
-                  </h3>
-                  <EditIcon className="self-center cursor-pointer"
-                    
+                  <h3 className="company-header-name">{fullName}</h3>
+                  <EditIcon
+                    className="self-center cursor-pointer"
                     onClick={handleEditClick}
                   />
                 </>
@@ -384,7 +380,6 @@ export default function CompanyHeader({
 
             {/* ----------------- */}
             <Flex align="center" gap={8} className="company-header-details">
-             
               {isusernameEditing ? (
                 <>
                   <Input
@@ -392,21 +387,22 @@ export default function CompanyHeader({
                     className=" m-w-full lg:m-w-[130px]"
                     onChange={(e) => setNewUsername(e.target.value)}
                     autoFocus
-                    
                     size="middle"
                   />
                   {loading ? (
                     <ClipLoader size={20} color="#1677ff" />
                   ) : (
                     <>
-                      <p className="!inline-block"
+                      <p
+                        className="!inline-block"
                         style={{ color: "green", cursor: "pointer" }}
                         onClick={handleUsernameSave}
                       >
                         ✔️
                       </p>
 
-                      <p className="!inline-block"
+                      <p
+                        className="!inline-block"
                         style={{ color: "red", cursor: "pointer" }}
                         onClick={handleUsernameCancel}
                       >
@@ -421,8 +417,8 @@ export default function CompanyHeader({
                     <p className="dark" style={{ cursor: "pointer" }}>
                       @{username}
                     </p>
-                    <EditIcon className="self-center cursor-pointer"
-                      
+                    <EditIcon
+                      className="self-center cursor-pointer"
                       onClick={handleUsernameEditClick}
                     />
                   </div>
