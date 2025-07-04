@@ -370,12 +370,12 @@ export default function CompanyHeader({
                 <>
                   <h3
                     className="company-header-name"
-                    style={{ cursor: "pointer" }}
+                    
                   >
                     {fullName}
                   </h3>
-                  <EditIcon
-                    style={{ cursor: "pointer" }}
+                  <EditIcon className="self-center cursor-pointer"
+                    
                     onClick={handleEditClick}
                   />
                 </>
@@ -384,11 +384,7 @@ export default function CompanyHeader({
 
             {/* ----------------- */}
             <Flex align="center" gap={8} className="company-header-details">
-              {/* <p className="dark" style={{ cursor: "pointer" }}>
-                @{username}
-                <EditIcon style={{ cursor: "pointer" }} />
-              </p> */}
-              {/* -----testing---- */}
+             
               {isusernameEditing ? (
                 <>
                   <Input
@@ -425,8 +421,8 @@ export default function CompanyHeader({
                     <p className="dark" style={{ cursor: "pointer" }}>
                       @{username}
                     </p>
-                    <EditIcon
-                      style={{ cursor: "pointer" }}
+                    <EditIcon className="self-center cursor-pointer"
+                      
                       onClick={handleUsernameEditClick}
                     />
                   </div>
