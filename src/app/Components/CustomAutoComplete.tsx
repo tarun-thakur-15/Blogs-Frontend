@@ -113,7 +113,7 @@ const CustomAutoComplete: React.FC = () => {
                   alt={user.fullName}
                   width={36}
                   height={36}
-                  className="rounded-full object-cover"
+                  className="rounded-full object-cover h-full w-full"
                 />
               </div>
               <div className="flex w-full justify-start items-center gap-[10px] h-6">

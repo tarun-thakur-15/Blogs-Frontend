@@ -1,6 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { SignUpSchema, Login, VerifyOtp, changePassword, ResendOtp, ReactionPayload, CreateBlog, PostCommentInterface, EditAboutSchema, DraftPayload,
+import { SignUpSchema, Login, VerifyOtp, changePassword, ResendOtp, ReactionPayload, CreateBlog, PostCommentInterface, EditAboutSchema, DraftPayload, EditFullNameSchema, EditUsernameSchema,
   DraftResponse } from "./schema";
 
 const url = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
@@ -149,6 +149,7 @@ export const getAllBlogs = async (offset = 0, limit = 10, token?: string) => {
       });
       return response.data;
     } catch (error) {
+      console.log(error);
      redirect('/something-went-wrong');
     }
   };
@@ -739,5 +740,48 @@ export const getDraft = async () => {
     return response.data;
   } catch (err: any) {
     redirect('/something-went-wrong');
+  }
+};
+
+export const updateFullName = async (
+  userData: EditFullNameSchema,
+  token?: string
+) => {
+  const accessToken = token || Cookies.get("accessToken");
+
+  try {
+    const response = await axios.patch(`${url}/changeFullName`, userData, {
+      headers: {
+        "Content-Type": "application/json",
+        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error updating full name:", error);
+    redirect("/something-went-wrong");
+  }
+};
+export const updateUsername = async (
+  userData: EditUsernameSchema,
+  token?: string
+) => {
+  const accessToken = token || Cookies.get("accessToken");
+  try {
+    const response = await axios.patch(`${url}/changeUsername`, userData, {
+      headers: {
+        "Content-Type": "application/json",
+        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    // Handle 403 specifically for restriction message
+    if (error.response?.status === 403) {
+      throw new Error(error.response.data.msg);
+    }
+    console.error("Error updating username:", error);
+    redirect("/something-went-wrong");
   }
 };

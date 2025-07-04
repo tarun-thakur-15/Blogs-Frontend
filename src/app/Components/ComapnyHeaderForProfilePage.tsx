@@ -13,12 +13,15 @@ import {
 import Image from "next/image";
 import Search from "../../../public/images/search.svg";
 import { Flex, Button, Select, Modal, Input, Skeleton } from "antd";
+import { EditUsernameSchema } from "../services/schema";
 import {
   getFollowersList,
   getFollowingList,
   searchFollowers,
   searchFollowing,
   changeProfilePicture,
+  updateFullName,
+  updateUsername,
 } from "../services/api";
 import "../styles/signin.css";
 import NProgress from "nprogress";
@@ -27,6 +30,9 @@ import Cookies from "js-cookie";
 import bydefaultUser from "../../assets/images/not-logged-in-user.png";
 import UserNotFound from "../../assets/images/not-logged-in-user.png";
 import Link from "next/link";
+import EditIcon from "../../../public/images/edit.svg";
+import { Toaster, toast } from "sonner";
+import { ClipLoader } from "react-spinners";
 interface CompanyHeaderProps {
   username: string;
   fullName: string;
@@ -70,6 +76,15 @@ export default function CompanyHeader({
   const [hasMoreFollowing, setHasMoreFollowing] = useState(true);
   const followingLoadMoreRef = useRef<HTMLDivElement | null>(null);
   const [followingQuery, setFollowingQuery] = useState("");
+
+  //states for editing full name
+  const [isEditing, setIsEditing] = useState(false);
+  const [newFullName, setNewFullName] = useState(fullName);
+  const [loading, setLoading] = useState(false);
+  //states for editing user name
+  const [isusernameEditing, setIsusernameEditing] = useState(false);
+  const [newUsername, setNewUsername] = useState(username);
+  const [usernameloading, setusernameLoading] = useState(false);
 
   const baseUrl = "https://blogs-backend-ftie.onrender.com/";
   const encodedImagePath = encodeURI(profileImage); // Handles spaces properly
@@ -230,7 +245,6 @@ export default function CompanyHeader({
       // Call the API function to change the profile picture
       const response = await changeProfilePicture(file);
 
-
       // Update the local state with the new profile image path (assumed to be returned in response)
       window.location.reload();
     } catch (error: any) {
@@ -239,15 +253,61 @@ export default function CompanyHeader({
     }
   };
 
+  //----functions for editing full name
+  const handleEditClick = () => setIsEditing(true);
+  const handleCancel = () => {
+    setIsEditing(false);
+    setNewFullName(fullName);
+  };
+
+  const handleSave = async () => {
+    if (newFullName.trim() === "") return;
+    setLoading(true);
+    try {
+      await updateFullName({ fullName: newFullName });
+      setIsEditing(false);
+      toast.success("Full name updated");
+      // Optional: refetch user profile or set fullName state
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  //----functions for editing user name
+  const handleUsernameEditClick = () => setIsusernameEditing(true);
+  const handleUsernameCancel = () => {
+    setIsusernameEditing(false);
+    setNewUsername(username);
+  };
+
+  const handleUsernameSave = async () => {
+    if (newUsername.trim() === "") return;
+    setusernameLoading(true);
+    try {
+      const token = Cookies.get("accessToken");
+      const payload: EditUsernameSchema = { username: newUsername };
+      await updateUsername(payload, token || "");
+      toast.success("Username updated successfully");
+      setIsusernameEditing(false);
+    } catch (err: any) {
+      toast.error(err.message || "Something went wrong");
+    } finally {
+      setusernameLoading(false);
+    }
+  };
+
   return (
     <>
       <Flex
         align="center"
         wrap="wrap"
-        className="company-header"
+        className="company-header justify-self-start"
         gap={20}
         justify="space-between"
       >
+        <Toaster position="top-right" />
         <Flex align="center">
           <div className="wrapper">
             <div className="file-upload">
@@ -259,7 +319,11 @@ export default function CompanyHeader({
                 style={{ display: "none" }}
               />
               {/* Clicking on the label triggers the file input */}
-              <label htmlFor="profile-input" style={{ cursor: "pointer" }} className="profileImage">
+              <label
+                htmlFor="profile-input"
+                style={{ cursor: "pointer" }}
+                className="profileImage"
+              >
                 <Image
                   src={fullImageUrl}
                   alt="Profile Image"
@@ -274,14 +338,89 @@ export default function CompanyHeader({
 
           <Flex gap={5} vertical className="company-header-info">
             <Flex align="center" gap={8}>
-              <h3 className="company-header-name" style={{ cursor: "pointer" }}>
-                {fullName}
-              </h3>
+              {isEditing ? (
+                <>
+                  <Input
+                    value={newFullName}
+                    onChange={(e) => setNewFullName(e.target.value)}
+                    style={{ maxWidth: 250 }}
+                    autoFocus
+                    size="middle"
+                  />
+                  {loading ? (
+                    <ClipLoader size={20} color="#1677ff" />
+                  ) : (
+                    <>
+                      <p
+                        style={{ color: "green", cursor: "pointer" }}
+                        onClick={handleSave}
+                      >
+                        ✔️
+                      </p>
+                      <p
+                        style={{ color: "red", cursor: "pointer" }}
+                        onClick={handleCancel}
+                      >
+                        ❌
+                      </p>
+                    </>
+                  )}
+                </>
+              ) : (
+                <>
+                  <h3
+                    className="company-header-name"
+                    style={{ cursor: "pointer" }}
+                  >
+                    {fullName}
+                  </h3>
+                  <EditIcon
+                    style={{ cursor: "pointer" }}
+                    onClick={handleEditClick}
+                  />
+                </>
+              )}
             </Flex>
+
+            {/* ----------------- */}
             <Flex align="center" gap={8} className="company-header-details">
-              <p className="dark" style={{ cursor: "pointer" }}>
+              {/* <p className="dark" style={{ cursor: "pointer" }}>
                 @{username}
-              </p>
+                <EditIcon style={{ cursor: "pointer" }} />
+              </p> */}
+              {/* -----testing---- */}
+              {isusernameEditing ? (
+                <>
+                  <Input
+                    value={newUsername}
+                    onChange={(e) => setNewUsername(e.target.value)}
+                    autoFocus
+                    style={{ maxWidth: 250 }}
+                    size="middle"
+                  />
+                  {loading ? (
+                    <ClipLoader size={20} color="#1677ff" />
+                  ) : (
+                    <>
+                    <p style={{ color: "green", cursor: "pointer" }} onClick={handleUsernameSave}>✔️</p>
+                      
+                      <p style={{ color: "red", cursor: "pointer" }} onClick={handleUsernameCancel}>❌</p>
+                      
+                    </>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p className="dark" style={{ cursor: "pointer" }}>
+                    @{username}
+                  </p>
+                  <EditIcon
+                    style={{ cursor: "pointer" }}
+                    onClick={handleUsernameEditClick}
+                  />
+                </>
+              )}
+              {/* ---------- */}
               <p className="dark">•</p>
               <p onClick={openModal}>
                 <span className="dark">{followersCount}</span> Followers
@@ -303,10 +442,15 @@ export default function CompanyHeader({
         open={isSubscriberListModalOpen}
         onCancel={() => setIsSubscriberListModalOpen(false)}
         footer={null}
-        styles={{ body: { height: "100%", overflowY: "auto", padding: "1rem" } }}
+        styles={{
+          body: { height: "100%", overflowY: "auto", padding: "1rem" },
+        }}
         className="!w-screen !h-screen !m-0 !p-0 !rounded-none sm:!w-auto sm:!h-auto sm:!m-4 sm:!p-6 sm:!rounded-lg"
       >
-        <div className="followersModalParent" style={{ maxWidth: "100%", width: "100%" }}>
+        <div
+          className="followersModalParent"
+          style={{ maxWidth: "100%", width: "100%" }}
+        >
           <div className="followersSpanParent" style={{ maxWidth: "100%" }}>
             <span className="followersSpan">Followers</span>
           </div>
@@ -332,9 +476,12 @@ export default function CompanyHeader({
                   <div className="followerItemInner">
                     <div className="followerIconContainer">
                       <Image
-                        src={bydefaultUser}
-                        alt="follower"
-                        className="followerIcon"
+                        src={
+                          `https://blogs-backend-ftie.onrender.com/${follower.profileImage}` ||
+                          bydefaultUser
+                        }
+                        alt="following user"
+                        className="followerIcon object-cover"
                         width={40}
                         height={40}
                       />
@@ -359,10 +506,15 @@ export default function CompanyHeader({
         open={isFollowingModalOpen}
         onCancel={() => setIsFollowingModalOpen(false)}
         footer={null}
-        styles={{ body: { height: "100%", overflowY: "auto", padding: "1rem" } }}
+        styles={{
+          body: { height: "100%", overflowY: "auto", padding: "1rem" },
+        }}
         className="!w-screen !h-screen !m-0 !p-0 !rounded-none sm:!w-auto sm:!h-auto sm:!m-4 sm:!p-6 sm:!rounded-lg"
       >
-        <div className="followersModalParent" style={{ maxWidth: "100%", width: "100%" }}>
+        <div
+          className="followersModalParent"
+          style={{ maxWidth: "100%", width: "100%" }}
+        >
           <div className="followersSpanParent" style={{ maxWidth: "100%" }}>
             <span className="followersSpan">Following</span>
           </div>
@@ -388,9 +540,12 @@ export default function CompanyHeader({
                   <div className="followerItemInner">
                     <div className="followerIconContainer">
                       <Image
-                        src={bydefaultUser}
+                        src={
+                          `https://blogs-backend-ftie.onrender.com/${user.profileImage}` ||
+                          bydefaultUser
+                        }
                         alt="following user"
-                        className="followerIcon"
+                        className="followerIcon object-cover"
                         width={40}
                         height={40}
                       />

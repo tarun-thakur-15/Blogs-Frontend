@@ -348,9 +348,9 @@ export default function CompanyHeaderOther({
                   <div className="followerItemInner">
                     <div className="followerIconContainer">
                       <Image
-                        src={bydefaultUser}
-                        alt="follower"
-                        className="followerIcon"
+                        src={`https://blogs-backend-ftie.onrender.com/${follower.profileImage}` || bydefaultUser}
+                        alt="following user"
+                        className="followerIcon object-cover"
                         width={40}
                         height={40}
                       />
@@ -404,9 +404,9 @@ export default function CompanyHeaderOther({
                   <div className="followerItemInner">
                     <div className="followerIconContainer">
                       <Image
-                        src={bydefaultUser}
+                        src={`https://blogs-backend-ftie.onrender.com/${user.profileImage}` || bydefaultUser}
                         alt="following user"
-                        className="followerIcon"
+                        className="followerIcon object-cover"
                         width={40}
                         height={40}
                       />

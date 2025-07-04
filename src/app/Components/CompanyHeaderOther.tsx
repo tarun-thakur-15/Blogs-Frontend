@@ -55,7 +55,7 @@ export default function CompanyHeaderOther({
   // State for Followers Modal
   const [isSubscriberListModalOpen, setIsSubscriberListModalOpen] =
     useState(false);
-    const [followers, setFollowers] = useState<any[]>([]);
+  const [followers, setFollowers] = useState<any[]>([]);
   const [offset, setOffset] = useState(0);
   const [loadingFollowers, setLoadingFollowers] = useState(false);
   const [hasMoreFollowers, setHasMoreFollowers] = useState(true);
@@ -178,24 +178,24 @@ export default function CompanyHeaderOther({
 
   // Handler for toggling favourite status
 
-
   const handleFollowChange = async (value: string) => {
     // Toggle the local state immediately
     setLocalIsFollowed((prev) => !prev);
     try {
       const token = Cookies.get("accessToken");
       const res = await toggleFollow(username, token);
-  
+
       // Optionally, you can re-sync with API response if needed:
       // setLocalIsFollowed(res.isFollowed);
     } catch (error: any) {
       console.error("Error toggling follow:", error);
-      toast.error(error.message || "Failed to update follow status. Please try again. ❌");
+      toast.error(
+        error.message || "Failed to update follow status. Please try again. ❌"
+      );
       // Optionally, revert local state on error:
       setLocalIsFollowed((prev) => !prev);
     }
   };
-
 
   // ---------------------
   const fetchAllFollowers = useCallback(async () => {
@@ -234,7 +234,7 @@ export default function CompanyHeaderOther({
   }, [followingQuery, isFollowingModalOpen, fetchAllFollowing]);
   return (
     <>
-     <Toaster position="top-right" />
+      <Toaster position="top-right" />
       <Flex
         align="center"
         wrap="wrap"
@@ -247,7 +247,10 @@ export default function CompanyHeaderOther({
             <div className="file-upload">
               <input className="profile-pic" type="file" />
               <Image
-                src={`https://blogs-backend-ftie.onrender.com/${profileImage}` || bydefaultUser}
+                src={
+                  `https://blogs-backend-ftie.onrender.com/${profileImage}` ||
+                  bydefaultUser
+                }
                 alt="profile picture"
                 width={68}
                 height={68}
@@ -302,7 +305,7 @@ export default function CompanyHeaderOther({
                     : [{ value: "Follow", label: "Follow" }]
                 }
                 onChange={(value) => {
-                  handleFollowChange(value); 
+                  handleFollowChange(value);
                 }}
               />
             </div>
@@ -314,10 +317,15 @@ export default function CompanyHeaderOther({
         open={isSubscriberListModalOpen}
         onCancel={() => setIsSubscriberListModalOpen(false)}
         footer={null}
-        styles={{ body: { height: "100%", overflowY: "auto", padding: "1rem" } }}
+        styles={{
+          body: { height: "100%", overflowY: "auto", padding: "1rem" },
+        }}
         className="!w-screen !h-screen !m-0 !p-0 !rounded-none sm:!w-auto sm:!h-auto sm:!m-4 sm:!p-6 sm:!rounded-lg"
       >
-        <div className="followersModalParent" style={{ maxWidth: "100%", width: "100%" }}>
+        <div
+          className="followersModalParent"
+          style={{ maxWidth: "100%", width: "100%" }}
+        >
           <div className="followersSpanParent" style={{ maxWidth: "100%" }}>
             <span className="followersSpan">Followers</span>
           </div>
@@ -343,16 +351,21 @@ export default function CompanyHeaderOther({
                   <div className="followerItemInner">
                     <div className="followerIconContainer">
                       <Image
-                        src={bydefaultUser}
-                        alt="follower"
-                        className="followerIcon"
+                        src={
+                          `https://blogs-backend-ftie.onrender.com/${follower.profileImage}` ||
+                          bydefaultUser
+                        }
+                        alt="following user"
+                        className="followerIcon object-cover"
                         width={40}
                         height={40}
                       />
                     </div>
                     <div className="followerInfo">
                       <span className="followerName">{follower.fullName}</span>
-                      <span className="followerUsername">@{follower.username}</span>
+                      <span className="followerUsername">
+                        @{follower.username}
+                      </span>
                     </div>
                   </div>
                 </Link>
@@ -368,10 +381,15 @@ export default function CompanyHeaderOther({
         open={isFollowingModalOpen}
         onCancel={() => setIsFollowingModalOpen(false)}
         footer={null}
-        styles={{ body: { height: "100%", overflowY: "auto", padding: "1rem" } }}
+        styles={{
+          body: { height: "100%", overflowY: "auto", padding: "1rem" },
+        }}
         className="!w-screen !h-screen !m-0 !p-0 !rounded-none sm:!w-auto sm:!h-auto sm:!m-4 sm:!p-6 sm:!rounded-lg"
       >
-        <div className="followersModalParent" style={{ maxWidth: "100%", width: "100%" }}>
+        <div
+          className="followersModalParent"
+          style={{ maxWidth: "100%", width: "100%" }}
+        >
           <div className="followersSpanParent" style={{ maxWidth: "100%" }}>
             <span className="followersSpan">Following</span>
           </div>
@@ -397,9 +415,12 @@ export default function CompanyHeaderOther({
                   <div className="followerItemInner">
                     <div className="followerIconContainer">
                       <Image
-                        src={bydefaultUser}
+                        src={
+                          `https://blogs-backend-ftie.onrender.com/${user.profileImage}` ||
+                          bydefaultUser
+                        }
                         alt="following user"
-                        className="followerIcon"
+                        className="followerIcon object-cover"
                         width={40}
                         height={40}
                       />
@@ -417,7 +438,6 @@ export default function CompanyHeaderOther({
           </div>
         </div>
       </Modal>
-
     </>
   );
 }

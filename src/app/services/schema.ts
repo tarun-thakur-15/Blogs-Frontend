@@ -60,3 +60,9 @@ export interface DraftResponse {
         updatedAt: string;    // ISO timestamp
     };
 }
+export interface EditFullNameSchema {
+  fullName: string;
+}
+export interface EditUsernameSchema {
+  username: string;
+}
