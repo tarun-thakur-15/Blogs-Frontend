@@ -181,7 +181,7 @@ const CustomAutoComplete: React.FC = () => {
 <div className="relative ">
   {/* Search Icon */}
   <div className="absolute inset-y-0 left-0 flex items-center !pl-3 pointer-events-none">
-    <SearchIcon className="w-5 h-5 text-muted-foreground" />
+    <SearchIcon className="w-5 h-5 text-muted-foreground searchIcon" />
   </div>
 
   {/* Input Field */}

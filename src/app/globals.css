@@ -67,11 +67,66 @@
   font-family: var(--font-noto);
   color: var(--Base-11);
 }
+.tooltipText {
+  color: white !important;
+}
+/* ---for dark mode--- */
+.dark .main {
+  background-color: rgb(60, 60, 60); 
+}
+.dark html {
+ background-color: rgb(60, 60, 60) !important; 
+}
+.dark body {
+  background-color: rgb(60, 60, 60) !important; 
+}
+
+.dark header,.dark .ant-modal .ant-input-affix-wrapper,.dark .ant-modal .ant-input-affix-wrapper input.ant-input {
+  background-color: rgb(60, 60, 60); 
+}
+.dark h1,.dark h2,.dark h3,.dark h4,.dark h5,.dark p,.dark span,.dark .ant-tabs-nav-list .ant-tabs-tab .ant-tabs-tab-btn,.dark .ant-tabs-nav-list .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn, .dark :where(.css-dev-only-do-not-override-os2fvf).ant-drawer .ant-drawer-title {
+  color: #e6e6e6 !important;
+}
+.dark .awnser-box-footer,.dark :where(.css-dev-only-do-not-override-os2fvf).ant-drawer .ant-drawer-content,.dark :where(.css-dev-only-do-not-override-os2fvf).ant-tabs >.ant-tabs-nav .ant-tabs-nav-list,.dark :where(.css-dev-only-do-not-override-os2fvf).ant-modal .ant-modal-content,.dark .profile-popover {
+  background-color: #4e4b4b;
+}
+.dark .commentIcon path,.dark .NotificationIcon path,.dark .searchIcon path,.dark .settingIcon path,.dark .signOutIcon path,.dark .editIcon path {
+  stroke: white !important;
+}
+.dark button.ant-btn,.dark .dropdown {
+  background: #7f8386;
+}
+.dark .ant-drawer-close svg {
+  fill: white;
+}
+.dark .tooltipText {
+  color: black !important;
+}
+.dark button.ant-btn.ant-btn-text.font-sm:hover {
+  background-color: #766d6d !important;
+}
+.dark :where(.css-dev-only-do-not-override-os2fvf).ant-btn-variant-outlined:not(:disabled):not(.ant-btn-disabled):hover {
+  background-color: #4d4949 !important;
+}
+.dark .notificationInner:hover {
+  background-color: #727577;
+}
+.dark a {
+  color: #7cb8fe !important;
+}
+.dark .aboutProfile {
+  background: #868a8e;
+  color: #e6e6e6;
+}
+.dark .logo {
+  opacity: 0;
+}
+/* ------- */
 html,
 body {
   max-width: 100vw;
   /* overflow-x: hidden; */
-  background-color: white;
+  /* background-color: white; */
   scroll-behavior: smooth;
 }
 p,

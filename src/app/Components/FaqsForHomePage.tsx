@@ -366,7 +366,7 @@ const FaqsForUserPage: React.FC<FaqsForUserPageProps> = ({ initialBlogs }) => {
 
                         {/* Comment Button */}
                         <Button className="add-like" type="text">
-                          <Comment width={15} height={15} />
+                          <Comment width={15} height={15} className="commentIcon" />
                           <p className="reactionCountOnHome">
                             {blog.commentCount}
                           </p>

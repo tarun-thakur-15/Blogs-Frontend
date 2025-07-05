@@ -52,7 +52,7 @@ export default function AboutTab({ about, accessToken }: AboutTabProps) {
       <Toaster position="top-right" />
       <div className="abouteditAllignment">
         <h4>About</h4>
-        <EditIcon className="pointer" onClick={handleEditClick} />
+        <EditIcon className="pointer editIcon" onClick={handleEditClick} />
       </div>
       {editMode ? (
         <>

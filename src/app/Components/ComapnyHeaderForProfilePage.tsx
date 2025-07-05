@@ -371,7 +371,7 @@ export default function CompanyHeader({
                 <>
                   <h3 className="company-header-name">{fullName}</h3>
                   <EditIcon
-                    className="self-center cursor-pointer"
+                    className="self-center cursor-pointer editIcon"
                     onClick={handleEditClick}
                   />
                 </>
@@ -418,7 +418,7 @@ export default function CompanyHeader({
                       @{username}
                     </p>
                     <EditIcon
-                      className="self-center cursor-pointer"
+                      className="self-center cursor-pointer editIcon"
                       onClick={handleUsernameEditClick}
                     />
                   </div>
@@ -461,7 +461,7 @@ export default function CompanyHeader({
           <Input
             className="home-search"
             placeholder="Search"
-            prefix={<Search />}
+            prefix={<Search className="searchIcon"/>}
             style={{ maxWidth: "100%" }}
             value={followersQuery}
             onChange={(e) => setFollowersQuery(e.target.value)}
@@ -525,7 +525,7 @@ export default function CompanyHeader({
           <Input
             className="home-search"
             placeholder="Search"
-            prefix={<Search />}
+            prefix={<Search className="searchIcon" />}
             style={{ maxWidth: "100%" }}
             value={followingQuery}
             onChange={(e) => setFollowingQuery(e.target.value)}

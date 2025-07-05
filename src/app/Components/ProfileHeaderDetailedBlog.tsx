@@ -341,7 +341,7 @@ export default function ProfileHeaderDetailedBlog({
           <Input
             className="home-search"
             placeholder="Search"
-            prefix={<Search />}
+            prefix={<Search className="searchIcon" />}
             style={{ maxWidth: "100%" }}
             value={followersQuery}
             onChange={(e) => setFollowersQuery(e.target.value)}
@@ -405,7 +405,7 @@ export default function ProfileHeaderDetailedBlog({
           <Input
             className="home-search"
             placeholder="Search"
-            prefix={<Search />}
+            prefix={<Search className="searchIcon" />}
             style={{ maxWidth: "100%" }}
             value={followingQuery}
             onChange={(e) => setFollowingQuery(e.target.value)}

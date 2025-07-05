@@ -11,27 +11,23 @@ import {
 import Image from "next/image";
 import SignInModal from "./SignInModal";
 import LogInModal from "./LogInModal";
+import ThemeToggle from "./ThemeToggle"; 
 // import CreateModal from "./CreateModal";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
-import Logo from "../../../public/images/logo.svg";
 import SettingIcon from "../../../public/images/setting.svg";
 import SignOutIcon from "../../../public/images/sign-out.svg";
 import Bell from "../../../public/images/bell.svg";
-import ChartIcon from "../../../public/images/chart.svg";
 import "../styles/header.css";
 import Cookies from "js-cookie";
 // import bydefaultUser from "../../../public/images/avatar2.png";
 import uncheckedNotificationIcon from "../../../public/images/redDot.png";
-import Logos from "../../../public/images/Logos.png";
-import Qnaly from "../../assets/images/QnalyHeaderLogo.webp";
-import defaultUser from "../../assets/images/not-logged-in-user.png";
 import FaqDrawer from "./FaqDrawer";
 import { getNotifications, markAllNotificationsAsRead } from "../services/api";
 import { useNotifications } from "../hooks/notificationHook";
 import NProgress from "nprogress";
-import BlogsLogo from "../../assets/images/BlogsNewLogo.png";
 import Lekhan from "../../assets/images/lekhan.png";
+import LekhanHD from "../../assets/images/LekhanHD.png";
 
 interface MenuItem {
   label: string;
@@ -210,6 +206,7 @@ export default function Header() {
               Channels
             </Link>
           </Flex> */}
+          <ThemeToggle/>
 
           <Link className="logo" href={"/"}>
             {/* <Logo /> */}
@@ -226,7 +223,7 @@ export default function Header() {
                 {" "}
                 <Button
                   type="text"
-                  className="font-sm"
+                  className="font-sm btnHoverOnDarkMode"
                   onClick={toggleBottomDrawer}
                 >
                   Create
@@ -241,7 +238,7 @@ export default function Header() {
                   onClick={toggleNotificationDrawer}
                 >
                   <div style={{ position: "relative" }}>
-                    <Bell />
+                    <Bell className="NotificationIcon" />
                   </div>
                 </Button>
                 <div
@@ -308,19 +305,19 @@ export default function Header() {
                                 setShowProfile(false);
                               }}
                             >
-                              <SettingIcon />
+                              <SettingIcon className="settingIcon" />
                               Settings
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent className="!p-[5px]">
-                            <p className="!text-white">Coming soon! ⏳</p>
+                            <p className="tooltipText">Coming soon! ⏳</p>
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
                     </Flex>
                     <span className="divider"></span>
                     <Button className="signout" onClick={logout}>
-                      <SignOutIcon />
+                      <SignOutIcon className="signOutIcon" />
                       Sign Out
                     </Button>
                   </div>

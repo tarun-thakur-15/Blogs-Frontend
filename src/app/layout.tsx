@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "./Components/Header";
 // import RouteGuard from "../../middleware";
 import ProgressBar from "./Components/ProgressBar";
+import { ThemeProvider } from "./context/ThemeContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,8 +33,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <ThemeProvider>
     <html lang="en">
-      {/* <RouteGuard> */}
         <body
           className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
         >
@@ -41,7 +42,7 @@ export default function RootLayout({
           <Header />
           {children}
         </body>
-      {/* </RouteGuard> */}
     </html>
+    </ThemeProvider>
   );
 }
