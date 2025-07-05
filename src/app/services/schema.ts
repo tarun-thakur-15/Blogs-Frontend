@@ -66,3 +66,18 @@ export interface EditFullNameSchema {
 export interface EditUsernameSchema {
   username: string;
 }
+
+export interface ForgotPasswordSendOtpSchema {
+  email: string;
+}
+
+export interface ForgotPasswordVerifyOtpSchema {
+  email: string;
+  otp: string;
+}
+
+export interface ForgotPasswordResetSchema {
+  email: string;
+  newPassword: string;
+  confirmPassword: string;
+}

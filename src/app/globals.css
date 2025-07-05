@@ -627,7 +627,7 @@ textarea.ant-input {
 }
 .followersSpan {
   color: var(--Base-11, #0e1012);
-  font-family: cursive;
+  font-family: var(--font-inter), sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -711,7 +711,7 @@ textarea.ant-input {
 }
 .followerName {
   color: var(--Base-11, #0e1012);
-  font-family: cursive;
+  font-family: var(--font-inter), sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;

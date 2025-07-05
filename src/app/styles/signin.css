@@ -184,7 +184,7 @@
     /* color: var(--Base-4, #afb8c1); */
     color: rgb(26, 25, 25);
   
-    font-family: cursive;
+    font-family: var(--font-inter), sans-serif;
     font-size: 24px;
     font-style: normal;
     font-weight: 700;

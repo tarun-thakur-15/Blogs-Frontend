@@ -84,7 +84,7 @@
 }
 .section1Span {
   color: var(--Base-8, #424a53);
-  font-family: cursive;
+  font-family: var(--font-inter), sans-serif;
   /* font-size: 14px; */
   font-size: 0.729vw;
   font-style: normal;
@@ -93,7 +93,7 @@
 }
 .h1Section1 {
   color: var(--Base-11, #0e1012);
-  font-family: cursive;
+  font-family: var(--font-inter), sans-serif;
   /* font-size: 57px; */
   font-size: 2.8vw;
   font-style: normal;
@@ -106,7 +106,7 @@
 }
 .pSection1 {
   color: var(--Base-6, #6e7781);
-  font-family: cursive;
+  font-family: var(--font-inter), sans-serif;
   /* font-size: 16px; */
   font-size: 0.833vw;
   font-style: normal;
@@ -131,7 +131,7 @@
 .btnText {
   color: var(--Base-1, #fff);
   text-align: center;
-  font-family: cursive;
+  font-family: var(--font-inter), sans-serif;
   /* font-size: 13px; */
   font-size: 0.679vw;
   font-style: normal;
@@ -180,7 +180,7 @@
     background: #c89103;
     color: var(--Base-1, #fff);
     text-align: center;
-    font-family: cursive;
+    font-family: var(--font-inter), sans-serif;
     font-size: 13px;
     font-style: normal;
     font-weight: 600;
@@ -266,7 +266,7 @@
   background: #3e1f79;
   color: var(--Base-1, #fff);
   text-align: center;
-  font-family: cursive;
+  font-family: var(--font-inter), sans-serif;
   /* font-size: 13px; */
   font-size: 0.679vw;
   font-style: normal;
@@ -329,7 +329,7 @@
   background: #033d8b;
   color: var(--Base-1, #fff);
   text-align: center;
-  font-family: cursive;
+  font-family: var(--font-inter), sans-serif;
   /* font-size: 13px; */
   font-size: 0.679vw;
   font-style: normal;
@@ -399,7 +399,7 @@
   background: #99286e;
   color: var(--Base-1, #fff);
   text-align: center;
-  font-family: cursive;
+  font-family: var(--font-inter), sans-serif;
   /* font-size: 13px; */
   font-size: 0.679vw;
   font-style: normal;
@@ -474,7 +474,7 @@
   background: #1e3294;
   color: var(--Base-1, #fff);
   text-align: center;
-  font-family: cursive;
+  font-family: var(--font-inter), sans-serif;
   /* font-size: 13px; */
   font-size: 0.679vw;
   font-style: normal;
@@ -625,7 +625,7 @@
   }
   .pSection1 {
     color: var(--Base-6, #6e7781);
-    font-family: cursive;
+    font-family: var(--font-inter), sans-serif;
     font-size: 15px;
     font-style: normal;
     font-weight: 400;
@@ -880,7 +880,7 @@
   }
   .pSection1 {
     color: var(--Base-6, #6e7781);
-    font-family: cursive;
+    font-family: var(--font-inter), sans-serif;
     font-size: 15px;
     font-style: normal;
     font-weight: 400;

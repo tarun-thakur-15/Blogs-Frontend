@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./Components/Header";
 // import RouteGuard from "../../middleware";
 import ProgressBar from "./Components/ProgressBar";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter", // <== this enables .variable
+  display: "swap",
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +35,7 @@ export default function RootLayout({
     <html lang="en">
       {/* <RouteGuard> */}
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
         >
           <ProgressBar />
           <Header />

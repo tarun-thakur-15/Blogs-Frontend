@@ -1,7 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { SignUpSchema, Login, VerifyOtp, changePassword, ResendOtp, ReactionPayload, CreateBlog, PostCommentInterface, EditAboutSchema, DraftPayload, EditFullNameSchema, EditUsernameSchema,
-  DraftResponse } from "./schema";
+import { SignUpSchema, Login, VerifyOtp, changePassword, ResendOtp, ReactionPayload, CreateBlog, PostCommentInterface, EditAboutSchema, DraftPayload, EditFullNameSchema, EditUsernameSchema, ForgotPasswordSendOtpSchema, ForgotPasswordVerifyOtpSchema, ForgotPasswordResetSchema, DraftResponse } from "./schema";
 
 const url = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
 const accessToken = Cookies.get("accessToken");
@@ -783,5 +782,47 @@ export const updateUsername = async (
     }
     console.error("Error updating username:", error);
     redirect("/something-went-wrong");
+  }
+};
+
+// 1. Send OTP
+export const sendForgotPasswordOtp = async (data: ForgotPasswordSendOtpSchema) => {
+  try {
+    const response = await axios.post(`${url}/forgot-password/send-otp`, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 2. Verify OTP
+export const verifyForgotPasswordOtp = async (data: ForgotPasswordVerifyOtpSchema) => {
+  try {
+    const response = await axios.post(`${url}/forgot-password/verify-otp`, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 3. Reset Password
+export const resetForgottenPassword = async (data: ForgotPasswordResetSchema) => {
+  try {
+    const response = await axios.post(`${url}/forgot-password/reset-password`, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
   }
 };
