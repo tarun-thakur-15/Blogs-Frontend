@@ -90,7 +90,7 @@
 .dark .awnser-box-footer,.dark :where(.css-dev-only-do-not-override-os2fvf).ant-drawer .ant-drawer-content,.dark :where(.css-dev-only-do-not-override-os2fvf).ant-tabs >.ant-tabs-nav .ant-tabs-nav-list,.dark :where(.css-dev-only-do-not-override-os2fvf).ant-modal .ant-modal-content,.dark .profile-popover {
   background-color: #4e4b4b;
 }
-.dark .commentIcon path,.dark .NotificationIcon path,.dark .searchIcon path,.dark .settingIcon path,.dark .signOutIcon path,.dark .editIcon path {
+.dark .commentIcon path,.dark .NotificationIcon path,.dark .searchIcon path,.dark .settingIcon path,.dark .signOutIcon path,.dark .editIcon path,.dark .closeIcon path {
   stroke: white !important;
 }
 .dark button.ant-btn,.dark .dropdown {
@@ -120,6 +120,13 @@
 }
 .dark .logo {
   opacity: 0;
+}
+.dark .type-question {
+  color: #e6e6e6;
+}
+.dark .createFaqBtn {
+  background-color: transparent;
+  color: #e6e6e6;
 }
 /* ------- */
 html,

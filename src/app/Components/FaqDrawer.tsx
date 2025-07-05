@@ -134,7 +134,7 @@ export default function FaqDrawer({
           </button>
 
           <Button onClick={handleClose}>
-            <CloseIcons />
+            <CloseIcons className="closeIcon" />
           </Button>
         </div>
       </div>
