@@ -299,7 +299,7 @@ export default function CompanyHeaderOther({
               <Select
                 className="normal"
                 value={localIsFollowed ? "Following" : "follow"}
-                suffixIcon={<SelectDrop />}
+                suffixIcon={<SelectDrop className="closeIcon" />}
                 placement="bottomLeft"
                 options={
                   localIsFollowed

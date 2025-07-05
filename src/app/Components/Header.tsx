@@ -29,17 +29,6 @@ import NProgress from "nprogress";
 import Lekhan from "../../assets/images/lekhan.png";
 import LekhanHD from "../../assets/images/LekhanHD.png";
 
-interface MenuItem {
-  label: string;
-  key: string;
-  type?: "divider";
-}
-
-interface CommentsProps {
-  // ownProfile?: boolean;
-  profileData?: any;
-}
-
 export default function Header() {
   const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -190,23 +179,8 @@ export default function Header() {
           className="desktop-nav"
           style={{ borderBottomWidth: "1px", justifyContent: "space-between" }}
         >
-          {/* <Flex gap={4} className="nav-list">
-            <Link
-              className={`headerLiks ${pathname === "/" ? "underline" : ""}`}
-              href={"/"}
-            >
-              Home
-            </Link>
-            <Link
-              className={`headerLiks ${
-                pathname === "/channels" ? "underline" : ""
-              }`}
-              href={"/channels"}
-            >
-              Channels
-            </Link>
-          </Flex> */}
-          <ThemeToggle/>
+          
+          {isLoggedIn && <ThemeToggle/>}
 
           <Link className="logo" href={"/"}>
             {/* <Logo /> */}
@@ -325,7 +299,7 @@ export default function Header() {
               </>
             ) : (
               <>
-                <Button onClick={showLoginModal}>Login</Button>
+                <Button className="loginBtn" onClick={showLoginModal}>Login</Button>
                 <Button type="primary" onClick={showModal}>
                   Sign Up
                 </Button>

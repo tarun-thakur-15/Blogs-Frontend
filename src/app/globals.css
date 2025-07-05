@@ -112,7 +112,7 @@
   background-color: #727577;
 }
 .dark a {
-  color: #7cb8fe !important;
+  color: #0958d9 !important;
 }
 .dark .aboutProfile {
   background: #868a8e;
@@ -127,6 +127,21 @@
 .dark .createFaqBtn {
   background-color: transparent;
   color: #e6e6e6;
+}
+.dark .desktop-nav {
+  background-color: transparent;
+}
+.dark button.ant-btn-primary {
+  background-color: #0969da !important;
+}
+.dark .loginBtn {
+ background-color: white !important;
+}
+.dark .loginBtn span {
+  color: #4d4949 !important;
+}
+.dark .ant-select.normal:not(.ant-select-customize-input) .ant-select-selector {
+  background-color: #1677ff;
 }
 /* ------- */
 html,
