@@ -148,7 +148,7 @@ const [contentValue, setContentValue] = useState(content || "");
           </button>
 
           <Button onClick={handleClose}>
-            <CloseIcons className="closeIcon" />
+            <CloseIcons className="closeIcon" /> 
           </Button>
         </div>
       </div>
