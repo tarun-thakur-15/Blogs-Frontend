@@ -5,7 +5,12 @@ import { Flex, Button, Modal, Form, Input } from "antd";
 import OtpInput from "react-otp-input";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { loginUser } from "../services/api";
+import {
+  loginUser,
+  sendForgotPasswordOtp,
+  verifyForgotPasswordOtp,
+  resetForgottenPassword,
+} from "../services/api";
 // CSS
 import "../styles/signin.css";
 // IMAGES
@@ -23,7 +28,7 @@ const identifierRules = [
     message: "Please enter your email or username!",
   },
   {
-    validator: (_, value: any) => {
+    validator: (_: any, value: any) => {
       if (!value) {
         return Promise.resolve();
       }
@@ -58,6 +63,14 @@ const LogInModal: React.FC<CustomModalProps> = ({
   const [countdown, setCountdown] = useState(5);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
   const [showResendMessage, setShowResendMessage] = useState(false);
+
+  // states for forget password flow
+  const [email, setEmail] = useState("");
+  const [sendOtpLoading, setSendOtpLoading] = useState(false);
+  const [otpLoadingforgetpassword, setOtpLoadingforgetpassword] =
+    useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
+  const [emailInput, setEmailInput] = useState("");
 
   useLayoutEffect(() => {
     if (otp.length === 6) {
@@ -98,7 +111,7 @@ const LogInModal: React.FC<CustomModalProps> = ({
         password: values.password,
       };
       const response = await loginUser(payload);
-     
+
       // Store returned values in cookies
       Cookies.set("accessToken", response.accessToken);
       Cookies.set("email", response.email);
@@ -128,13 +141,14 @@ const LogInModal: React.FC<CustomModalProps> = ({
               " sm:!w-auto sm:!h-auto sm:!m-4 sm:!p-6 sm:!rounded-lg"
         }
         style={{ top: 0 }}
-        styles={{ body: { height: "100%", overflowY: "auto", padding: "1rem" } }}
+        styles={{
+          body: { height: "100%", overflowY: "auto", padding: "1rem" },
+        }}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
       >
-
         {formLevel === 0 ? (
           <Flex className="sign-in-modal--feilds" vertical>
             <div className="sign-in-modal--header">
@@ -188,13 +202,71 @@ const LogInModal: React.FC<CustomModalProps> = ({
               Don't have an account?{" "}
               <span onClick={showSignModal}>Sign up</span>
             </p>
+            <p
+              className="!text-blue-600"
+              onClick={() => {
+                setFormLevel(1);
+              }}
+            >
+              Forget Password?
+            </p>
           </Flex>
         ) : formLevel === 1 ? (
           <Flex className="sign-in-modal--feilds" vertical>
             <div className="sign-in-modal--header">
+              <h2>Enter your Email here</h2>
+            </div>
+            <Form name="forgetPassword" form={form}>
+              <Form.Item
+                name="mail"
+                rules={[
+                  { required: true, message: "Please enter your email!" },
+                  { type: "email", message: "The input is not a valid email!" },
+                ]}
+              >
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={emailInput}
+          onChange={(e) => setEmailInput(e.target.value)}
+                  prefix={<Email />}
+                />
+              </Form.Item>
+
+              <Form.Item>
+                <Button
+                  type="primary"
+                  disabled={!emailInput.trim()}
+                  htmlType="submit"
+                  loading={sendOtpLoading}
+                  onClick={async () => {
+                    try {
+                      const values = await form.validateFields();
+                      setSendOtpLoading(true);
+                      await sendForgotPasswordOtp({ email: values.mail });
+                      setEmail(values.mail); // Store email in state for later steps
+                      setFormLevel(2);
+                      setSendOtpLoading(false);
+                    } catch (error: any) {
+                      setSendOtpLoading(false);
+                      setErrorMessage(
+                        error?.response?.data?.msg || "Something went wrong."
+                      );
+                    }
+                  }}
+                >
+                  Submit
+                </Button>
+                {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+              </Form.Item>
+            </Form>
+          </Flex>
+        ) : formLevel === 2 ? (
+          <Flex className="sign-in-modal--feilds" vertical>
+            <div className="sign-in-modal--header">
               <h2>Enter OTP</h2>
               <p>
-                OTP sent on <a href={`/`}>johndoe@gmail.com</a>
+                OTP sent on <a href={`#`}>johndoe@gmail.com</a>
               </p>
             </div>
             <Form
@@ -223,6 +295,20 @@ const LogInModal: React.FC<CustomModalProps> = ({
                   type="primary"
                   htmlType="submit"
                   loading={otpLoading}
+                  onClick={async () => {
+                    try {
+                      setOtpLoadingforgetpassword(true);
+                      await verifyForgotPasswordOtp({ email, otp }); // use stored `email` state
+                      setFormLevel(3);
+                      setOtpLoadingforgetpassword(false);
+                    } catch (error: any) {
+                      setOtpLoadingforgetpassword(false);
+                      setErrorMessage(
+                        error?.response?.data?.msg || "Invalid OTP"
+                      );
+                      setError(true);
+                    }
+                  }}
                 >
                   Submit
                 </Button>
@@ -237,7 +323,7 @@ const LogInModal: React.FC<CustomModalProps> = ({
             )}
             <p>
               Did not receive an OTP?{" "}
-              {formLevel === 1 && countdown > 0 ? (
+              {formLevel === 2 && countdown > 0 ? (
                 <span>
                   <span style={{ color: "#B3A5A5", cursor: "not-allowed" }}>
                     Resend OTP
@@ -254,6 +340,66 @@ const LogInModal: React.FC<CustomModalProps> = ({
                 </span>
               )}
             </p>
+          </Flex>
+        ) : formLevel === 3 ? (
+          <Flex className="sign-in-modal--feilds" vertical>
+            <div className="sign-in-modal--header">
+              <h2>Create your new password...</h2>
+            </div>
+            <Form
+              name="resetPassword"
+              onFinish={async (values) => {
+                if (values.newPassword !== values.confirmPassword) {
+                  setErrorMessage("Passwords do not match");
+                  return;
+                }
+
+                try {
+                  setResetLoading(true);
+                  await resetForgottenPassword({
+                    email,
+                    newPassword: values.newPassword,
+                    confirmPassword: values.confirmPassword,
+                  });
+                  setResetLoading(false);
+                  setFormLevel(0); // Optionally redirect to login or show success message
+                } catch (error: any) {
+                  setResetLoading(false);
+                  setErrorMessage(
+                    error?.response?.data?.msg || "Failed to reset password"
+                  );
+                }
+              }}
+            >
+              <Form.Item
+                name="newPassword"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your new password!",
+                  },
+                ]}
+              >
+                <Input.Password placeholder="New Password" />
+              </Form.Item>
+
+              <Form.Item
+                name="confirmPassword"
+                rules={[
+                  { required: true, message: "Please confirm your password!" },
+                ]}
+              >
+                <Input.Password placeholder="Confirm Password" />
+              </Form.Item>
+
+              <Form.Item>
+                <Button type="primary" htmlType="submit" loading={resetLoading}>
+                  Reset Password
+                </Button>
+              </Form.Item>
+
+              {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+            </Form>
           </Flex>
         ) : (
           <>
