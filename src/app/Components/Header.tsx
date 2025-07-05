@@ -11,7 +11,7 @@ import {
 import Image from "next/image";
 import SignInModal from "./SignInModal";
 import LogInModal from "./LogInModal";
-import ThemeToggle from "./ThemeToggle"; 
+import ThemeToggle from "./ThemeToggle";
 // import CreateModal from "./CreateModal";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
@@ -74,7 +74,6 @@ export default function Header() {
 
   //this useEffect will check for accessToken, email, username, fullname to conditionally display the logged in state
   useEffect(() => {
- 
     const storedEmail = Cookies.get("email");
     const storedUsername = Cookies.get("username");
     const storedFullName = Cookies.get("fullname");
@@ -85,7 +84,6 @@ export default function Header() {
       setUsername(storedUsername);
       setFullName(storedFullName);
       setIsLoggedIn(true);
-      
     } else {
       setIsLoggedIn(false);
     }
@@ -124,7 +122,7 @@ export default function Header() {
     setLoadingNotifications(true);
     try {
       const data = await getNotifications(token, offset, 10);
-      
+
       setNotifications(data.notifications);
       setUnreadNotifications(data.unreadCount); // Adjust if API returns a total count separately
     } catch (error) {
@@ -154,7 +152,6 @@ export default function Header() {
 
     try {
       await markAllNotificationsAsRead();
-     
     } catch (error) {
       console.error("Error marking notifications as read:", error);
       // **Revert state if API call fails**
@@ -179,15 +176,14 @@ export default function Header() {
           className="desktop-nav"
           style={{ borderBottomWidth: "1px", justifyContent: "space-between" }}
         >
-          
-          {isLoggedIn && <ThemeToggle/>}
+          <div className="md:w-[146.23px]">{isLoggedIn && <ThemeToggle />}</div>
 
           <Link className="logo" href={"/"}>
             {/* <Logo /> */}
             <Image
               src={Lekhan}
               alt="Blogs"
-              className="w-[84px] h-[36px] lg:w-[130px] lg:h-[50px]"
+              className="w-[79px] h-[31px] lg:w-[130px] lg:h-[50px]"
             />
           </Link>
 
@@ -299,7 +295,9 @@ export default function Header() {
               </>
             ) : (
               <>
-                <Button className="loginBtn" onClick={showLoginModal}>Login</Button>
+                <Button className="loginBtn" onClick={showLoginModal}>
+                  Login
+                </Button>
                 <Button type="primary" onClick={showModal}>
                   Sign Up
                 </Button>
