@@ -255,7 +255,7 @@ export default function CompanyHeaderOther({
         <Flex align="center">
           <div className="wrapper">
             <div className="file-upload">
-              <input className="profile-pic" type="file" />
+              {/* <input className="profile-pic" type="file" /> */}
               <Image
                 src={`https://blogs-backend-ftie.onrender.com/${profileImage}` || bydefaultUser}
                 alt="profile picture"
