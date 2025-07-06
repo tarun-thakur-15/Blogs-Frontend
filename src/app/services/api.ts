@@ -826,3 +826,4 @@ export const resetForgottenPassword = async (data: ForgotPasswordResetSchema) =>
     throw error;
   }
 };
+// --
