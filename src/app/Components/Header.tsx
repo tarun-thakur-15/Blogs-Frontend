@@ -176,10 +176,11 @@ export default function Header() {
           className="desktop-nav"
           style={{ borderBottomWidth: "1px", justifyContent: "space-between" }}
         >
-          <div className="md:w-[146.23px]">{isLoggedIn && <ThemeToggle />}</div>
+          {/* commented dark mode toggle for now.. coz its not working perfectly on vercel */}
+          {/* <div className="md:w-[146.23px]">{isLoggedIn && <ThemeToggle />}</div> */}
 
           <Link className="logo" href={"/"}>
-            {/* <Logo /> */}
+           
             <Image
               src={Lekhan}
               alt="Blogs"
