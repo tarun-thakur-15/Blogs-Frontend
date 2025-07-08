@@ -18,6 +18,8 @@ import SelectDrop from "../../../public/images/select-drop.svg";
 import Cookies from "js-cookie";
 import NProgress from "nprogress";
 import { toast, Toaster } from "sonner";
+import SignInModal from "./SignInModal";
+import LogInModal from "./LogInModal";
 
 interface ProfileHeaderDetailedBlogProps {
   username: string;
@@ -70,7 +72,8 @@ export default function ProfileHeaderDetailedBlog({
   const [hasMoreFollowing, setHasMoreFollowing] = useState(true);
   const followingLoadMoreRef = useRef<HTMLDivElement | null>(null);
   const [followingQuery, setFollowingQuery] = useState("");
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [localIsFollowed, setLocalIsFollowed] = useState(isFollowed);
 
   const token = Cookies.get("accessToken");
@@ -188,24 +191,41 @@ export default function ProfileHeaderDetailedBlog({
     }
   };
 
-  const handleFollowChange = async (value: string) => {
-    setLocalIsFollowed((prev) => !prev);
-    try {
-      const token = Cookies.get("accessToken");
-      const res = await toggleFollow(username, token);
-      toast.success(
-        res?.msg ||
-          `You have ${
-            localIsFollowed ? "unfollowed" : "followed"
-          } ${username} successfully! 🎉`
-      );
-    } catch (error: any) {
+const handleFollowChange = async (value: string) => {
+  setLocalIsFollowed((prev) => !prev);
+  try {
+    const token = Cookies.get("accessToken");
+
+    // If token is not available, show login modal and return early
+    if (!token) {
+      showLoginModal();
+      setLocalIsFollowed((prev) => !prev); // Revert the follow toggle
+      return;
+    }
+
+    const res = await toggleFollow(username, token);
+    toast.success(
+      res?.msg ||
+        `You have ${
+          localIsFollowed ? "unfollowed" : "followed"
+        } ${username} successfully! 🎉`
+    );
+  } catch (error: any) {
+    const token = Cookies.get("accessToken");
+
+    if (!token) {
+      showLoginModal();
+    } else {
       toast.error(
         error.message || "Failed to update follow status. Please try again. ❌"
       );
-      setLocalIsFollowed((prev) => !prev);
     }
-  };
+
+    // Always revert the follow state in case of error
+    setLocalIsFollowed((prev) => !prev);
+  }
+};
+
 
   // ---------------------
   const fetchAllFollowers = useCallback(async () => {
@@ -242,6 +262,19 @@ export default function ProfileHeaderDetailedBlog({
       fetchAllFollowing();
     }
   }, [followingQuery, isFollowingModalOpen, fetchAllFollowing]);
+
+  // ---------------------------
+  const showLoginModal = () => {
+    setIsModalOpen(false);
+    setIsLoginModalOpen(true);
+    document.body.classList.add("modal-opened");
+  };
+
+  const showModal = () => {
+    setIsModalOpen(true);
+    setIsLoginModalOpen(false);
+    document.body.classList.add("modal-opened");
+  };
   return (
     <>
       <Toaster position="top-right" />
@@ -314,7 +347,7 @@ export default function ProfileHeaderDetailedBlog({
                     : [{ value: "Follow", label: "Follow" }]
                 }
                 onChange={(value) => {
-                  handleFollowChange(value); // Pass the selected value to handleFollowChange
+                  handleFollowChange(value);
                 }}
               />
             </div>
@@ -447,6 +480,16 @@ export default function ProfileHeaderDetailedBlog({
           </div>
         </div>
       </Modal>
+      <SignInModal
+        setIsModalOpen={setIsModalOpen}
+        showLoginModal={showLoginModal}
+        isModalOpen={isModalOpen}
+      />
+      <LogInModal
+        setIsModalOpen={setIsLoginModalOpen}
+        showSignModal={showModal}
+        isModalOpen={isLoginModalOpen}
+      />
     </>
   );
 }
