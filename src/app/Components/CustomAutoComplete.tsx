@@ -53,7 +53,7 @@ const CustomAutoComplete: React.FC = () => {
             >
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full">
                 {/* LEFT: Profile image */}
-                <div className="h-[30px] w-[30px] overflow-hidden">
+                <div className="h-[30px] w-[30px] overflow-hidden border-[100%]">
                   <Image
                     src={
                       blog.author.profileImage?.startsWith("http")
@@ -103,7 +103,7 @@ const CustomAutoComplete: React.FC = () => {
               onClick={() => NProgress.start()}
               className="flex items-center gap-3 w-full mt-[6px] h-[40px] justify-center"
             >
-              <div className="h-[30px] w-[30px] overflow-hidden !ml-[10px]">
+              <div className="h-[30px] w-[33px] overflow-hidden !ml-[10px]">
                 <Image
                   src={
                     user.profileImage?.startsWith("http")

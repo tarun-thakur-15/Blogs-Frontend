@@ -198,7 +198,7 @@ export default function Comments({
               <div className="relative">
                 <button
                   ref={optionsButtonRef}
-                  className="optionsMain group"
+                  className="optionsMain group cursor-pointer"
                   style={{
                     backgroundColor: "white",
                     border: "none",
@@ -282,7 +282,7 @@ export default function Comments({
               />
             </div>
             <button
-              className="redButtons commentBtn whitespace-nowrap"
+              className="redButtons commentBtn whitespace-nowrap cursor-pointer"
               onClick={handleAddComment}
             >
               Add Comment
