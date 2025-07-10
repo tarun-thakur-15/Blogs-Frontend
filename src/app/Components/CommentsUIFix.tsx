@@ -215,7 +215,9 @@ export default function Comments({
                 </div>
               </div>
 
+
               <div className="relative">
+                {accessToken && (
                 <button
                   ref={optionsButtonRef}
                   className="optionsMain group cursor-pointer"
@@ -231,14 +233,19 @@ export default function Comments({
                     toggleDropdown(comment._id);
                   }}
                 >
+                  
                   <OptionsHorizontal
                     className="optionIconSize"
                     height={20}
                     width={20}
                   />
                 </button>
+                )}
 
                 {/* Delete Dropdown */}
+                
+
+                
                 {isDropdownOpen[comment._id] && (
                   <div className="dropdown" ref={dropdownRef}>
                     {(loggedInUsername === comment.author.username ||
@@ -256,6 +263,7 @@ export default function Comments({
                     )}
                   </div>
                 )}
+                
               </div>
             </div>
           ))}
