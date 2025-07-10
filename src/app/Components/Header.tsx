@@ -70,7 +70,6 @@ export default function Header() {
     setIsLoginModalOpen(false);
     document.body.classList.add("modal-opened");
   };
-  const pathname = usePathname();
 
   //this useEffect will check for accessToken, email, username, fullname to conditionally display the logged in state
   useEffect(() => {

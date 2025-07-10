@@ -13,6 +13,7 @@ import MiddleRelatedFaqs from "../Components/MiddleRelatedFaqs";
 import { getPerticularBlog, getComments } from "../services/api";
 import ReadTTS from "../Components/ReadTTS";
 import { cn } from "@/lib/utils";
+import ShareModal from "../Components/ShareModal";
 // Images
 import Divider from "../../assets/images/divider.png";
 import { cookies } from "next/headers";
@@ -66,6 +67,7 @@ const BlogDetailPage = async ({ params }: PageProps) => {
           followersCount={blogData.author.followersCount}
           followingCount={blogData.author.followingCount}
           isFollowed={blogData.author.isFollowed}
+          totalBlogs={blogData.author.totalBlogs}
           usernameFromCookies={usernameFromCookies}
           isFavourite={blogData.isFavourite}
           blogSlug={blogData.slug}
@@ -194,6 +196,7 @@ const BlogDetailPage = async ({ params }: PageProps) => {
         </div>
       </div>
     </main>
+    
   );
 };
 

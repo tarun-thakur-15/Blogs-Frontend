@@ -9,6 +9,8 @@ import { PostCommentInterface } from "../services/schema"; // adjust the path as
 import moment from "moment";
 import Cookies from "js-cookie";
 import NProgress from "nprogress";
+import SignInModal from "./SignInModal";
+import LogInModal from "./LogInModal";
 // CSS
 import "../styles/comments.css";
 // import Like from "../../../public/images/like.svg";
@@ -57,6 +59,9 @@ export default function Comments({
   }>({});
   const optionsButtonRef = useRef<HTMLButtonElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const loadMoreComments = async () => {
     setLoading(true);
@@ -91,10 +96,15 @@ export default function Comments({
       setTotalComments((prev) => prev + 1);
       setNewCommentText(""); // Clear the input field
     } catch (error: any) {
-      console.error("Error posting comment:", error.message);
-      toast.error(
-        error.message || "Failed to create comment.. Please try again later :-)"
-      );
+      if (!accessToken) {
+        showLoginModal();
+      } else {
+        console.error("Error posting comment:", error.message);
+        toast.error(
+          error.message ||
+            "Failed to create comment.. Please try again later :-)"
+        );
+      }
     }
   };
 
@@ -113,13 +123,11 @@ export default function Comments({
       );
       toast.success(result?.msg || "Comment deleted successfully! 🗑️");
       setIsDropdownOpen((prev) => ({ ...prev, [commentId]: false })); // Close dropdown
-      
     } catch (error: any) {
-          toast.error(
-      error.message || "Failed to delete comment.. Please try again later 😞"
-    );
+      toast.error(
+        error.message || "Failed to delete comment.. Please try again later 😞"
+      );
       console.error("Error deleting comment:", error);
-      
     }
   };
 
@@ -142,6 +150,18 @@ export default function Comments({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const showLoginModal = () => {
+    setIsModalOpen(false);
+    setIsLoginModalOpen(true);
+    document.body.classList.add("modal-opened");
+  };
+
+  const showModal = () => {
+    setIsModalOpen(true);
+    setIsLoginModalOpen(false);
+    document.body.classList.add("modal-opened");
+  };
 
   return (
     <>
@@ -211,7 +231,11 @@ export default function Comments({
                     toggleDropdown(comment._id);
                   }}
                 >
-                  <OptionsHorizontal className="optionIconSize" height={20} width={20} />
+                  <OptionsHorizontal
+                    className="optionIconSize"
+                    height={20}
+                    width={20}
+                  />
                 </button>
 
                 {/* Delete Dropdown */}
@@ -290,6 +314,16 @@ export default function Comments({
           </div>
         </div>
       </Flex>
+      <SignInModal
+        setIsModalOpen={setIsModalOpen}
+        showLoginModal={showLoginModal}
+        isModalOpen={isModalOpen}
+      />
+      <LogInModal
+        setIsModalOpen={setIsLoginModalOpen}
+        showSignModal={showModal}
+        isModalOpen={isLoginModalOpen}
+      />
     </>
   );
 }

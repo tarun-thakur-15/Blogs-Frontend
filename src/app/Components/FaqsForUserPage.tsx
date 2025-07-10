@@ -245,7 +245,7 @@ export default function FaqsForUserPage({
                     <p className="awnser-box--question">{blog.title}</p>
                   </div>
                   <div className="awnser-box-body">
-                    <p className="awnser-box--awnser">{blog.previewContent}</p>
+                    <p className="awnser-box--awnser" dangerouslySetInnerHTML={{ __html: blog.previewContent }}/>
                   </div>
                   <div className="awnser-box-footer">
                     <Flex justify="space-between" align="center">

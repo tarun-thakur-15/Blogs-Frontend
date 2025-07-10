@@ -14,6 +14,8 @@ import "../styles/awnserbox.css";
 import Cookies from "js-cookie";
 import SignInModal from "./SignInModal";
 import LogInModal from "./LogInModal";
+import ShareModal from "./ShareModal";
+import Share from "../../assets/images/Share.svg";
 
 interface Fly {
   id: number;
@@ -82,6 +84,21 @@ export default function FaqPageActionsMobile({
     ReactionPayload["reactionType"] | null
   >(null);
 
+  //states for opening and closing Share Modal
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isShareModalAnimating, setIsShareModalAnimating] = useState(false);
+  const [shareUrl, setShareUrl] = useState("");
+
+    const showShareModal = () => {
+    const fullUrl = window.location.origin;
+    setShareUrl(fullUrl);
+    setIsShareModalOpen(true);
+    setTimeout(() => {
+      setIsShareModalAnimating(true);
+      document.body.classList.add("modal-opened");
+    }, 0);
+  };
+
   const showModal = () => {
     setIsModalOpen(true);
     setIsLoginModalOpen(false);
@@ -98,7 +115,6 @@ export default function FaqPageActionsMobile({
   // This function triggers the fly-up animation for this blog only.
   const handleClick =
     (emoji: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
-      
       const id = Date.now();
       const button = e.currentTarget;
       const startX = button.offsetLeft + button.offsetWidth / 2;
@@ -121,10 +137,9 @@ export default function FaqPageActionsMobile({
   const handleReaction = async (
     reactionType: ReactionPayload["reactionType"]
   ) => {
-   
     try {
       const result = await reactToBlog(slug, { reactionType }, AccessToken);
-    
+
       // Update the local reaction state with the API response.
       setReactionState(result.reaction);
     } catch (error) {
@@ -168,6 +183,14 @@ export default function FaqPageActionsMobile({
       : isDisliked
       ? "dislike"
       : "";
+
+  const closeShareModal = () => {
+    setIsShareModalAnimating(false);
+    setTimeout(() => {
+      setIsShareModalOpen(false);
+      document.body.classList.remove("modal-opened");
+    }, 300);
+  };
 
   return (
     <>
@@ -231,10 +254,25 @@ export default function FaqPageActionsMobile({
         <div className="flex gap-[5px]">
           <a href="#comments">
             <Button className="add-like" type="text">
-              <CommentIcon width={19} height={27} className="w-[19px] h-[27px]" />
+              <CommentIcon
+                width={19}
+                height={27}
+                className="w-[19px] h-[27px]"
+              />
             </Button>
           </a>
           <p className="font-sm">{totalComments}</p>
+        </div>
+        <div className="flex gap-[5px]">
+          
+            <Button className="add-like" type="text" onClick={showShareModal}>
+              <Share
+                width={19}
+                height={27}
+                className="w-[19px] h-[27px]"
+              />
+            </Button>
+          
         </div>
         {flies.map((fly) => (
           <span
@@ -255,6 +293,12 @@ export default function FaqPageActionsMobile({
         setIsModalOpen={setIsLoginModalOpen}
         showSignModal={showModal}
         isModalOpen={isLoginModalOpen}
+      />
+      <ShareModal
+        isShareModalOpen={isShareModalOpen}
+        closeShareModal={closeShareModal}
+        isShareModalAnimating={isShareModalAnimating}
+        shareUrl={`${shareUrl}/${slug}`}
       />
     </>
   );
