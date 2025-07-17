@@ -297,7 +297,9 @@ export default function FaqPageActionsMobile({
             </Button>
           
         </div>
-        <div className="flex gap-[5px]">
+          {/* report button commented temporarily */}
+
+        {/* <div className="flex gap-[5px]">
           
             <Button className="add-like" type="text"  onClick={(e) => {
                 showReportModal(slug);
@@ -309,7 +311,7 @@ export default function FaqPageActionsMobile({
               />
             </Button>
           
-        </div>
+        </div> */}
         {flies.map((fly) => (
           <span
             key={fly.id}

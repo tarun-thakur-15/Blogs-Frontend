@@ -307,7 +307,8 @@ export default function FaqPageActions({
               <Share width={15} height={15} />
             </Button>
           </Flex>
-          <Flex vertical gap={8} align="center">
+          {/* report button commented temporarily */}
+          {/* <Flex vertical gap={8} align="center">
             <Button
               className="add-like"
               type="text"
@@ -317,7 +318,7 @@ export default function FaqPageActions({
             >
               <Report width={15} height={15} />
             </Button>
-          </Flex>
+          </Flex> */}
         </Flex>
       </div>
 
