@@ -235,7 +235,8 @@ export default function CompanyHeader({
     try {
       // Call the API function to change the profile picture
       const response = await changeProfilePicture(file);
-
+      console.log(`handleprofileimage ${response.profileImage}`);
+      Cookies.set("profileImage", response.profileImage)
       // Update the local state with the new profile image path (assumed to be returned in response)
       window.location.reload();
     } catch (error: any) {

@@ -15,7 +15,9 @@ import Cookies from "js-cookie";
 import SignInModal from "./SignInModal";
 import LogInModal from "./LogInModal";
 import ShareModal from "./ShareModal";
+import ReportModal from "./ReportModal";
 import Share from "../../assets/images/Share.svg";
+import Report from "../../assets/images/Report.svg";
 
 // Define your fly interface
 interface Fly {
@@ -90,7 +92,28 @@ export default function FaqPageActions({
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isShareModalAnimating, setIsShareModalAnimating] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
-  
+
+  //states for report modal
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [reportingCommentSlug, setReportingCommentSlug] = useState("");
+
+  const closeReportModal = () => {
+    setIsAnimating(false);
+    setTimeout(() => {
+      setIsReportModalOpen(false);
+      document.body.classList.remove("modal-opened");
+    }, 300);
+  };
+  const showReportModal = (commentSlug: any) => {
+    setReportingCommentSlug(commentSlug);
+    setIsReportModalOpen(true);
+    setTimeout(() => {
+      setIsAnimating(true);
+      document.body.classList.add("modal-opened");
+    }, 0);
+  };
+
   const showShareModal = () => {
     const fullUrl = window.location.origin;
     setShareUrl(fullUrl);
@@ -280,11 +303,20 @@ export default function FaqPageActions({
             <p className="font-sm">{totalComments}</p>
           </Flex>
           <Flex vertical gap={8} align="center">
-            
-              <Button className="add-like" type="text" onClick={showShareModal}>
-                <Share width={15} height={15} />
-              </Button>
-            
+            <Button className="add-like" type="text" onClick={showShareModal}>
+              <Share width={15} height={15} />
+            </Button>
+          </Flex>
+          <Flex vertical gap={8} align="center">
+            <Button
+              className="add-like"
+              type="text"
+              onClick={(e) => {
+                showReportModal(slug);
+              }}
+            >
+              <Report width={15} height={15} />
+            </Button>
           </Flex>
         </Flex>
       </div>
@@ -304,6 +336,13 @@ export default function FaqPageActions({
         closeShareModal={closeShareModal}
         isShareModalAnimating={isShareModalAnimating}
         shareUrl={`${shareUrl}/${slug}`}
+      />
+      <ReportModal
+        isReportModalOpen={isReportModalOpen}
+        closeReportModal={closeReportModal}
+        isAnimating={isAnimating}
+        commentSlug={reportingCommentSlug}
+        accessToken={AccessToken}
       />
     </div>
   );

@@ -15,7 +15,9 @@ import Cookies from "js-cookie";
 import SignInModal from "./SignInModal";
 import LogInModal from "./LogInModal";
 import ShareModal from "./ShareModal";
+import ReportModal from "./ReportModal";
 import Share from "../../assets/images/Share.svg";
+import Report from "../../assets/images/Report.svg";
 
 interface Fly {
   id: number;
@@ -88,6 +90,27 @@ export default function FaqPageActionsMobile({
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isShareModalAnimating, setIsShareModalAnimating] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
+
+    //states for report modal
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [reportingCommentSlug, setReportingCommentSlug] = useState("");
+
+  const closeReportModal = () => {
+    setIsAnimating(false);
+    setTimeout(() => {
+      setIsReportModalOpen(false);
+      document.body.classList.remove("modal-opened");
+    }, 300);
+  };
+  const showReportModal = (commentSlug: any) => {
+    setReportingCommentSlug(commentSlug);
+    setIsReportModalOpen(true);
+    setTimeout(() => {
+      setIsAnimating(true);
+      document.body.classList.add("modal-opened");
+    }, 0);
+  };
 
     const showShareModal = () => {
     const fullUrl = window.location.origin;
@@ -194,7 +217,7 @@ export default function FaqPageActionsMobile({
 
   return (
     <>
-      <div className="w-full flex justify-start gap-[20px]">
+      <div className="w-full flex justify-start gap-[15px]">
         <div className="flex gap-[5px]">
           <Button
             className={`add-like ${
@@ -255,9 +278,9 @@ export default function FaqPageActionsMobile({
           <a href="#comments">
             <Button className="add-like" type="text">
               <CommentIcon
-                width={19}
-                height={27}
-                className="w-[19px] h-[27px]"
+                width={20}
+                height={20}
+                className="w-[20px] h-[20px]"
               />
             </Button>
           </a>
@@ -267,9 +290,22 @@ export default function FaqPageActionsMobile({
           
             <Button className="add-like" type="text" onClick={showShareModal}>
               <Share
-                width={19}
-                height={27}
-                className="w-[19px] h-[27px]"
+                width={20}
+                height={20}
+                className="w-[20px] h-[20px]"
+              />
+            </Button>
+          
+        </div>
+        <div className="flex gap-[5px]">
+          
+            <Button className="add-like" type="text"  onClick={(e) => {
+                showReportModal(slug);
+              }}>
+              <Report
+                 width={20}
+                height={20}
+                className="w-[20px] h-[20px]"
               />
             </Button>
           
@@ -300,6 +336,13 @@ export default function FaqPageActionsMobile({
         isShareModalAnimating={isShareModalAnimating}
         shareUrl={`${shareUrl}/${slug}`}
       />
+                  <ReportModal
+              isReportModalOpen={isReportModalOpen}
+              closeReportModal={closeReportModal}
+              isAnimating={isAnimating}
+              commentSlug={reportingCommentSlug}
+              accessToken={AccessToken}
+            />
     </>
   );
 }
