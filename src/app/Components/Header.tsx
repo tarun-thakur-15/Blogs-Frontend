@@ -26,7 +26,7 @@ import FaqDrawer from "./FaqDrawer";
 import { getNotifications, markAllNotificationsAsRead } from "../services/api";
 import { useNotifications } from "../hooks/notificationHook";
 import NProgress from "nprogress";
-import Lekhan from "../../assets/images/lekhan.png";
+import Lekhan from "../../assets/images/LekhanTransparent.png";
 import LekhanHD from "../../assets/images/LekhanHD.png";
 
 export default function Header() {
