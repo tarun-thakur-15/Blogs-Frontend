@@ -136,7 +136,7 @@ const LogInModal: React.FC<CustomModalProps> = ({
           formLevel === 2
             ? "sign-in-modal success"
             : "sign-in-modal login" +
-              /* make full-screen on mobile, restore at sm+ */
+              
               " !w-screen !h-screen !m-0 !p-0 !rounded-none" +
               " sm:!w-auto sm:!h-auto sm:!m-4 sm:!p-6 sm:!rounded-lg"
         }
@@ -163,31 +163,19 @@ const LogInModal: React.FC<CustomModalProps> = ({
               <Form.Item name="identifier" rules={identifierRules} hasFeedback>
                 <Input
                   placeholder="Enter your email or username"
-                  prefix={
-                    // You can combine icons if desired or choose one.
-                    <>
-                      {/* <MailOutlined style={{ marginRight: 8 }} /> */}
-                      {/* <UserOutlined /> */}
-                    </>
-                  }
+                  
                 />
               </Form.Item>
               <Form.Item
                 name="password"
                 rules={[
                   { required: true, message: "Please enter your password!" },
-                  // Optionally add more rules here (e.g., min length, regex, etc.)
+                  
                 ]}
               >
                 <Input.Password
                   placeholder="Enter your password"
-                  prefix={
-                    // You can combine icons if desired or choose one.
-                    <>
-                      {/* <MailOutlined style={{ marginRight: 8 }} /> */}
-                      {/* <UserOutlined /> */}
-                    </>
-                  }
+                 
                 />
               </Form.Item>
 
@@ -211,57 +199,57 @@ const LogInModal: React.FC<CustomModalProps> = ({
               Forget Password?
             </p>
           </Flex>
-        ) : formLevel === 1 ? (
-          <Flex className="sign-in-modal--feilds" vertical>
-            <div className="sign-in-modal--header">
-              <h2>Enter your Email here</h2>
-            </div>
-            <Form name="forgetPassword" form={form}>
-              <Form.Item
-                name="mail"
-                rules={[
-                  { required: true, message: "Please enter your email!" },
-                  { type: "email", message: "The input is not a valid email!" },
-                ]}
-              >
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={emailInput}
-          onChange={(e) => setEmailInput(e.target.value)}
-                  prefix={<Email />}
-                />
-              </Form.Item>
+        ) : formLevel === 2 ? ( ""
+          // <Flex className="sign-in-modal--feilds" vertical>
+          //   <div className="sign-in-modal--header">
+          //     <h2>Enter your Email here</h2>
+          //   </div>
+          //   <Form name="forgetPassword" form={form}>
+          //     <Form.Item
+          //       name="mail"
+          //       rules={[
+          //         { required: true, message: "Please enter your email!" },
+          //         { type: "email", message: "The input is not a valid email!" },
+          //       ]}
+          //     >
+          //       <Input
+          //         type="email"
+          //         placeholder="Enter your email"
+          //         value={emailInput}
+          // onChange={(e) => setEmailInput(e.target.value)}
+          //         prefix={<Email />}
+          //       />
+          //     </Form.Item>
 
-              <Form.Item>
-                <Button
-                  type="primary"
-                  disabled={!emailInput.trim()}
-                  htmlType="submit"
-                  loading={sendOtpLoading}
-                  onClick={async () => {
-                    try {
-                      const values = await form.validateFields();
-                      setSendOtpLoading(true);
-                      await sendForgotPasswordOtp({ email: values.mail });
-                      setEmail(values.mail); // Store email in state for later steps
-                      setFormLevel(2);
-                      setSendOtpLoading(false);
-                    } catch (error: any) {
-                      setSendOtpLoading(false);
-                      setErrorMessage(
-                        error?.response?.data?.msg || "Something went wrong."
-                      );
-                    }
-                  }}
-                >
-                  Submit
-                </Button>
-                {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-              </Form.Item>
-            </Form>
-          </Flex>
-        ) : formLevel === 2 ? (
+          //     <Form.Item>
+          //       <Button
+          //         type="primary"
+          //         disabled={!emailInput.trim()}
+          //         htmlType="submit"
+          //         loading={sendOtpLoading}
+          //         onClick={async () => {
+          //           try {
+          //             const values = await form.validateFields();
+          //             setSendOtpLoading(true);
+          //             await sendForgotPasswordOtp({ email: values.mail });
+          //             setEmail(values.mail);
+          //             setFormLevel(2);
+          //             setSendOtpLoading(false);
+          //           } catch (error: any) {
+          //             setSendOtpLoading(false);
+          //             setErrorMessage(
+          //               error?.response?.data?.msg || "Something went wrong."
+          //             );
+          //           }
+          //         }}
+          //       >
+          //         Submit
+          //       </Button>
+          //       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+          //     </Form.Item>
+          //   </Form>
+          // </Flex>
+        ) : formLevel === 1 ? (
           <Flex className="sign-in-modal--feilds" vertical>
             <div className="sign-in-modal--header">
               <h2>Enter OTP</h2>
@@ -323,7 +311,7 @@ const LogInModal: React.FC<CustomModalProps> = ({
             )}
             <p>
               Did not receive an OTP?{" "}
-              {formLevel === 2 && countdown > 0 ? (
+              {formLevel === 1 && countdown > 0 ? (
                 <span>
                   <span style={{ color: "#B3A5A5", cursor: "not-allowed" }}>
                     Resend OTP
@@ -341,72 +329,72 @@ const LogInModal: React.FC<CustomModalProps> = ({
               )}
             </p>
           </Flex>
-        ) : formLevel === 3 ? (
-          <Flex className="sign-in-modal--feilds" vertical>
-            <div className="sign-in-modal--header">
-              <h2>Create your new password...</h2>
-            </div>
-            <Form
-              name="resetPassword"
-              onFinish={async (values) => {
-                if (values.newPassword !== values.confirmPassword) {
-                  setErrorMessage("Passwords do not match");
-                  return;
-                }
+        ) : formLevel === 3 ? ( ""
+          // <Flex className="sign-in-modal--feilds" vertical>
+          //   <div className="sign-in-modal--header">
+          //     <h2>Create your new password...</h2>
+          //   </div>
+          //   <Form
+          //     name="resetPassword"
+          //     onFinish={async (values) => {
+          //       if (values.newPassword !== values.confirmPassword) {
+          //         setErrorMessage("Passwords do not match");
+          //         return;
+          //       }
 
-                try {
-                  setResetLoading(true);
-                  await resetForgottenPassword({
-                    email,
-                    newPassword: values.newPassword,
-                    confirmPassword: values.confirmPassword,
-                  });
-                  setResetLoading(false);
-                  setFormLevel(0); // Optionally redirect to login or show success message
-                } catch (error: any) {
-                  setResetLoading(false);
-                  setErrorMessage(
-                    error?.response?.data?.msg || "Failed to reset password"
-                  );
-                }
-              }}
-            >
-              <Form.Item
-                name="newPassword"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter your new password!",
-                  },
-                ]}
-              >
-                <Input.Password placeholder="New Password" />
-              </Form.Item>
+          //       try {
+          //         setResetLoading(true);
+          //         await resetForgottenPassword({
+          //           email,
+          //           newPassword: values.newPassword,
+          //           confirmPassword: values.confirmPassword,
+          //         });
+          //         setResetLoading(false);
+          //         setFormLevel(0); // Optionally redirect to login or show success message
+          //       } catch (error: any) {
+          //         setResetLoading(false);
+          //         setErrorMessage(
+          //           error?.response?.data?.msg || "Failed to reset password"
+          //         );
+          //       }
+          //     }}
+          //   >
+          //     <Form.Item
+          //       name="newPassword"
+          //       rules={[
+          //         {
+          //           required: true,
+          //           message: "Please enter your new password!",
+          //         },
+          //       ]}
+          //     >
+          //       <Input.Password placeholder="New Password" />
+          //     </Form.Item>
 
-              <Form.Item
-                name="confirmPassword"
-                rules={[
-                  { required: true, message: "Please confirm your password!" },
-                ]}
-              >
-                <Input.Password placeholder="Confirm Password" />
-              </Form.Item>
+          //     <Form.Item
+          //       name="confirmPassword"
+          //       rules={[
+          //         { required: true, message: "Please confirm your password!" },
+          //       ]}
+          //     >
+          //       <Input.Password placeholder="Confirm Password" />
+          //     </Form.Item>
 
-              <Form.Item>
-                <Button type="primary" htmlType="submit" loading={resetLoading}>
-                  Reset Password
-                </Button>
-              </Form.Item>
+          //     <Form.Item>
+          //       <Button type="primary" htmlType="submit" loading={resetLoading}>
+          //         Reset Password
+          //       </Button>
+          //     </Form.Item>
 
-              {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-            </Form>
-          </Flex>
+          //     {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+          //   </Form>
+          // </Flex>
         ) : (
           <>
-            <Image className="success-gif" src={SuccessGif} alt="success" />
+            {/* <Image className="success-gif" src={SuccessGif} alt="success" />
             <p className="success-text">
               Logged in to your account successfully
-            </p>
+            </p> */}
           </>
         )}
       </Modal>
