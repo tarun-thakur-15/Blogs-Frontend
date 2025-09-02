@@ -15,6 +15,7 @@ import Link from "next/link";
 import { searchBlogsAndUsers } from "../services/api";
 import NProgress from "nprogress";
 import SearchIcon from "../../../public/images/search.svg";
+import defaultIamge from "../../../public/images/redDot.png";
 
 const CustomAutoComplete: React.FC = () => {
   const [value, setValue] = useState("");
@@ -63,7 +64,7 @@ const CustomAutoComplete: React.FC = () => {
                     alt={blog.author.fullName}
                     width={32}
                     height={32}
-                    className="rounded-full object-cover"
+                    className="rounded-full object-cover h-full w-full"
                   />
                 </div>
 
@@ -78,7 +79,7 @@ const CustomAutoComplete: React.FC = () => {
                 </div>
 
                 {/* RIGHT: Author + Username + Date */}
-                <div className="flex flex-col sm:items-end text-right">
+                <div className="flex flex-col sm:items-end text-right self-start">
                   <p className="!text-xs sm:!text-sm text-foreground font-medium !mb-0">
                     {blog.author.fullName}
                    
@@ -109,11 +110,13 @@ const CustomAutoComplete: React.FC = () => {
                     user.profileImage?.startsWith("http")
                       ? user.profileImage
                       : `https://blogs-backend-ftie.onrender.com/${user.profileImage}`
+                     
                   }
                   alt={user.fullName}
                   width={36}
                   height={36}
                   className="rounded-full object-cover h-full w-full"
+                  
                 />
               </div>
               <div className="flex w-full justify-start items-center gap-[10px] h-6">

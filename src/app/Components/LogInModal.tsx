@@ -266,7 +266,7 @@ const LogInModal: React.FC<CustomModalProps> = ({
             <div className="sign-in-modal--header">
               <h2>Enter OTP</h2>
               <p>
-                OTP sent on <a href={`#`}>johndoe@gmail.com</a>
+                OTP sent on <a href={`#`}>{Cookies.get(email)}</a>
               </p>
             </div>
             <Form
