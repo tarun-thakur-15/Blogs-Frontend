@@ -265,9 +265,9 @@ const LogInModal: React.FC<CustomModalProps> = ({
           <Flex className="sign-in-modal--feilds" vertical>
             <div className="sign-in-modal--header">
               <h2>Enter OTP</h2>
-              <p>
+              {/* <p>
                 OTP sent on <a href={`#`}>{Cookies.get(email)}</a>
-              </p>
+              </p> */}
             </div>
             <Form
               name="validateOtp"
