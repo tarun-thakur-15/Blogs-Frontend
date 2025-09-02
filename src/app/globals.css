@@ -1445,6 +1445,16 @@ textarea.ant-input {
 
 .forImageInsideContent img {
   border-radius: 20px;
+  height: 300px !important ;
+  width: auto !important ;
+  justify-self: center !important;
+  margin-top: 10px;
+}
+
+@media (max-width: 767px) {
+  .forImageInsideContent img {
+    height: 70% !important;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -1454,4 +1464,22 @@ textarea.ant-input {
 }
 .ant-select-dropdown .ant-select-item-option-content {
   white-space: nowrap !important;
+}
+
+@keyframes dots {
+  0% { content: "."; }
+  33% { content: ".."; }
+  66% { content: "..."; }
+  100% { content: ""; }
+}
+
+.loading-dots::after {
+  content: "";
+  animation: dots 1s steps(3, end) infinite;
+  color: white;
+}
+
+.loading-dots-delete::after {
+  content: "";
+  animation: dots 1s steps(3, end) infinite;
 }

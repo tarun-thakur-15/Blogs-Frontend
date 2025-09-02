@@ -78,9 +78,10 @@ export default function Comments({
     setLoading(false);
   };
   // Function to post a new comment and add it to the top of the list
+  const [isPosting, setIsPosting] = useState(false);
   const handleAddComment = async () => {
     if (!newCommentText.trim()) return; // Do not post empty comments
-
+    setIsPosting(true); // start loading
     const commentData: PostCommentInterface = {
       slug,
       content: newCommentText,
@@ -105,6 +106,8 @@ export default function Comments({
             "Failed to create comment.. Please try again later :-)"
         );
       }
+    } finally {
+      setIsPosting(false); // stop loading
     }
   };
 
@@ -115,19 +118,28 @@ export default function Comments({
     }));
   };
 
+  const [deletingCommentId, setDeletingCommentId] = useState<string | null>(
+    null
+  );
   const handleDeleteComment = async (commentId: string) => {
     try {
+      setDeletingCommentId(commentId); // mark this comment as being deleted
+
       const result = await deleteComment(commentId);
+
       setComments((prev) =>
         prev.filter((comment) => comment._id !== commentId)
       );
       toast.success(result?.msg || "Comment deleted successfully! 🗑️");
+
       setIsDropdownOpen((prev) => ({ ...prev, [commentId]: false })); // Close dropdown
     } catch (error: any) {
       toast.error(
         error.message || "Failed to delete comment.. Please try again later 😞"
       );
       console.error("Error deleting comment:", error);
+    } finally {
+      setDeletingCommentId(null); // reset
     }
   };
 
@@ -215,37 +227,33 @@ export default function Comments({
                 </div>
               </div>
 
-
               <div className="relative">
                 {accessToken && (
-                <button
-                  ref={optionsButtonRef}
-                  className="optionsMain group cursor-pointer"
-                  style={{
-                    backgroundColor: "white",
-                    border: "none",
-                    width: "24px",
-                    height: "24px",
-                  }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleDropdown(comment._id);
-                  }}
-                >
-                  
-                  <OptionsHorizontal
-                    className="optionIconSize"
-                    height={20}
-                    width={20}
-                  />
-                </button>
+                  <button
+                    ref={optionsButtonRef}
+                    className="optionsMain group cursor-pointer"
+                    style={{
+                      backgroundColor: "white",
+                      border: "none",
+                      width: "24px",
+                      height: "24px",
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      toggleDropdown(comment._id);
+                    }}
+                  >
+                    <OptionsHorizontal
+                      className="optionIconSize"
+                      height={20}
+                      width={20}
+                    />
+                  </button>
                 )}
 
                 {/* Delete Dropdown */}
-                
 
-                
                 {isDropdownOpen[comment._id] && (
                   <div className="dropdown" ref={dropdownRef}>
                     {(loggedInUsername === comment.author.username ||
@@ -258,12 +266,15 @@ export default function Comments({
                           handleDeleteComment(comment._id);
                         }}
                       >
-                        <span className="deleteText">Delete</span>
+                        {deletingCommentId === comment._id ? (
+                          <span className=".loading-dots-delete">Deleting</span>
+                        ) : (
+                          <span className="deleteText">Delete</span>
+                        )}
                       </button>
                     )}
                   </div>
                 )}
-                
               </div>
             </div>
           ))}
@@ -314,10 +325,15 @@ export default function Comments({
               />
             </div>
             <button
-              className="redButtons commentBtn whitespace-nowrap cursor-pointer"
+              disabled={isPosting}
+              className="w-full self-stretch flex items-center justify-center gap-1 rounded-md px-[18px] py-2 font-medium bg-green-600 hover:bg-green-700 transition-colors duration-300 ease-in-out commentBtn whitespace-nowrap cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
               onClick={handleAddComment}
             >
-              Add Comment
+              {isPosting ? (
+                <span className="loading-dots !text-white">Posting</span>
+              ) : (
+                "Add Comment"
+              )}
             </button>
           </div>
         </div>

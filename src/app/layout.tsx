@@ -69,7 +69,7 @@ export default function RootLayout({
       >
         <ProgressBar />
         <Header />
-        <main className="relative z-10">{children}</main>
+        <main>{children}</main>
       </body>
     </html>
     // </ThemeProvider>

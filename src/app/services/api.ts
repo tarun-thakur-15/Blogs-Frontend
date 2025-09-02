@@ -2,7 +2,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { SignUpSchema, Login, VerifyOtp, changePassword, ResendOtp, ReactionPayload, CreateBlog, PostCommentInterface, EditAboutSchema, DraftPayload, EditFullNameSchema, EditUsernameSchema, ForgotPasswordSendOtpSchema, ForgotPasswordVerifyOtpSchema, ForgotPasswordResetSchema, DraftResponse } from "./schema";
 
-const url = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
+// const url = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
+const url = "https://blogs-backend-ftie.onrender.com/api"
 const accessToken = Cookies.get("accessToken");
 import { redirect } from 'next/navigation'; 
 export const signUpUser = async (userData: SignUpSchema) => {
