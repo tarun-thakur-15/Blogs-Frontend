@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Flex, Button, Drawer, Skeleton } from "antd";
+import { Flex, Button } from "antd";
 import {
   Tooltip,
   TooltipContent,
@@ -11,23 +11,17 @@ import {
 import Image from "next/image";
 import SignInModal from "./SignInModal";
 import LogInModal from "./LogInModal";
-import ThemeToggle from "./ThemeToggle";
-// import CreateModal from "./CreateModal";
 import { useRouter } from "next/navigation";
-import { usePathname } from "next/navigation";
 import SettingIcon from "../../../public/images/setting.svg";
 import SignOutIcon from "../../../public/images/sign-out.svg";
 import Bell from "../../../public/images/bell.svg";
 import "../styles/header.css";
 import Cookies from "js-cookie";
-// import bydefaultUser from "../../../public/images/avatar2.png";
-import uncheckedNotificationIcon from "../../../public/images/redDot.png";
 import FaqDrawer from "./FaqDrawer";
-import { getNotifications, markAllNotificationsAsRead } from "../services/api";
-import { useNotifications } from "../hooks/notificationHook";
 import NProgress from "nprogress";
 import Lekhan from "../../assets/images/LekhanTransparent.png";
-import LekhanHD from "../../assets/images/LekhanHD.png";
+import NotificationDrawer from "./NotificationDrawer";
+import { getUnreadNotificationCount } from "../services/api";
 
 export default function Header() {
   const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
@@ -41,12 +35,7 @@ export default function Header() {
   const [username, setUsername] = useState<string | null>(null);
   const [fullName, setFullName] = useState<string | null>(null);
   const [isDrawerVisible, setDrawerVisible] = useState(false);
-  const [loadingNotifications, setLoadingNotifications] = useState(false);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
-  const { notifications, setNotifications } = useNotifications(
-    Cookies.get("userId")!
-  );
-  const [offset, setOffset] = useState(0);
   const router = useRouter();
 
   const token = Cookies.get("accessToken");
@@ -107,6 +96,23 @@ export default function Header() {
     };
   }, []);
 
+  // this below useEffect is for calling unread notification count api
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        const data = await getUnreadNotificationCount(token);
+
+        if (data?.unreadCount) {
+          setUnreadNotifications(data.unreadCount);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUnreadCount();
+  }, []);
+
   //logout function to clear all the cookies and then page reload
   const logout = () => {
     console.log("sign out button clicked");
@@ -117,47 +123,14 @@ export default function Header() {
     });
   };
 
-  // Function to load existing notifications (when drawer opens)
-  const fetchNotifications = async () => {
-    setLoadingNotifications(true);
-    try {
-      const data = await getNotifications(token, offset, 10);
+  const DEFAULT_AVATAR = `/images/default-user.webp`;
 
-      setNotifications(data.notifications);
-      setUnreadNotifications(data.unreadCount); // Adjust if API returns a total count separately
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-    }
-    setLoadingNotifications(false);
-  };
+  const initialSrc = profileImage
+    ? `${backendBaseUrl}/${profileImage}`
+    : DEFAULT_AVATAR;
 
-  // Load notifications when drawer opens
-  useEffect(() => {
-    if (isNotificationDrawerOpen) {
-      fetchNotifications();
-    }
-  }, [isNotificationDrawerOpen]);
+  const [imgSrc, setImgSrc] = useState(initialSrc);
 
-  // **Mark all notifications as read**
-  const handleMarkAllAsRead = async () => {
-    if (notifications.length === 0) return;
-
-    // **Optimistically update the state**
-    const updatedNotifications = notifications.map((notif) => ({
-      ...notif,
-      isRead: true,
-    }));
-    setNotifications(updatedNotifications);
-    setUnreadNotifications(0); // Since all are marked read
-
-    try {
-      await markAllNotificationsAsRead();
-    } catch (error) {
-      console.error("Error marking notifications as read:", error);
-      // **Revert state if API call fails**
-      fetchNotifications();
-    }
-  };
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
@@ -180,7 +153,6 @@ export default function Header() {
           {/* <div className="md:w-[146.23px]">{isLoggedIn && <ThemeToggle />}</div> */}
 
           <Link className="logo" href={"/"}>
-           
             <Image
               src={Lekhan}
               alt="Blogs"
@@ -205,11 +177,17 @@ export default function Header() {
                 />
                 <Button
                   type="text"
-                  className={`font-sm ${unreadNotifications ? "icon" : ""}`}
+                  className="font-sm notificationButton"
                   onClick={toggleNotificationDrawer}
                 >
-                  <div style={{ position: "relative" }}>
+                  <div className="bellWrapper">
                     <Bell className="NotificationIcon" />
+
+                    {unreadNotifications > 0 && (
+                      <span className="notificationBadge">
+                        {unreadNotifications}
+                      </span>
+                    )}
                   </div>
                 </Button>
                 <div
@@ -221,10 +199,15 @@ export default function Header() {
                   }}
                 >
                   <Image
-                    src={`${backendBaseUrl}/${profileImage}`}
+                    src={imgSrc}
                     alt="User Profile"
                     width={27}
                     height={27}
+                    onError={() => {
+                      if (imgSrc !== DEFAULT_AVATAR) {
+                        setImgSrc(DEFAULT_AVATAR);
+                      }
+                    }}
                   />
                 </div>
                 {showProfile && (
@@ -232,10 +215,15 @@ export default function Header() {
                     <div>
                       <div className="avatar">
                         <Image
-                          src={`${backendBaseUrl}/${profileImage}`}
-                          alt="User Profile"
+                          src={imgSrc}
+                          alt={username || fullName || "Profile Picture"}
                           width={40}
                           height={40}
+                          onError={() => {
+                            if (imgSrc !== DEFAULT_AVATAR) {
+                              setImgSrc(DEFAULT_AVATAR);
+                            }
+                          }}
                         />
                       </div>
                       <p className="profile-popover--name">{fullName}</p>
@@ -308,84 +296,12 @@ export default function Header() {
         </Flex>
       </div>
       {/* notification drawer */}
-      <Drawer
-        title="Notification"
-        onClose={toggleNotificationDrawer}
+
+      <NotificationDrawer
         open={isNotificationDrawerOpen}
-        width={350}
-      >
-        <div className="notificationInnerZero">
-          <p className="unread">
-            <span>{unreadNotifications} </span> Unread
-          </p>
-          <Button className="markAllAsReadBtn" onClick={handleMarkAllAsRead}>
-            Mark all as read
-          </Button>
-        </div>
-        <div className="notification-content">
-          {loadingNotifications ? (
-            <Skeleton active avatar paragraph={{ rows: 1, width: "100%" }} />
-          ) : notifications.length > 0 ? (
-            notifications.map((notif: any) => (
-              <div
-                key={notif._id}
-                className="notificationInner"
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  // Navigate or mark notification as read
-                  NProgress.start();
-                }}
-              >
-                <Link
-                  href={
-                    notif.type === "follow"
-                      ? `/user/${notif.message.split(" ")[0]}` // Extract username from message
-                      : notif.type === "comment"
-                      ? `/${notif?.blog?.slug}` // Link to the blog where the comment was made
-                      : `/${notif?.blog?.slug}` // Default case (for reactions, etc.)
-                  }
-                >
-                  {/* Show different layout if notification is unread */}
-                  {notif.isRead ? (
-                    <>
-                      <div className="notificationContentParent">
-                        <p className="notificationContent">{notif.message}</p>
-                        <div className="notificationDayParent">
-                          <span className="notificationDay">
-                            {new Date(notif.createdAt).toLocaleDateString()}
-                          </span>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <Image
-                        src={uncheckedNotificationIcon}
-                        alt="unchecked notification"
-                        className="uncheckedNotificationIcon"
-                        width={40}
-                        height={40}
-                      />
-                      <div className="notificationContentParent">
-                        <p className="notificationContentIfAlreadyRead">
-                          {notif.message}
-                        </p>
-                        <div className="notificationDayParent">
-                          <span className="notificationDay">
-                            {new Date(notif.createdAt).toLocaleDateString()}
-                          </span>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </Link>
-              </div>
-            ))
-          ) : (
-            <p style={{ padding: "10px" }}>No notifications found.</p>
-          )}
-        </div>
-      </Drawer>
+        onClose={toggleNotificationDrawer}
+        setUnreadNotifications={setUnreadNotifications}
+      />
       <SignInModal
         setIsModalOpen={setIsModalOpen}
         showLoginModal={showLoginModal}

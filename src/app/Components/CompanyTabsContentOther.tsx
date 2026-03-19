@@ -13,6 +13,8 @@ import {
 
 // CSS
 import "../styles/tabs.css";
+import DetailedBlogHeaderSkeleton from "./DetailedBlogHeaderSkeleton";
+import BlogSkeleton from "./BlogSkeleton";
 // IMAGES
 interface BlogPreview {
   _id: string;
@@ -34,7 +36,6 @@ interface BlogPreview {
 interface CompanyTabsContentOtherProps {
   about?: string;
   type?: string;
-  highlightedBlogsData?: BlogPreview[];
   username: string;
   topic?: string;
 }
@@ -52,13 +53,11 @@ export default function CompanyTabsContentOther({
   // When the tab type is "Topic" and a topic is provided, fetch blogs for that topic
   useEffect(() => {
     if (type === "Topic" && topic) {
-  
       setLoading(true);
       getBlogsByTopic(username, topic, 0, 10, token)
         .then((data) => {
           setTopicBlogs(data.blogs || []);
           setLoading(false);
-          
         })
         .catch((error) => {
           console.error("Error fetching blogs by topic:", error);
@@ -92,7 +91,7 @@ export default function CompanyTabsContentOther({
 
   // Fetch All blogs when type is "AllBlogs"
   useEffect(() => {
-    if (type === "AllBlogs") {
+    if (type === "All Blogs") {
       setAllBlogsLoading(true);
       getUserBlogs(0, 10, username, token)
         .then((data) => {
@@ -105,9 +104,11 @@ export default function CompanyTabsContentOther({
         });
     }
   }, [type, username]);
+
+
   return (
     <div className="company-tabs--content">
-      <Flex vertical gap={type !== "about" ? 20 : 12}>
+      <Flex vertical gap={type !== "About" ? 20 : 12}>
         <Flex justify="space-between" align="center">
           <Flex gap={6} align="center">
             <h4 className="mb-0">{type === "Topic" ? topic : type}</h4>
@@ -122,29 +123,7 @@ export default function CompanyTabsContentOther({
         {type === "Highlights" ? (
           <Flex className="company-tabs--list" vertical gap={20}>
             {highlightedBlogsLoading ? (
-              <div style={{ padding: "20px 0" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "30px",
-                  }}
-                >
-                  {/* skeleton for header */}
-                  <div
-                    className="skeletonHeaderProfile"
-                    style={{ marginBottom: "30px" }}
-                  >
-                    <div>
-                      <Skeleton.Avatar size={70} shape="circle" />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <Skeleton active paragraph={{ rows: 1, width: "100%" }} />
-                    </div>
-                  </div>
-                  {/* skeleton for body */}
-                </div>
-              </div>
+              <BlogSkeleton/>
             ) : (
               <FaqsForUserPage
                 initialBlogs={highlightedBlogs || []}
@@ -157,7 +136,7 @@ export default function CompanyTabsContentOther({
         {type === "All Blogs" ? (
           <Flex className="company-tabs--list" vertical gap={20}>
             {allBlogsLoading ? (
-              <Spin tip="Loading All blogs..." />
+              <BlogSkeleton/>
             ) : (
               <AllBlogsUserPage
                 initialBlogs={allBlogs || []}
@@ -166,40 +145,11 @@ export default function CompanyTabsContentOther({
             )}
           </Flex>
         ) : null}
-        {/* {type === "AllBlogs" ? (
-          <Flex className="company-tabs--list" vertical gap={20}>
-            <FaqsForUserPage
-              initialBlogs={highlightedBlogsData || []}
-              username={username}
-            />
-          </Flex>
-        ) : null} */}
+       
         {type === "Topic" ? (
           <Flex className="company-tabs--list" vertical gap={20}>
             {loading ? (
-              <div style={{ padding: "20px 0" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "30px",
-                  }}
-                >
-                  {/* skeleton for header */}
-                  <div
-                    className="skeletonHeaderProfile"
-                    style={{ marginBottom: "30px" }}
-                  >
-                    <div>
-                      <Skeleton.Avatar size={70} shape="circle" />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <Skeleton active paragraph={{ rows: 1, width: "100%" }} />
-                    </div>
-                  </div>
-                  {/* skeleton for body */}
-                </div>
-              </div>
+             <BlogSkeleton/>
             ) : (
               <DynamicTopicBlogs
                 initialBlogs={topicBlogs || []}

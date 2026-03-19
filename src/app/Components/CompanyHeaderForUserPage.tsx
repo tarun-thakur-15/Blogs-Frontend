@@ -20,6 +20,7 @@ import NProgress from "nprogress";
 import { toast, Toaster } from "sonner";
 import SignInModal from "./SignInModal";
 import LogInModal from "./LogInModal";
+import DetailedBlogHeaderSkeleton from "./DetailedBlogHeaderSkeleton";
 
 interface CompanyHeaderOtherProps {
   username: string;
@@ -53,6 +54,7 @@ export default function CompanyHeaderOther({
   totalBlogs,
   blogSlug,
 }: CompanyHeaderOtherProps) {
+  const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
   // State for Followers Modal
   const [isSubscriberListModalOpen, setIsSubscriberListModalOpen] =
     useState(false);
@@ -73,8 +75,8 @@ export default function CompanyHeaderOther({
   const [followingQuery, setFollowingQuery] = useState("");
 
   const [localIsFollowed, setLocalIsFollowed] = useState(isFollowed);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const token = Cookies.get("accessToken");
 
@@ -129,7 +131,7 @@ export default function CompanyHeaderOther({
         root: null,
         rootMargin: "0px",
         threshold: 0.1,
-      }
+      },
     );
 
     if (loadMoreRef.current) {
@@ -155,7 +157,7 @@ export default function CompanyHeaderOther({
               const data = await getFollowingList(
                 username,
                 followingOffset,
-                10
+                10,
               );
               const newFollowing = data.following || [];
               if (newFollowing.length < 10) setHasMoreFollowing(false);
@@ -167,7 +169,7 @@ export default function CompanyHeaderOther({
           })();
         }
       },
-      { root: null, rootMargin: "0px", threshold: 0.1 }
+      { root: null, rootMargin: "0px", threshold: 0.1 },
     );
     if (followingLoadMoreRef.current) {
       observer.observe(followingLoadMoreRef.current);
@@ -179,40 +181,41 @@ export default function CompanyHeaderOther({
     };
   }, [hasMoreFollowing, loadingFollowing, followingOffset, username]);
 
-const handleFollowChange = async (value: string) => {
-  setLocalIsFollowed((prev) => !prev);
-  try {
-    const token = Cookies.get("accessToken");
-
-    // If token is not available, show login modal and return early
-    if (!token) {
-      showLoginModal();
-      setLocalIsFollowed((prev) => !prev); // Revert the follow toggle
-      return;
-    }
-
-    const res = await toggleFollow(username, token);
-    toast.success(
-      res?.msg ||
-        `You have ${
-          localIsFollowed ? "unfollowed" : "followed"
-        } ${username} successfully! 🎉`
-    );
-  } catch (error: any) {
-    const token = Cookies.get("accessToken");
-
-    if (!token) {
-      showLoginModal();
-    } else {
-      toast.error(
-        error.message || "Failed to update follow status. Please try again. ❌"
-      );
-    }
-
-    // Always revert the follow state in case of error
+  const handleFollowChange = async (value: string) => {
     setLocalIsFollowed((prev) => !prev);
-  }
-};
+    try {
+      const token = Cookies.get("accessToken");
+
+      // If token is not available, show login modal and return early
+      if (!token) {
+        showLoginModal();
+        setLocalIsFollowed((prev) => !prev); // Revert the follow toggle
+        return;
+      }
+
+      const res = await toggleFollow(username, token);
+      toast.success(
+        res?.msg ||
+          `You have ${
+            localIsFollowed ? "unfollowed" : "followed"
+          } ${username} successfully! 🎉`,
+      );
+    } catch (error: any) {
+      const token = Cookies.get("accessToken");
+
+      if (!token) {
+        showLoginModal();
+      } else {
+        toast.error(
+          error.message ||
+            "Failed to update follow status. Please try again. ❌",
+        );
+      }
+
+      // Always revert the follow state in case of error
+      setLocalIsFollowed((prev) => !prev);
+    }
+  };
 
   // Handler for toggling favourite status
   const handleFavouriteChange = async (value: string) => {
@@ -225,6 +228,14 @@ const handleFollowChange = async (value: string) => {
       console.error("Error toggling favourite:", error);
     }
   };
+
+  const DEFAULT_AVATAR = `/images/default-user.webp`;
+
+  const initialSrc = profileImage
+    ? `${backendBaseUrl}/${profileImage}`
+    : DEFAULT_AVATAR;
+
+  const [imgSrc, setImgSrc] = useState(initialSrc);
   // ---------------------
   const fetchAllFollowers = useCallback(async () => {
     setLoadingFollowers(true);
@@ -261,7 +272,7 @@ const handleFollowChange = async (value: string) => {
     }
   }, [followingQuery, isFollowingModalOpen, fetchAllFollowing]);
 
-    // ---------------------------
+  // ---------------------------
   const showLoginModal = () => {
     setIsModalOpen(false);
     setIsLoginModalOpen(true);
@@ -273,6 +284,16 @@ const handleFollowChange = async (value: string) => {
     setIsLoginModalOpen(false);
     document.body.classList.add("modal-opened");
   };
+
+  //loading state UI
+  const [pageLoading, setPageLoading] = useState(true);
+  useEffect(() => {
+    setPageLoading(false);
+  }, []);
+
+  if (pageLoading) {
+    return <DetailedBlogHeaderSkeleton />;
+  }
   return (
     <>
       <Toaster position="top-right" />
@@ -288,10 +309,15 @@ const handleFollowChange = async (value: string) => {
             <div className="file-upload">
               {/* <input className="profile-pic" type="file" /> */}
               <Image
-                src={`https://blogs-backend-ftie.onrender.com/${profileImage}` || bydefaultUser}
+                src={imgSrc}
                 alt="profile picture"
                 width={68}
                 height={68}
+                onError={() => {
+                  if (imgSrc !== DEFAULT_AVATAR) {
+                    setImgSrc(DEFAULT_AVATAR);
+                  }
+                }}
               />
             </div>
           </div>
@@ -350,10 +376,15 @@ const handleFollowChange = async (value: string) => {
         open={isSubscriberListModalOpen}
         onCancel={() => setIsSubscriberListModalOpen(false)}
         footer={null}
-        styles={{ body: { height: "100%", overflowY: "auto", padding: "1rem" } }}
+        styles={{
+          body: { height: "100%", overflowY: "auto", padding: "1rem" },
+        }}
         className="!w-screen !h-screen !m-0 !p-0 !rounded-none sm:!w-auto sm:!h-auto sm:!m-4 sm:!p-6 sm:!rounded-lg"
       >
-        <div className="followersModalParent" style={{ maxWidth: "100%", width: "100%" }}>
+        <div
+          className="followersModalParent"
+          style={{ maxWidth: "100%", width: "100%" }}
+        >
           <div className="followersSpanParent" style={{ maxWidth: "100%" }}>
             <span className="followersSpan">Followers</span>
           </div>
@@ -379,7 +410,10 @@ const handleFollowChange = async (value: string) => {
                   <div className="followerItemInner">
                     <div className="followerIconContainer">
                       <Image
-                        src={`https://blogs-backend-ftie.onrender.com/${follower.profileImage}` || bydefaultUser}
+                        src={
+                          `https://blogs-backend-ftie.onrender.com/${follower.profileImage}` ||
+                          bydefaultUser
+                        }
                         alt="following user"
                         className="followerIcon object-cover"
                         width={40}
@@ -406,10 +440,15 @@ const handleFollowChange = async (value: string) => {
         open={isFollowingModalOpen}
         onCancel={() => setIsFollowingModalOpen(false)}
         footer={null}
-        styles={{ body: { height: "100%", overflowY: "auto", padding: "1rem" } }}
+        styles={{
+          body: { height: "100%", overflowY: "auto", padding: "1rem" },
+        }}
         className="!w-screen !h-screen !m-0 !p-0 !rounded-none sm:!w-auto sm:!h-auto sm:!m-4 sm:!p-6 sm:!rounded-lg"
       >
-        <div className="followersModalParent" style={{ maxWidth: "100%", width: "100%" }}>
+        <div
+          className="followersModalParent"
+          style={{ maxWidth: "100%", width: "100%" }}
+        >
           <div className="followersSpanParent" style={{ maxWidth: "100%" }}>
             <span className="followersSpan">Following</span>
           </div>
@@ -435,7 +474,10 @@ const handleFollowChange = async (value: string) => {
                   <div className="followerItemInner">
                     <div className="followerIconContainer">
                       <Image
-                        src={`https://blogs-backend-ftie.onrender.com/${user.profileImage}` || bydefaultUser}
+                        src={
+                          `https://blogs-backend-ftie.onrender.com/${user.profileImage}` ||
+                          bydefaultUser
+                        }
                         alt="following user"
                         className="followerIcon object-cover"
                         width={40}
@@ -455,7 +497,7 @@ const handleFollowChange = async (value: string) => {
           </div>
         </div>
       </Modal>
-            <SignInModal
+      <SignInModal
         setIsModalOpen={setIsModalOpen}
         showLoginModal={showLoginModal}
         isModalOpen={isModalOpen}

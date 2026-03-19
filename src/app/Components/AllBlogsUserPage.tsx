@@ -1,9 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { Flex, Button, Skeleton } from "antd";
-import type { MenuProps } from "antd";
+import { Flex, Button } from "antd";
 import Cookies from "js-cookie";
 import { reactToBlog, getUserBlogs } from "../services/api";
 import { ReactionPayload } from "../services/schema"; // ensure correct path
@@ -11,15 +9,13 @@ import { ReactionPayload } from "../services/schema"; // ensure correct path
 import "../styles/awnserbox.css";
 // Images
 
-import notLoggedInIcon from "../../assets/images/not-logged-in-user.png";
-import Like from "../../../public/images/like.svg";
 import Comment from "../../../public/images/comment.svg";
-import BoxIcon from "../../../public/images/box.svg";
 import BoxIconPng from "../../assets/images/box.png";
 import SignInModal from "../Components/SignInModal";
 import LogInModal from "../Components/LogInModal";
 import moment from "moment";
 import Link from "next/link";
+import BlogSkeleton from "./BlogSkeleton";
 
 interface Fly {
   id: number;
@@ -91,17 +87,16 @@ export default function AllBlogsUserPage({
   const handleReaction = async (
     slug: string,
     reactionType: ReactionPayload["reactionType"],
-    blogId: string
+    blogId: string,
   ) => {
-
     try {
       const result = await reactToBlog(slug, { reactionType }, AccessToken);
 
       // Update the local state with the new reaction counts for the blog that was updated
       setBlogs((prevBlogs) =>
         prevBlogs.map((blog) =>
-          blog.slug === slug ? { ...blog, reactions: result.reaction } : blog
-        )
+          blog.slug === slug ? { ...blog, reactions: result.reaction } : blog,
+        ),
       );
       setSelectedReactions((prev) => ({ ...prev, [blogId]: reactionType }));
     } catch (error) {
@@ -113,7 +108,6 @@ export default function AllBlogsUserPage({
   const handleClickForBlog =
     (blogId: string, emoji: string) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
-
       const id = Date.now();
       const button = e.currentTarget;
       const startX = button.offsetLeft + button.offsetWidth / 2;
@@ -143,7 +137,7 @@ export default function AllBlogsUserPage({
     (
       blogId: string,
       slug: string,
-      reactionType: ReactionPayload["reactionType"]
+      reactionType: ReactionPayload["reactionType"],
     ) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
@@ -180,13 +174,20 @@ export default function AllBlogsUserPage({
         offsetRef.current,
         10,
         username,
-        AccessToken
+        AccessToken,
       );
       if (data.blogs && data.blogs.length > 0) {
         setBlogs((prev) => {
-          const newBlogs = [...prev, ...data.blogs];
-          // Update the offsetRef to the new total count.
+          const existingIds = new Set(prev.map((b) => b._id));
+
+          const filtered = data.blogs.filter(
+            (b: BlogPreview) => !existingIds.has(b._id),
+          );
+
+          const newBlogs = [...prev, ...filtered];
+
           offsetRef.current = newBlogs.length;
+
           return newBlogs;
         });
       } else {
@@ -202,7 +203,7 @@ export default function AllBlogsUserPage({
     const observer = new IntersectionObserver(
       (entries) => {
         // If the loadMoreRef container is visible and not currently loading, trigger loadMoreBlogs
-        if (entries[0].isIntersecting && !loadingMore) {
+        if (entries[0].isIntersecting && !loadingMore && hasMore) {
           loadMoreBlogs();
         }
       },
@@ -210,7 +211,7 @@ export default function AllBlogsUserPage({
         root: null,
         rootMargin: "0px",
         threshold: 0.1,
-      }
+      },
     );
 
     if (loadMoreRef.current) {
@@ -224,6 +225,11 @@ export default function AllBlogsUserPage({
     };
   }, [loadMoreBlogs, loadingMore, hasMore]);
 
+  useEffect(() => {
+  setBlogs(initialBlogs);
+  offsetRef.current = initialBlogs.length;
+}, [initialBlogs]);
+
   return (
     <>
       {blogs && blogs.length > 0
@@ -234,12 +240,21 @@ export default function AllBlogsUserPage({
               (blog.isLiked
                 ? "like"
                 : blog.isAmazing
-                ? "amazing"
-                : blog.isConfusing
-                ? "confusing"
-                : blog.isDisliked
-                ? "dislike"
-                : "");
+                  ? "amazing"
+                  : blog.isConfusing
+                    ? "confusing"
+                    : blog.isDisliked
+                      ? "dislike"
+                      : "");
+
+  const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
+  const DEFAULT_AVATAR = `/images/default-user.webp`;
+
+  const initialSrc = blog?.author?.profileImage
+    ? `${backendBaseUrl}/${blog?.author?.profileImage}`
+    : DEFAULT_AVATAR;
+
+  const [imgSrc, setImgSrc] = useState(initialSrc);
 
             return (
               <div key={`${blog._id}-${index}`} className="awnser-box">
@@ -258,13 +273,11 @@ export default function AllBlogsUserPage({
                       <Flex gap={2} align="center">
                         <div className="awnser-box--company">
                           <Image
-                            src={
-                              `https://blogs-backend-ftie.onrender.com/${blog.author.profileImage}` ||
-                              notLoggedInIcon
-                            }
-                            alt="Placeholder avatar"
+                          src={imgSrc}
+                            alt={blog.author.username}
                             width={40}
                             height={40}
+                            onError={() => setImgSrc(DEFAULT_AVATAR)}
                           />
                         </div>
                         <span className="usernameBlogsHome">
@@ -288,7 +301,7 @@ export default function AllBlogsUserPage({
                             onClick={handleReactionWithAnimation(
                               blog._id,
                               blog.slug,
-                              "like"
+                              "like",
                             )}
                           >
                             <p
@@ -309,7 +322,7 @@ export default function AllBlogsUserPage({
                             onClick={handleReactionWithAnimation(
                               blog._id,
                               blog.slug,
-                              "amazing"
+                              "amazing",
                             )}
                           >
                             <p
@@ -330,7 +343,7 @@ export default function AllBlogsUserPage({
                             onClick={handleReactionWithAnimation(
                               blog._id,
                               blog.slug,
-                              "confusing"
+                              "confusing",
                             )}
                           >
                             <p
@@ -351,7 +364,7 @@ export default function AllBlogsUserPage({
                             onClick={handleReactionWithAnimation(
                               blog._id,
                               blog.slug,
-                              "dislike"
+                              "dislike",
                             )}
                           >
                             <p
@@ -383,7 +396,11 @@ export default function AllBlogsUserPage({
 
                         {/* Comment Button */}
                         <Button className="add-like" type="text">
-                          <Comment width={15} height={15} className="commentIcon" />
+                          <Comment
+                            width={15}
+                            height={15}
+                            className="commentIcon"
+                          />
                           <p className="reactionCountOnHome">
                             {blog.commentCount}
                           </p>
@@ -410,27 +427,7 @@ export default function AllBlogsUserPage({
       )}
 
       {/* Loading Skeleton for Infinite Scroll */}
-      <div ref={loadMoreRef} style={{ padding: "20px 0" }}>
-        {loadingMore && (
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "30px" }}
-          >
-            {/* Skeleton for header */}
-            <div
-              className="skeletonHeaderProfile"
-              style={{ marginBottom: "30px" }}
-            >
-              <div>
-                <Skeleton.Avatar size={70} shape="circle" />
-              </div>
-              <div style={{ flex: 1 }}>
-                <Skeleton active paragraph={{ rows: 1, width: "100%" }} />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
+      <div ref={loadMoreRef}>{loadingMore && <BlogSkeleton />}</div>
       {/* Modals */}
       <SignInModal
         setIsModalOpen={setIsModalOpen}

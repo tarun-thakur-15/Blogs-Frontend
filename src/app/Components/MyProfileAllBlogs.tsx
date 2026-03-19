@@ -26,6 +26,7 @@ import LogInModal from "../Components/LogInModal";
 import moment from "moment";
 import Link from "next/link";
 import Options from "../../../public/images/options.svg";
+import BlogSkeleton from "./BlogSkeleton";
 
 interface Fly {
   id: number;
@@ -63,6 +64,10 @@ interface MyProfileAllBlogs {
   initialBlogs: BlogPreview[];
   username: string;
   topic: string;
+}
+
+interface BlogCardProps {
+  blog: BlogPreview;
 }
 export default function MyProfileAllBlogs({
   initialBlogs,
@@ -102,17 +107,16 @@ export default function MyProfileAllBlogs({
   const handleReaction = async (
     slug: string,
     reactionType: ReactionPayload["reactionType"],
-    blogId: string
+    blogId: string,
   ) => {
-
     try {
       const result = await reactToBlog(slug, { reactionType }, AccessToken);
-     
+
       // Update the local state with the new reaction counts for the blog that was updated
       setBlogs((prevBlogs) =>
         prevBlogs.map((blog) =>
-          blog.slug === slug ? { ...blog, reactions: result.reaction } : blog
-        )
+          blog.slug === slug ? { ...blog, reactions: result.reaction } : blog,
+        ),
       );
       setSelectedReactions((prev) => ({ ...prev, [blogId]: reactionType }));
     } catch (error) {
@@ -124,7 +128,6 @@ export default function MyProfileAllBlogs({
   const handleClickForBlog =
     (blogId: string, emoji: string) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      
       const id = Date.now();
       const button = e.currentTarget;
       const startX = button.offsetLeft + button.offsetWidth / 2;
@@ -154,7 +157,7 @@ export default function MyProfileAllBlogs({
     (
       blogId: string,
       slug: string,
-      reactionType: ReactionPayload["reactionType"]
+      reactionType: ReactionPayload["reactionType"],
     ) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
@@ -191,7 +194,7 @@ export default function MyProfileAllBlogs({
         offsetRef.current,
         10,
         username,
-        AccessToken
+        AccessToken,
       );
       if (data.blogs && data.blogs.length > 0) {
         setBlogs((prev) => {
@@ -221,7 +224,7 @@ export default function MyProfileAllBlogs({
         root: null,
         rootMargin: "0px",
         threshold: 0.1,
-      }
+      },
     );
 
     if (loadMoreRef.current) {
@@ -235,18 +238,15 @@ export default function MyProfileAllBlogs({
     };
   }, [loadMoreBlogs, loadingMore, hasMore]);
 
-
   const toggleDropdown = (id: string | null) => {
-  setIsDropdownOpen((prev) => (prev === id ? null : id));
- 
-};
-
+    setIsDropdownOpen((prev) => (prev === id ? null : id));
+  };
 
   const handleDeleteBlog = async (slug: string) => {
     try {
       setLoading(true);
       const result = await deleteBlog(slug, AccessToken);
-  
+
       toast.success(result.msg || "About Updated Successfully!");
       setTimeout(async () => {
         const data = await getUserBlogs(0, 10, username, AccessToken);
@@ -254,7 +254,6 @@ export default function MyProfileAllBlogs({
           setBlogs(data.blogs);
           // Optionally update the offsetRef if required:
           offsetRef.current = data.blogs.length;
-         
         }
       }, 1000);
     } catch (error) {
@@ -271,14 +270,13 @@ export default function MyProfileAllBlogs({
       // Call the toggleHighlight API function
       const result = await toggleHighlight(slug);
       toast.success(result.msg);
-      
+
       setTimeout(async () => {
         const data = await getUserBlogs(0, 10, username, AccessToken);
         if (data.blogs) {
           setBlogs(data.blogs);
           // Optionally update the offsetRef if required:
           offsetRef.current = data.blogs.length;
-         
         }
       }, 1000);
     } catch (error: any) {
@@ -295,7 +293,7 @@ export default function MyProfileAllBlogs({
       // Call the toggleHighlight API function
       const result = await toggleArchieve(slug);
       toast.success(result.msg);
-      
+
       // Wait for 1 second before refreshing the highlighted blogs
       setTimeout(async () => {
         const data = await getUserBlogs(0, 10, username, AccessToken);
@@ -303,7 +301,6 @@ export default function MyProfileAllBlogs({
           setBlogs(data.blogs);
           // Optionally update the offsetRef if required:
           offsetRef.current = data.blogs.length;
-         
         }
       }, 1000);
     } catch (error: any) {
@@ -315,25 +312,42 @@ export default function MyProfileAllBlogs({
   };
 
   // this is for closing dropdown when clicked anywhere outside it 👇
-const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-useEffect(() => {
-  const handleClickOutside = (event: MouseEvent) => {
-    const openDropdownRef = dropdownRefs.current[isDropdownOpen ?? ""];
-    if (
-      openDropdownRef &&
-      !openDropdownRef.contains(event.target as Node)
-    ) {
-      toggleDropdown(null);
-    }
-  };
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const openDropdownRef = dropdownRefs.current[isDropdownOpen ?? ""];
+      if (openDropdownRef && !openDropdownRef.contains(event.target as Node)) {
+        toggleDropdown(null);
+      }
+    };
 
-  document.addEventListener("click", handleClickOutside);
-  return () => {
-    document.removeEventListener("click", handleClickOutside);
-  };
-}, [isDropdownOpen]);
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
+  const baseUrl = "https://blogs-backend-ftie.onrender.com/";
+  const DEFAULT_AVATAR = `/images/default-user.webp`;
+
+  function BlogCard({ blog }: BlogCardProps) {
+    const initialSrc = blog.author.profileImage
+      ? `${baseUrl}/${blog.author.profileImage}`
+      : DEFAULT_AVATAR;
+
+    const [imgSrc, setImgSrc] = useState(initialSrc);
+
+    return (
+      <Image
+        src={imgSrc}
+        alt={blog.author.username}
+        width={40}
+        height={40}
+        onError={() => setImgSrc(DEFAULT_AVATAR)}
+      />
+    );
+  }
 
   return (
     <>
@@ -346,12 +360,12 @@ useEffect(() => {
               (blog.isLiked
                 ? "like"
                 : blog.isAmazing
-                ? "amazing"
-                : blog.isConfusing
-                ? "confusing"
-                : blog.isDisliked
-                ? "dislike"
-                : "");
+                  ? "amazing"
+                  : blog.isConfusing
+                    ? "confusing"
+                    : blog.isDisliked
+                      ? "dislike"
+                      : "");
 
             return (
               <div key={`${blog._id}-${index}`} className="awnser-box">
@@ -369,15 +383,7 @@ useEffect(() => {
                     <Flex justify="space-between" align="center">
                       <Flex gap={2} align="center">
                         <div className="awnser-box--company">
-                          <Image
-                            src={
-                              `https://blogs-backend-ftie.onrender.com/${blog.author.profileImage}` ||
-                              notLoggedInIcon
-                            }
-                            alt="Placeholder avatar"
-                            width={40}
-                            height={40}
-                          />
+                          <BlogCard key={blog._id} blog={blog} />
                         </div>
                         <span className="usernameBlogsHome">
                           {" "}
@@ -404,7 +410,7 @@ useEffect(() => {
                             onClick={handleReactionWithAnimation(
                               blog._id,
                               blog.slug,
-                              "like"
+                              "like",
                             )}
                           >
                             <p
@@ -425,7 +431,7 @@ useEffect(() => {
                             onClick={handleReactionWithAnimation(
                               blog._id,
                               blog.slug,
-                              "amazing"
+                              "amazing",
                             )}
                           >
                             <p
@@ -446,7 +452,7 @@ useEffect(() => {
                             onClick={handleReactionWithAnimation(
                               blog._id,
                               blog.slug,
-                              "confusing"
+                              "confusing",
                             )}
                           >
                             <p
@@ -467,7 +473,7 @@ useEffect(() => {
                             onClick={handleReactionWithAnimation(
                               blog._id,
                               blog.slug,
-                              "dislike"
+                              "dislike",
                             )}
                           >
                             <p
@@ -499,7 +505,11 @@ useEffect(() => {
 
                         {/* Comment Button */}
                         <Button className="add-like" type="text">
-                          <Comment width={15} height={15} className="commentIcon" />
+                          <Comment
+                            width={15}
+                            height={15}
+                            className="commentIcon"
+                          />
                           <p className="reactionCountOnHome">
                             {blog.commentCount}
                           </p>
@@ -510,7 +520,8 @@ useEffect(() => {
                           style={{ position: "relative" }}
                           className="h-[18px]"
                         >
-                          <div className="h-full"
+                          <div
+                            className="h-full"
                             ref={(el) => {
                               dropdownRefs.current[blog._id] = el;
                             }}
@@ -526,7 +537,7 @@ useEffect(() => {
                                 e.preventDefault();
                                 e.stopPropagation();
                                 toggleDropdown(
-                                  blog._id === isDropdownOpen ? null : blog._id
+                                  blog._id === isDropdownOpen ? null : blog._id,
                                 );
                               }}
                             >
@@ -556,7 +567,9 @@ useEffect(() => {
                                 }}
                                 disabled={loading}
                               >
-                                <span className="dropdownText">Delete</span>
+                                <span className="dropdownText text-[#dc2626]!">
+                                  Delete
+                                </span>
                               </button>
                               <button
                                 className="dropdownBtn"
@@ -611,26 +624,7 @@ useEffect(() => {
       )}
 
       {/* Loading Skeleton for Infinite Scroll */}
-      <div ref={loadMoreRef} style={{ padding: "20px 0" }}>
-        {loadingMore && (
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "30px" }}
-          >
-            {/* Skeleton for header */}
-            <div
-              className="skeletonHeaderProfile"
-              style={{ marginBottom: "30px" }}
-            >
-              <div>
-                <Skeleton.Avatar size={70} shape="circle" />
-              </div>
-              <div style={{ flex: 1 }}>
-                <Skeleton active paragraph={{ rows: 1, width: "100%" }} />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+      <div ref={loadMoreRef}>{loadingMore && <BlogSkeleton />}</div>
 
       {/* Modals */}
       <SignInModal

@@ -1,16 +1,12 @@
 // app/user/[username]/page.tsx
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 3600; // 1 hour
 
 import "../../styles/page.css";
 import CompanyHeaderOther from "../../Components/CompanyHeaderForUserPage";
 import CompanyTabsContentOther from "../../Components/CompanyTabsContentOther";
 import { Tabs } from "antd";
 import { cookies } from "next/headers";
-import {
-  getProfileDetails,
-  getUserTopics,
-} from "../../services/api";
+import { getProfileDetails, getUserTopics } from "../../services/api";
 
 interface UsernamePageProps {
   params: { username: string };
@@ -26,7 +22,6 @@ export default async function UsernamePage({ params }: UsernamePageProps) {
 
   // Call the API to fetch the profile details for the given username
   const profileData = await getProfileDetails(username, accessToken);
- 
 
   //fetch all topics of a perticular user
   const userTopicsData = await getUserTopics(username);
@@ -48,10 +43,7 @@ export default async function UsernamePage({ params }: UsernamePageProps) {
       key: "static-1",
       label: "Highlights",
       children: (
-        <CompanyTabsContentOther
-          type="Highlights"
-          username={username}
-        />
+        <CompanyTabsContentOther type="Highlights" username={username} />
       ),
     },
     {
@@ -71,19 +63,18 @@ export default async function UsernamePage({ params }: UsernamePageProps) {
   // Create dynamic tabs for each topic by fetching blogs for that topic.
   const dynamicTabs = await Promise.all(
     (userTopicsData.topics || []).map(async (topic: string, index: number) => {
-     
       return {
         key: `topic-${index}`,
         label: topic,
         children: (
           <CompanyTabsContentOther
-            type="Topic" // explicitly set type as "Topic"
+            type="Topic"
             username={username}
-            topic={topic} // pass the topic so that useEffect can trigger API call
+            topic={topic}
           />
         ),
       };
-    })
+    }),
   );
 
   const allTabs = [...staticTabs, ...dynamicTabs];
@@ -104,7 +95,9 @@ export default async function UsernamePage({ params }: UsernamePageProps) {
           usernameFromCookies={usernameFromCookies}
         />
 
-        <Tabs items={allTabs} />
+        <div className="w-full murari">
+          <Tabs items={allTabs} />
+        </div>
       </div>
     </main>
   );

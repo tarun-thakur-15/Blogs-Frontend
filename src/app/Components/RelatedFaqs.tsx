@@ -1,19 +1,15 @@
 "use client";
-import { FC, useState, useLayoutEffect, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Flex, Button } from "antd";
 // CSS
 import "../styles/awnserbox.css";
 // Images
-
-import Dhruvil from "../../../public/images/dhruvil.webp";
 import notLoggedInIcon from "../../assets/images/not-logged-in-user.png";
 // import Like from "../../../public/images/like.svg";
 import Comment from "../../../public/images/comment.svg";
 import BoxIconPng from "../../assets/images/box.png";
-import moment from "moment";
-import { Skeleton } from "antd";
 
 interface Fly {
   id: number;

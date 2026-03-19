@@ -22,6 +22,7 @@ const CustomAutoComplete: React.FC = () => {
   const [options, setOptions] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
 
   const onSearch = (query: string) => {
@@ -178,9 +179,25 @@ const CustomAutoComplete: React.FC = () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
   }, []);
+  useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      wrapperRef.current &&
+      !wrapperRef.current.contains(event.target as Node)
+    ) {
+      setIsOpen(false);
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
 
   return (
-    <div className="relative w-full !mb-5">
+    <div ref={wrapperRef} className="relative w-full !mb-5">
 <div className="relative ">
   {/* Search Icon */}
   <div className="absolute inset-y-0 left-0 flex items-center !pl-3 pointer-events-none">

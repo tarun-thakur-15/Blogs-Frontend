@@ -11,7 +11,7 @@ export const config = {
   ],
 };
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const url = req.nextUrl.clone();
   const path = req.nextUrl.pathname;
   const token = req.cookies.get("accessToken")?.value;

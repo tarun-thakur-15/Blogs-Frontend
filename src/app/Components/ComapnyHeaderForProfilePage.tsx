@@ -77,10 +77,6 @@ export default function CompanyHeader({
   const [newUsername, setNewUsername] = useState(username);
   const [usernameloading, setusernameLoading] = useState(false);
 
-  const baseUrl = "https://blogs-backend-ftie.onrender.com/";
-  const encodedImagePath = encodeURI(profileImage); // Handles spaces properly
-  const fullImageUrl = `${baseUrl}${encodedImagePath}`;
-
   const token = Cookies.get("accessToken");
   // Function to open followers modal and load followers
   const openModal = async () => {
@@ -133,7 +129,7 @@ export default function CompanyHeader({
         root: null,
         rootMargin: "0px",
         threshold: 0.1,
-      }
+      },
     );
 
     if (loadMoreRef.current) {
@@ -159,7 +155,7 @@ export default function CompanyHeader({
               const data = await getFollowingList(
                 username,
                 followingOffset,
-                10
+                10,
               );
               const newFollowing = data.following || [];
               if (newFollowing.length < 10) setHasMoreFollowing(false);
@@ -171,7 +167,7 @@ export default function CompanyHeader({
           })();
         }
       },
-      { root: null, rootMargin: "0px", threshold: 0.1 }
+      { root: null, rootMargin: "0px", threshold: 0.1 },
     );
     if (followingLoadMoreRef.current) {
       observer.observe(followingLoadMoreRef.current);
@@ -227,7 +223,7 @@ export default function CompanyHeader({
 
   // Function to handle profile picture change
   const handleProfileChange = async (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -236,7 +232,7 @@ export default function CompanyHeader({
       // Call the API function to change the profile picture
       const response = await changeProfilePicture(file);
       console.log(`handleprofileimage ${response.profileImage}`);
-      Cookies.set("profileImage", response.profileImage)
+      Cookies.set("profileImage", response.profileImage);
       // Update the local state with the new profile image path (assumed to be returned in response)
       window.location.reload();
     } catch (error: any) {
@@ -257,13 +253,13 @@ export default function CompanyHeader({
     setLoading(true);
     try {
       await updateFullName({ fullName: newFullName });
-       // ✅ Update full name in cookies
-    Cookies.set("fullname", newFullName);
+      // ✅ Update full name in cookies
+      Cookies.set("fullname", newFullName);
       setIsEditing(false);
       toast.success("Full name updated");
       setTimeout(() => {
-      window.location.reload();
-    }, 1000); // wait 1s to show the toast before reload
+        window.location.reload();
+      }, 1000); // wait 1s to show the toast before reload
       // Optional: refetch user profile or set fullName state
     } catch (error) {
       toast.error("Something went wrong");
@@ -299,6 +295,16 @@ export default function CompanyHeader({
       setusernameLoading(false);
     }
   };
+  const baseUrl = "https://blogs-backend-ftie.onrender.com/";
+  const encodedImagePath = encodeURI(profileImage); // Handles spaces properly
+  const fullImageUrl = `${baseUrl}${encodedImagePath}`;
+
+  const DEFAULT_AVATAR = `/images/default-user.webp`;
+  const initialSrc = profileImage
+    ? `${baseUrl}/${profileImage}`
+    : DEFAULT_AVATAR;
+
+  const [imgSrc, setImgSrc] = useState(initialSrc);
 
   return (
     <>
@@ -327,11 +333,15 @@ export default function CompanyHeader({
                 className="profileImage"
               >
                 <Image
-                  src={fullImageUrl}
-                  alt="Profile Image"
+                  src={imgSrc}
+                  alt={username}
                   width={100}
                   height={100}
-                  onError={() => setCurrentProfileImage(UserNotFound)}
+                  onError={() => {
+                    if (imgSrc !== DEFAULT_AVATAR) {
+                      setImgSrc(DEFAULT_AVATAR);
+                    }
+                  }}
                   className="profileImage"
                 />
               </label>
@@ -462,7 +472,7 @@ export default function CompanyHeader({
           <Input
             className="home-search"
             placeholder="Search"
-            prefix={<Search className="searchIcon"/>}
+            prefix={<Search className="searchIcon" />}
             style={{ maxWidth: "100%" }}
             value={followersQuery}
             onChange={(e) => setFollowersQuery(e.target.value)}
@@ -485,7 +495,7 @@ export default function CompanyHeader({
                           `https://blogs-backend-ftie.onrender.com/${follower.profileImage}` ||
                           bydefaultUser
                         }
-                        alt="following user"
+                        alt={follower.fullName}
                         className="followerIcon object-cover"
                         width={40}
                         height={40}
@@ -549,7 +559,7 @@ export default function CompanyHeader({
                           `https://blogs-backend-ftie.onrender.com/${user.profileImage}` ||
                           bydefaultUser
                         }
-                        alt="following user"
+                        alt={user.fullName}
                         className="followerIcon object-cover"
                         width={40}
                         height={40}

@@ -1,59 +1,56 @@
 // In FaqDrawer.tsx
 "use client";
-import { Button, Drawer, Input, notification } from "antd";
+import { Button, Drawer } from "antd";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
-import { createBlog } from "../services/api"; // Adjust the path as needed
+import { createBlog } from "../services/api";
 import TiptapEditor from "./TiptapEditor";
 import DefaultImage from "../../assets/images/not-logged-in-user.png";
 import CloseIcons from "../../../public/images/closeIcon.svg";
 import { ClipLoader } from "react-spinners";
-import { saveDraft, getDraft } from "../services/api";
-// import toast from "react-hot-toast";
+import { saveDraft } from "../services/api";
 import { Toaster, toast } from "sonner";
+
 export default function FaqDrawer({
   visible,
   onClose,
 }: {
   visible: boolean;
   onClose: () => void;
-
 }) {
   const [topic, setTopic] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [editorKey, setEditorKey] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [isSaving, setIsSaving] = useState(true);
+  const [isSaving, setIsSaving] = useState(false); // ← fixed: start false, not true
+
   const saveTimer = useRef<NodeJS.Timeout | null>(null);
-  // Check if Post Blog button should be disabled:
-  // Disable if topic, title, or content is empty OR if content has less than 500 words.
+
   const isPostDisabled = !topic || !title || !content;
 
-  //function to close Drawer
+  // ─── close & reset ────────────────────────────────────────────────────────
   const handleClose = () => {
     setTopic("");
     setTitle("");
     setContent("");
-    setEditorKey((prevKey) => prevKey + 1); // Force re-render of editor to clear content
+    setEditorKey((prevKey) => prevKey + 1);
     onClose();
   };
 
   const ProfileImage = Cookies.get("profileImage");
-  //function to post the blog by calling createBlog api
-  const handlePostBlog = async () => {
 
+  // ─── post blog ────────────────────────────────────────────────────────────
+  const handlePostBlog = async () => {
     if (isPostDisabled) {
       toast.error(
-        "Incomplete Information: Please ensure Topic, Title, and at least 500 words of content are provided."
+        "Incomplete Information: Please ensure Topic, Title, and content are provided."
       );
-      
       return;
     }
     setLoading(true);
     try {
-     
       const blogData = { topic, title, content };
       const token = Cookies.get("accessToken");
       const result = await createBlog(blogData, token);
@@ -62,37 +59,38 @@ export default function FaqDrawer({
         handleClose();
       }, 2000);
     } catch (error: any) {
-      console.error("Error creating blog:", error);
-      toast.error(error.message || "Failed to create blog");
+      const apiMsg = error?.response?.data?.msg;
+      toast.error(apiMsg || "Failed to create blog");
     }
     setLoading(false);
   };
-  // 2) Debounce saveDraft on topic/content change
+
+  // ─── autosave (debounced 3 s) ─────────────────────────────────────────────
+  // BUG FIX: original code had `+setIsSaving(...)` — the unary `+` coerces the
+  // return value of setIsSaving (undefined) to a number and discards it,
+  // so isSaving was never actually set. Removed the leading `+`.
   useEffect(() => {
-    // clear any existing timer
     if (saveTimer.current) clearTimeout(saveTimer.current);
 
-    // if either field is non-empty, schedule a save
-    if (topic || content) {
-      +setIsSaving(true);
+    if (topic || title || content) {
+      setIsSaving(true); // ← fixed (was `+setIsSaving(true)`)
       saveTimer.current = setTimeout(async () => {
         try {
           await saveDraft({ topic, title, content });
         } catch (err) {
           console.error("Autosave failed", err);
         } finally {
-          +setIsSaving(false);
+          setIsSaving(false); // ← fixed (was `+setIsSaving(false)`)
         }
       }, 3000);
     } else {
-      // nothing to save
-      +setIsSaving(false);
+      setIsSaving(false); // ← fixed (was `+setIsSaving(false)`)
     }
 
     return () => {
       if (saveTimer.current) clearTimeout(saveTimer.current);
     };
-  }, [topic, content]);
+  }, [topic, title, content]); // ← also watch `title` so saving reflects all fields
 
   return (
     <Drawer
@@ -103,11 +101,16 @@ export default function FaqDrawer({
       height="100%"
       className="drawerZindex"
     >
+      {/* ── Top bar ── */}
       <div className="parent1" style={{ height: "50px" }}>
         <div className="leftBtns">
           <div className="createFaqProfileImageContainer">
             <Image
-              src={`https://blogs-backend-ftie.onrender.com/${ProfileImage}` || DefaultImage}
+              src={
+                ProfileImage
+                  ? `https://blogs-backend-ftie.onrender.com/${ProfileImage}`
+                  : DefaultImage
+              }
               alt="Profile Image"
               className="createFaqProfileImage"
               width={40}
@@ -116,14 +119,13 @@ export default function FaqDrawer({
           </div>
           <button className="createFaqBtn">Create FAQ</button>
         </div>
+
         <div className="rightBtns">
-          {isSaving ? (
+          {isSaving && (
             <button className="autosaveBtn">
               <ClipLoader size={14} color="#0969da" />
               <span>&nbsp;Saving…</span>
             </button>
-          ) : (
-            ""
           )}
           <button
             className="postFaqBtn"
@@ -132,12 +134,13 @@ export default function FaqDrawer({
           >
             {loading ? <ClipLoader size={14} color="#fff" /> : "Post Blog"}
           </button>
-
           <Button onClick={handleClose}>
             <CloseIcons className="closeIcon" />
           </Button>
         </div>
       </div>
+
+      {/* ── Body ── */}
       <section style={{ height: "90%" }} className="paddingTopForMobile">
         <div
           className="container"
@@ -152,7 +155,8 @@ export default function FaqDrawer({
             style={{ display: "flex", flexDirection: "column", gap: "18px" }}
           >
             <Toaster position="top-right" />
-            {/* Topic input */}
+
+            {/* Topic */}
             <input
               type="text"
               placeholder="Type your Topic here"
@@ -160,16 +164,18 @@ export default function FaqDrawer({
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
             />
-            {/* Title input */}
+
+            {/* Title */}
             <textarea
               placeholder="Type your title here"
               className="type-question"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
-            {/* Tiptap Editor for content */}
+
+            {/* Editor */}
             <div className="editor-box-new" style={{ position: "relative" }}>
-              <TiptapEditor key={editorKey} setEditorContent={setContent}/>
+              <TiptapEditor key={editorKey} setEditorContent={setContent} />
             </div>
           </div>
         </div>

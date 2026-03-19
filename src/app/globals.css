@@ -232,25 +232,41 @@ button.ant-btn span {
 button.ant-btn.ant-btn-text.font-sm {
   padding: 6px 8px;
 }
-button.ant-btn.ant-btn-text.font-sm.icon {
+.notificationButton {
   padding: 0px;
   width: 29px;
   height: 29px;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
 }
-button.ant-btn.ant-btn-text.font-sm.icon::after {
+
+.bellWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+}
+
+.notificationBadge {
   position: absolute;
-  content: "";
-  right: 5px;
-  top: 5px;
-  height: 8px;
-  width: 8px;
-  border-radius: 50%;
-  background-color: #cf222e;
+  top: -12px;
+  right: -9px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #cf222e;
+  color: white !important;
+  font-size: 9px !important;
+  font-weight: 600 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
   border: 2px solid white;
+  border-radius: 100%;
 }
 button.ant-btn.ant-btn-text.font-sm:hover {
   background-color: var(--Base-1) !important;
@@ -1326,11 +1342,6 @@ textarea.ant-input {
 .dropdown:hover {
   background-color: #f8fafc;
 }
-.deleteText {
-  font-size: 0.875rem; 
-  color: #000; 
-  border: none;
-}
 .optionIconSize {
   height: 20px;
   width: 20px;
@@ -1365,11 +1376,29 @@ textarea.ant-input {
   border: none;
   margin-left: 5px;
   cursor: pointer;
+  background: transparent;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
+
+.dropdownBtn:hover {
+  background-color: #f3f4f6;
+}
+
+.dropdownBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .dropdownText {
   text-align: start;
-  background-color: #f6f8fa !important;
-  font-size: 15px !important;
+  font-size: 14px;
+  color: black; /* modern red tone for delete */
+  font-weight: 500;
   white-space: nowrap;
 }
 .activityBarAllignment {
@@ -1473,13 +1502,25 @@ textarea.ant-input {
   100% { content: ""; }
 }
 
-.loading-dots::after {
-  content: "";
-  animation: dots 1s steps(3, end) infinite;
-  color: white;
-}
-
 .loading-dots-delete::after {
   content: "";
   animation: dots 1s steps(3, end) infinite;
+}
+
+.notificationSkeleton > div {
+  padding-inline: 20px !important;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.murari > div {
+  display: flex !important;
+  flex-direction: row !important;
 }

@@ -1,6 +1,5 @@
-export const dynamic = "force-dynamic";
 export const dynamicParams = true;
-export const revalidate = 0;
+export const revalidate = 3600; // 1 hour
 import { format } from "date-fns";
 import "../styles/page.css";
 import "../styles/awnserbox.css";
@@ -14,6 +13,7 @@ import { getPerticularBlog, getComments } from "../services/api";
 import ReadTTS from "../Components/ReadTTS";
 import { cn } from "@/lib/utils";
 import ShareModal from "../Components/ShareModal";
+import BlogContent from "../Components/Blogcontent";
 // Images
 import Divider from "../../assets/images/divider.png";
 import { cookies } from "next/headers";
@@ -24,13 +24,15 @@ import BoxIconPng from "../../assets/images/box.png";
 import LoginToRead from "../../assets/images/LoginToRead.jpeg";
 import LoginToReadFullBlog from "../Components/LoginToReadFullBlog";
 import Listen from "./../../../public/images/Listen.svg";
+import ProfileAvatar from "../Components/ProfileAvatar";
 
 interface PageProps {
   params: { slug: string };
 }
 
 const BlogDetailPage = async ({ params }: PageProps) => {
-  const { slug } = params;
+    const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
+  const { slug } = await params;
 
   // Get token from cookies server side
   const cookieStore = await cookies();
@@ -56,11 +58,11 @@ const BlogDetailPage = async ({ params }: PageProps) => {
 
   // Compare Created At and Updated At
   const isSameDate = createdAt.getTime() === updatedAt.getTime();
+  console.log("blogdata.content is: ", blogData.content);
 
   return (
     <main className={"main single-page marginTop"}>
       <div className="container">
-        
         <ProfileHeaderDetailedBlog
           username={blogData.author.username}
           fullName={blogData.author.fullName}
@@ -80,8 +82,9 @@ const BlogDetailPage = async ({ params }: PageProps) => {
           <p>{blogData.topic}</p>
         </div>
         <div>
-          <p>{blogData.readersCount} readers</p>
-          <ReadTTS text={blogData.content}>
+         
+          {/* something is wrong with this ReadTTS thing so commenting this for now */}
+          {/* <ReadTTS text={blogData.content}>
             <button
               className={cn(
                 "px-4 py-2 rounded-full h-[38px] w-[130px] flex justify-center",
@@ -98,16 +101,20 @@ const BlogDetailPage = async ({ params }: PageProps) => {
               <Listen className="h-4 w-4" />
               Listen Blog
             </button>
-          </ReadTTS>
+          </ReadTTS> */}
         </div>
 
         <div className="single-answer-page">
-          <Flex justify="space-between">
+          <div className="w-full flex justify-between">
             <Flex vertical gap={60} className="single-answer-page-details">
               <Flex vertical gap={30}>
                 <Flex vertical className="single-answer">
-                  <h2>{blogData.title}</h2>
-                  <div className="forImageInsideContent" dangerouslySetInnerHTML={{ __html: blogData.content }} />
+                  <h1>{blogData.title}</h1>
+                  {/* <div
+                    className="forImageInsideContent"
+                    dangerouslySetInnerHTML={{ __html: blogData.content }}
+                  /> */}
+                  <BlogContent content={blogData.content} />
                   <LoginToReadFullBlog />
                   <Flex
                     justify="space-between"
@@ -122,9 +129,9 @@ const BlogDetailPage = async ({ params }: PageProps) => {
                     >
                       <Flex gap={6} align="center">
                         <div className="awnser-box--company">
-                          <Image
-                            className=""
-                            src={ `https://blogs-backend-ftie.onrender.com/${blogData.author.profileImage}` ||  DefaultImage}
+                          <ProfileAvatar
+                            profileImage={blogData.author.profileImage}
+                            backendBaseUrl={backendBaseUrl}
                             alt="Tarun"
                             width={40}
                             height={40}
@@ -147,17 +154,18 @@ const BlogDetailPage = async ({ params }: PageProps) => {
                       )}
                     </Flex>
                   </Flex>
+                  {/* action buttons for mobile and tablet screens */}
                   <div className="lg:hidden">
-              <FaqPageActionsMobile
-                slug={blogData.slug}
-                reaction={blogData.reaction}
-                totalComments={blogData.totalComments}
-                isLiked={blogData.isLiked}
-                isConfusing={blogData.isConfusing}
-                isAmazing={blogData.isAmazing}
-                isDisliked={blogData.isDisliked}
-              />
-            </div>
+                    <FaqPageActionsMobile
+                      slug={blogData.slug}
+                      reaction={blogData.reaction}
+                      totalComments={blogData.totalComments}
+                      isLiked={blogData.isLiked}
+                      isConfusing={blogData.isConfusing}
+                      isAmazing={blogData.isAmazing}
+                      isDisliked={blogData.isDisliked}
+                    />
+                  </div>
                 </Flex>
                 <Image className="divider" src={Divider} alt="divider" />
                 <Flex vertical className="">
@@ -172,7 +180,7 @@ const BlogDetailPage = async ({ params }: PageProps) => {
                 </Flex>
               </Flex>
             </Flex>
-            
+            {/* action buttons for desktop */}
             <div className="hidden lg:block">
               <FaqPageActions
                 slug={blogData.slug}
@@ -184,7 +192,7 @@ const BlogDetailPage = async ({ params }: PageProps) => {
                 isDisliked={blogData.isDisliked}
               />
             </div>
-          </Flex>
+          </div>
           {/* uncomment this below div when you need to give related blogs */}
           {/* <div className="related-question">
             <Image className="divider" src={Divider} alt="divider" />
@@ -196,7 +204,6 @@ const BlogDetailPage = async ({ params }: PageProps) => {
         </div>
       </div>
     </main>
-    
   );
 };
 

@@ -81,3 +81,7 @@ export interface ForgotPasswordResetSchema {
   newPassword: string;
   confirmPassword: string;
 }
+
+export interface UnreadNotificationCountResponse {
+  unreadCount: number;
+}

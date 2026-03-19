@@ -27,6 +27,7 @@ import {
 import "../styles/tabs.css";
 // IMAGES
 import SelectDrop from "../../../public/images/select-drop.svg";
+import BlogSkeleton from "./BlogSkeleton";
 interface BlogPreview {
   _id: string;
   title: string;
@@ -196,6 +197,8 @@ useEffect(() => {
     }
   }, [type, activityType, token]);
 
+  
+
   return (
     <div className="company-tabs--content">
       <Flex vertical gap={type !== "about" ? 20 : 12}>
@@ -234,34 +237,15 @@ useEffect(() => {
         {type === "Highlights" ? (
           <Flex className="company-tabs--list" vertical gap={20}>
             {highlightedBlogsLoading ? (
-              <div style={{ padding: "20px 0" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "30px",
-                  }}
-                >
-                  {/* skeleton for header */}
-                  <div
-                    className="skeletonHeaderProfile"
-                    style={{ marginBottom: "30px" }}
-                  >
-                    <div>
-                      <Skeleton.Avatar size={70} shape="circle" />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <Skeleton active paragraph={{ rows: 1, width: "100%" }} />
-                    </div>
-                  </div>
-                  {/* skeleton for body */}
-                </div>
-              </div>
+              
+                <BlogSkeleton/>
+             
             ) : (
               <MyProfileHighlightedBlogs
                 initialBlogs={highlightedBlogs || []}
                 username={username}
               />
+              
             )}
           </Flex>
         ) : null}
@@ -269,7 +253,7 @@ useEffect(() => {
         {type === "All Blogs" ? (
           <Flex className="company-tabs--list" vertical gap={20}>
             {allBlogsLoading ? (
-              <Spin tip="Loading All blogs..." />
+              <BlogSkeleton/>
             ) : (
               <MyProfileAllBlogs
                 initialBlogs={allBlogs || []}
@@ -282,29 +266,7 @@ useEffect(() => {
         {type === "Archived Blogs" ? (
           <Flex className="company-tabs--list" vertical gap={20}>
             {archivedBlogsLoading ? (
-              <div style={{ padding: "20px 0" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "30px",
-                  }}
-                >
-                  {/* skeleton for header */}
-                  <div
-                    className="skeletonHeaderProfile"
-                    style={{ marginBottom: "30px" }}
-                  >
-                    <div>
-                      <Skeleton.Avatar size={70} shape="circle" />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <Skeleton active paragraph={{ rows: 1, width: "100%" }} />
-                    </div>
-                  </div>
-                  {/* skeleton for body */}
-                </div>
-              </div>
+             <BlogSkeleton/>
             ) : (
               <ArchivedTabs
                 initialBlogs={archivedBlogs || []}
@@ -317,29 +279,7 @@ useEffect(() => {
         {type === "Activity" && (
           <Flex className="company-tabs--list" vertical gap={20}>
             {activityLoading ? (
-              <div style={{ padding: "20px 0" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "30px",
-                  }}
-                >
-                  {/* skeleton for header */}
-                  <div
-                    className="skeletonHeaderProfile"
-                    style={{ marginBottom: "30px" }}
-                  >
-                    <div>
-                      <Skeleton.Avatar size={70} shape="circle" />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <Skeleton active paragraph={{ rows: 1, width: "100%" }} />
-                    </div>
-                  </div>
-                  {/* skeleton for body */}
-                </div>
-              </div>
+              <BlogSkeleton/>
             ) : (
               <>
                 {activityType === "Likes" && (
@@ -380,29 +320,7 @@ useEffect(() => {
         {type === "Draft" && (
           <Flex className="company-tabs--list" vertical gap={20}>
             {draftLoading ? (
-              <div style={{ padding: "20px 0" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "30px",
-                  }}
-                >
-                  {/* skeleton for header */}
-                  <div
-                    className="skeletonHeaderProfile"
-                    style={{ marginBottom: "30px" }}
-                  >
-                    <div>
-                      <Skeleton.Avatar size={70} shape="circle" />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <Skeleton active paragraph={{ rows: 1, width: "100%" }} />
-                    </div>
-                  </div>
-                  {/* skeleton for body */}
-                </div>
-              </div>
+              <BlogSkeleton/>
             ) : <DraftBlog draftBlogs={draft}/>}
           </Flex>
         )}

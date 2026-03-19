@@ -21,6 +21,7 @@ import SignInModal from "../Components/SignInModal";
 import LogInModal from "../Components/LogInModal";
 import moment from "moment";
 import Link from "next/link";
+import BlogSkeleton from "./BlogSkeleton";
 
 interface Fly {
   id: number;
@@ -57,6 +58,9 @@ interface DislikedBlogsTab {
   initialBlogs: BlogPreview[];
   username: string;
   topic: string;
+}
+interface BlogCardProps {
+  blog: BlogPreview;
 }
 export default function DislikedBlogsTab({
   initialBlogs,
@@ -162,7 +166,26 @@ export default function DislikedBlogsTab({
     };
   }, [loadMoreBlogs, loadingMore, hasMore]);
 
+  const baseUrl = "https://blogs-backend-ftie.onrender.com/";
+  const DEFAULT_AVATAR = `/images/default-user.webp`;
 
+  function BlogCard({ blog }: BlogCardProps) {
+    const initialSrc = blog.author.profileImage
+      ? `${baseUrl}/${blog.author.profileImage}`
+      : DEFAULT_AVATAR;
+
+    const [imgSrc, setImgSrc] = useState(initialSrc);
+
+    return (
+      <Image
+        src={imgSrc}
+        alt={blog.author.username}
+        width={40}
+        height={40}
+        onError={() => setImgSrc(DEFAULT_AVATAR)}
+      />
+    );
+  }
 
   return (
     <>
@@ -195,12 +218,7 @@ export default function DislikedBlogsTab({
                     <Flex justify="space-between" align="center">
                       <Flex gap={2} align="center">
                         <div className="awnser-box--company">
-                          <Image
-                            src={`https://blogs-backend-ftie.onrender.com/${blog.author.profileImage}` || notLoggedInIcon}
-                            alt="Placeholder avatar"
-                            width={40}
-                            height={40}
-                          />
+                          <BlogCard key={blog._id} blog={blog} />
                         </div>
                         <span className="usernameBlogsHome">
                           {" "}
@@ -324,24 +342,9 @@ export default function DislikedBlogsTab({
       )}
 
       {/* Loading Skeleton for Infinite Scroll */}
-      <div ref={loadMoreRef} style={{ padding: "20px 0" }}>
+      <div ref={loadMoreRef}>
         {loadingMore && (
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "30px" }}
-          >
-            {/* Skeleton for header */}
-            <div
-              className="skeletonHeaderProfile"
-              style={{ marginBottom: "30px" }}
-            >
-              <div>
-                <Skeleton.Avatar size={70} shape="circle" />
-              </div>
-              <div style={{ flex: 1 }}>
-                <Skeleton active paragraph={{ rows: 1, width: "100%" }} />
-              </div>
-            </div>
-          </div>
+          <BlogSkeleton/>
         )}
       </div>
 

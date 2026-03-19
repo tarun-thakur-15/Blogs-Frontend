@@ -1,13 +1,8 @@
 "use client";
-import { Button, Flex, Skeleton } from "antd";
-import { useRef, useState } from "react";
+import { Button, Flex } from "antd";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import CommentIcon from "../../../public/images/comment.svg";
-import BoxIconPng from "../../assets/images/box.png";
-import notLoggedInIcon from "../../assets/images/not-logged-in-user.png";
-import moment from "moment";
-import Link from "next/link";
 import { reactToBlog } from "../services/api"; // Ensure correct path
 import { ReactionPayload } from "../services/schema"; // Ensure correct path
 import "../styles/awnserbox.css";
@@ -17,7 +12,6 @@ import LogInModal from "./LogInModal";
 import ShareModal from "./ShareModal";
 import ReportModal from "./ReportModal";
 import Share from "../../assets/images/Share.svg";
-import Report from "../../assets/images/Report.svg";
 
 // Define your fly interface
 interface Fly {
@@ -216,6 +210,8 @@ export default function FaqPageActions({
       document.body.classList.remove("modal-opened");
     }, 300);
   };
+
+
 
   return (
     <div>

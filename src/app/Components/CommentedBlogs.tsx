@@ -6,6 +6,7 @@ import { getCommentedBlogs } from "../services/api";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
 import BoxIconPng from "../../assets/images/box.png";
+import BlogSkeleton from "./BlogSkeleton";
 
 // Define an interface for an individual comment
 export interface CommentData {
@@ -113,7 +114,7 @@ export default function CommentedBlogs({ initialBlogs }: CommentedBlogsProps) {
                 <div className="awnser-box--company">
                   <Image
                     src={notLoggedInIcon}
-                    alt="User profile"
+                    alt={blog.blogAuthorUsername}
                     width={40}
                     height={40}
                   />
@@ -175,24 +176,9 @@ export default function CommentedBlogs({ initialBlogs }: CommentedBlogsProps) {
       )}
 
       {/* Loading Skeleton for Infinite Scroll */}
-      <div ref={loadMoreRef} style={{ padding: "20px 0" }}>
+      <div ref={loadMoreRef}>
         {loadingMore && (
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "30px" }}
-          >
-            {/* Skeleton for header */}
-            <div
-              className="skeletonHeaderProfile"
-              style={{ marginBottom: "30px" }}
-            >
-              <div>
-                <Skeleton.Avatar size={70} shape="circle" />
-              </div>
-              <div style={{ flex: 1 }}>
-                <Skeleton active paragraph={{ rows: 1, width: "100%" }} />
-              </div>
-            </div>
-          </div>
+          <BlogSkeleton/>
         )}
       </div>
       </>

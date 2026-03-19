@@ -1,26 +1,50 @@
-export const dynamic = "force-dynamic";
+"use client";
 
+import { useEffect, useState } from "react";
 import "../styles/page.css";
 import "../styles/comments.css";
 import CompanyHeader from "../Components/ComapnyHeaderForProfilePage";
-import { Divider } from "antd";
+import { Divider, Flex, Skeleton } from "antd";
 import { getProfileDetails } from "../services/api";
-import { cookies } from "next/headers";
+import Cookies from "js-cookie";
 import ClientTabsWrapper from "../Components/ClientTabsWrapper";
+import { useRouter } from "next/navigation";
+import ProfilePageSkeleton from "../Components/ProfilePageSkeleton";
 
-export default async function CompanyPage() {
-  const backendBaseURL = "https://blogs-backend-ftie.onrender.com/";
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken")?.value || "";
-  const usernameFromCookies = cookieStore.get("username")?.value!;
-  
-  const profileData = await getProfileDetails(usernameFromCookies, accessToken);
-  
+export default function CompanyPage() {
+  const router = useRouter();
+  const [profileData, setProfileData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  const accessToken = Cookies.get("accessToken") || "";
+  if (!accessToken) {
+    router.push("/");
+  }
+  const usernameFromCookies = Cookies.get("username") || "";
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const data = await getProfileDetails(usernameFromCookies, accessToken);
+        setProfileData(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  if (loading) {
+    return <ProfilePageSkeleton />;
+  }
 
   return (
     <main className="main profile">
       <div className="container">
-        <div>
+        <div className="w-full">
           <CompanyHeader
             username={profileData.username}
             fullName={profileData.fullName}

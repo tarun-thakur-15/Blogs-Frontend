@@ -24,6 +24,7 @@ import LogInModal from "../Components/LogInModal";
 import moment from "moment";
 import Link from "next/link";
 import Options from "../../../public/images/options.svg";
+import BlogSkeleton from "./BlogSkeleton";
 
 interface Fly {
   id: number;
@@ -61,6 +62,9 @@ interface ProfileHighlightedBlogsProps {
   initialBlogs: BlogPreview[];
   username: string;
 }
+interface BlogCardProps {
+  blog: BlogPreview;
+}
 export default function MyProfileHighlightedBlogs({
   initialBlogs,
   username,
@@ -96,17 +100,16 @@ export default function MyProfileHighlightedBlogs({
   const handleReaction = async (
     slug: string,
     reactionType: ReactionPayload["reactionType"],
-    blogId: string
+    blogId: string,
   ) => {
-
     try {
       const result = await reactToBlog(slug, { reactionType }, AccessToken);
-     
+
       // Update the local state with the new reaction counts for the blog that was updated
       setBlogs((prevBlogs) =>
         prevBlogs.map((blog) =>
-          blog.slug === slug ? { ...blog, reactions: result.reaction } : blog
-        )
+          blog.slug === slug ? { ...blog, reactions: result.reaction } : blog,
+        ),
       );
       setSelectedReactions((prev) => ({ ...prev, [blogId]: reactionType }));
     } catch (error) {
@@ -118,7 +121,6 @@ export default function MyProfileHighlightedBlogs({
   const handleClickForBlog =
     (blogId: string, emoji: string) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
-     
       const id = Date.now();
       const button = e.currentTarget;
       const startX = button.offsetLeft + button.offsetWidth / 2;
@@ -148,7 +150,7 @@ export default function MyProfileHighlightedBlogs({
     (
       blogId: string,
       slug: string,
-      reactionType: ReactionPayload["reactionType"]
+      reactionType: ReactionPayload["reactionType"],
     ) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
@@ -185,7 +187,7 @@ export default function MyProfileHighlightedBlogs({
         offsetRef.current,
         10,
         username,
-        AccessToken
+        AccessToken,
       );
       if (data.blogs && data.blogs.length > 0) {
         setBlogs((prev) => {
@@ -215,7 +217,7 @@ export default function MyProfileHighlightedBlogs({
         root: null,
         rootMargin: "0px",
         threshold: 0.1,
-      }
+      },
     );
 
     if (loadMoreRef.current) {
@@ -235,7 +237,7 @@ export default function MyProfileHighlightedBlogs({
       // Call the toggleHighlight API function
       const result = await toggleHighlight(slug);
       toast.success(result.msg);
-      
+
       // Wait for 1 second before refreshing the highlighted blogs
       setTimeout(async () => {
         const data = await getHighlightedBlogs(0, 10, username, AccessToken);
@@ -243,7 +245,6 @@ export default function MyProfileHighlightedBlogs({
           setBlogs(data.blogs);
           // Optionally update the offsetRef if required:
           offsetRef.current = data.blogs.length;
-         
         }
       }, 1000);
     } catch (error: any) {
@@ -255,7 +256,6 @@ export default function MyProfileHighlightedBlogs({
   };
 
   const toggleDropdown = (blogId: any) => {
-
     // Toggle the dropdown for the specific blog
     setIsDropdownOpen((prev) => (prev === blogId ? null : blogId));
   };
@@ -278,22 +278,44 @@ export default function MyProfileHighlightedBlogs({
     };
   }, []);
 
+  const baseUrl = "https://blogs-backend-ftie.onrender.com/";
+  const DEFAULT_AVATAR = `/images/default-user.webp`;
+
+  function BlogCard({ blog }: BlogCardProps) {
+    const initialSrc = blog.author.profileImage
+      ? `${baseUrl}/${blog.author.profileImage}`
+      : DEFAULT_AVATAR;
+
+    const [imgSrc, setImgSrc] = useState(initialSrc);
+
+    return (
+      <Image
+        src={imgSrc}
+        alt={blog.author.username}
+        width={40}
+        height={40}
+        onError={() => setImgSrc(DEFAULT_AVATAR)}
+      />
+    );
+  }
+
   return (
     <>
       {blogs && blogs.length > 0
         ? blogs.map((blog) => {
+
             // Determine the selected reaction for the blog
             const currentReaction =
               selectedReactions[blog._id] ??
               (blog.isLiked
                 ? "like"
                 : blog.isAmazing
-                ? "amazing"
-                : blog.isConfusing
-                ? "confusing"
-                : blog.isDisliked
-                ? "dislike"
-                : "");
+                  ? "amazing"
+                  : blog.isConfusing
+                    ? "confusing"
+                    : blog.isDisliked
+                      ? "dislike"
+                      : "");
 
             return (
               <div key={blog._id} className="awnser-box">
@@ -312,15 +334,7 @@ export default function MyProfileHighlightedBlogs({
                     <Flex justify="space-between" align="center">
                       <Flex gap={2} align="center">
                         <div className="awnser-box--company">
-                          <Image
-                            src={
-                              `https://blogs-backend-ftie.onrender.com/${blog.author.profileImage}` ||
-                              notLoggedInIcon
-                            }
-                            alt="Placeholder avatar"
-                            width={40}
-                            height={40}
-                          />
+                          <BlogCard key={blog._id} blog={blog} />
                         </div>
                         <span className="usernameBlogsHome">
                           {" "}
@@ -347,7 +361,7 @@ export default function MyProfileHighlightedBlogs({
                             onClick={handleReactionWithAnimation(
                               blog._id,
                               blog.slug,
-                              "like"
+                              "like",
                             )}
                           >
                             <p
@@ -368,7 +382,7 @@ export default function MyProfileHighlightedBlogs({
                             onClick={handleReactionWithAnimation(
                               blog._id,
                               blog.slug,
-                              "amazing"
+                              "amazing",
                             )}
                           >
                             <p
@@ -389,7 +403,7 @@ export default function MyProfileHighlightedBlogs({
                             onClick={handleReactionWithAnimation(
                               blog._id,
                               blog.slug,
-                              "confusing"
+                              "confusing",
                             )}
                           >
                             <p
@@ -410,7 +424,7 @@ export default function MyProfileHighlightedBlogs({
                             onClick={handleReactionWithAnimation(
                               blog._id,
                               blog.slug,
-                              "dislike"
+                              "dislike",
                             )}
                           >
                             <p
@@ -442,7 +456,11 @@ export default function MyProfileHighlightedBlogs({
 
                         {/* Comment Button */}
                         <Button className="add-like" type="text">
-                          <Comment width={15} height={15} className="commentIcon" />
+                          <Comment
+                            width={15}
+                            height={15}
+                            className="commentIcon"
+                          />
                           <p className="reactionCountOnHome">
                             {blog.commentCount}
                           </p>
@@ -454,7 +472,7 @@ export default function MyProfileHighlightedBlogs({
                           style={{ position: "relative" }}
                         >
                           <div
-                          className="h-full"
+                            className="h-full"
                             ref={dropdownRef}
                             style={{
                               position: "relative",
@@ -523,26 +541,7 @@ export default function MyProfileHighlightedBlogs({
       )}
 
       {/* Loading Skeleton for Infinite Scroll */}
-      <div ref={loadMoreRef} style={{ padding: "20px 0" }}>
-        {loadingMore && (
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "30px" }}
-          >
-            {/* Skeleton for header */}
-            <div
-              className="skeletonHeaderProfile"
-              style={{ marginBottom: "30px" }}
-            >
-              <div>
-                <Skeleton.Avatar size={70} shape="circle" />
-              </div>
-              <div style={{ flex: 1 }}>
-                <Skeleton active paragraph={{ rows: 1, width: "100%" }} />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+      <div ref={loadMoreRef}>{loadingMore && <BlogSkeleton />}</div>
 
       {/* Modals */}
       <SignInModal

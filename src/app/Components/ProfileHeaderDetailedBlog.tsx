@@ -1,7 +1,7 @@
 "use client";
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
-import { Flex, Button, Select, Modal, Input, Skeleton } from "antd";
+import { Flex, Select, Modal, Input, Skeleton } from "antd";
 import Link from "next/link";
 import {
   getFollowersList,
@@ -20,6 +20,7 @@ import NProgress from "nprogress";
 import { toast, Toaster } from "sonner";
 import SignInModal from "./SignInModal";
 import LogInModal from "./LogInModal";
+import DetailedBlogHeaderSkeleton from "./DetailedBlogHeaderSkeleton";
 
 interface ProfileHeaderDetailedBlogProps {
   username: string;
@@ -53,7 +54,6 @@ export default function ProfileHeaderDetailedBlog({
   totalBlogs,
   blogSlug,
 }: ProfileHeaderDetailedBlogProps) {
-  const backendBaseUrl = "https://blogs-backend-ftie.onrender.com/";
   // State for Followers Modal
   const [isSubscriberListModalOpen, setIsSubscriberListModalOpen] =
     useState(false);
@@ -129,7 +129,7 @@ export default function ProfileHeaderDetailedBlog({
         root: null,
         rootMargin: "0px",
         threshold: 0.1,
-      }
+      },
     );
 
     if (loadMoreRef.current) {
@@ -155,7 +155,7 @@ export default function ProfileHeaderDetailedBlog({
               const data = await getFollowingList(
                 username,
                 followingOffset,
-                10
+                10,
               );
               const newFollowing = data.following || [];
               if (newFollowing.length < 10) setHasMoreFollowing(false);
@@ -167,7 +167,7 @@ export default function ProfileHeaderDetailedBlog({
           })();
         }
       },
-      { root: null, rootMargin: "0px", threshold: 0.1 }
+      { root: null, rootMargin: "0px", threshold: 0.1 },
     );
     if (followingLoadMoreRef.current) {
       observer.observe(followingLoadMoreRef.current);
@@ -190,42 +190,50 @@ export default function ProfileHeaderDetailedBlog({
       console.error("Error toggling favourite:", error);
     }
   };
+  const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
+  const DEFAULT_AVATAR = `/images/default-user.webp`;
 
-const handleFollowChange = async (value: string) => {
-  setLocalIsFollowed((prev) => !prev);
-  try {
-    const token = Cookies.get("accessToken");
+  const initialSrc = profileImage
+    ? `${backendBaseUrl}/${profileImage}`
+    : DEFAULT_AVATAR;
 
-    // If token is not available, show login modal and return early
-    if (!token) {
-      showLoginModal();
-      setLocalIsFollowed((prev) => !prev); // Revert the follow toggle
-      return;
-    }
+  const [imgSrc, setImgSrc] = useState(initialSrc);
 
-    const res = await toggleFollow(username, token);
-    toast.success(
-      res?.msg ||
-        `You have ${
-          localIsFollowed ? "unfollowed" : "followed"
-        } ${username} successfully! 🎉`
-    );
-  } catch (error: any) {
-    const token = Cookies.get("accessToken");
-
-    if (!token) {
-      showLoginModal();
-    } else {
-      toast.error(
-        error.message || "Failed to update follow status. Please try again. ❌"
-      );
-    }
-
-    // Always revert the follow state in case of error
+  const handleFollowChange = async (value: string) => {
     setLocalIsFollowed((prev) => !prev);
-  }
-};
+    try {
+      const token = Cookies.get("accessToken");
 
+      // If token is not available, show login modal and return early
+      if (!token) {
+        showLoginModal();
+        setLocalIsFollowed((prev) => !prev); // Revert the follow toggle
+        return;
+      }
+
+      const res = await toggleFollow(username, token);
+      toast.success(
+        res?.msg ||
+          `You have ${
+            localIsFollowed ? "unfollowed" : "followed"
+          } ${username} successfully! 🎉`,
+      );
+    } catch (error: any) {
+      const token = Cookies.get("accessToken");
+
+      if (!token) {
+        showLoginModal();
+      } else {
+        toast.error(
+          error.message ||
+            "Failed to update follow status. Please try again. ❌",
+        );
+      }
+
+      // Always revert the follow state in case of error
+      setLocalIsFollowed((prev) => !prev);
+    }
+  };
 
   // ---------------------
   const fetchAllFollowers = useCallback(async () => {
@@ -275,9 +283,19 @@ const handleFollowChange = async (value: string) => {
     setIsLoginModalOpen(false);
     document.body.classList.add("modal-opened");
   };
+  //loading state UI
+  const [pageLoading, setPageLoading] = useState(true);
+  useEffect(() => {
+    setPageLoading(false);
+  }, []);
+
+  if (pageLoading) {
+    return <DetailedBlogHeaderSkeleton />;
+  }
   return (
     <>
       <Toaster position="top-right" />
+
       <Flex
         align="center"
         wrap="wrap"
@@ -289,13 +307,15 @@ const handleFollowChange = async (value: string) => {
           <div className="wrapper">
             <div className="file-upload">
               <Image
-                src={
-                  `https://blogs-backend-ftie.onrender.com/${profileImage}` ||
-                  bydefaultUser
-                }
+                src={imgSrc}
                 alt="profile picture"
                 width={68}
                 height={68}
+                onError={() => {
+                  if (imgSrc !== DEFAULT_AVATAR) {
+                    setImgSrc(DEFAULT_AVATAR);
+                  }
+                }}
               />
             </div>
           </div>

@@ -1,0 +1,46 @@
+// this is a client side component for profile image fallbacks created for situation when src in <image/> is present but actual image is broken. Use this Component as Image wrapper in Non CSR components.
+"use client";
+
+import Image from "next/image";
+import { useState } from "react";
+
+const DEFAULT_AVATAR = "/images/default-user.webp";
+
+interface ProfileAvatarProps {
+  profileImage?: string | String;
+  backendBaseUrl: string;
+  alt?: string;
+  width?: number;
+  height?: number;
+  className?: string;
+}
+
+export default function ProfileAvatar({
+  profileImage,
+  backendBaseUrl,
+  alt = "profile picture",
+  width = 40,
+  height = 40,
+  className = "",
+}: ProfileAvatarProps) {
+  const initialSrc = profileImage
+    ? `${backendBaseUrl}/${profileImage}`
+    : DEFAULT_AVATAR;
+
+  const [imgSrc, setImgSrc] = useState(initialSrc);
+
+  return (
+    <Image
+      className={className}
+      src={imgSrc}
+      alt={alt}
+      width={width}
+      height={height}
+      onError={() => {
+        if (imgSrc !== DEFAULT_AVATAR) {
+          setImgSrc(DEFAULT_AVATAR);
+        }
+      }}
+    />
+  );
+}

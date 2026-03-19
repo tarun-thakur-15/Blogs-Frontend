@@ -1,22 +1,18 @@
 "use client";
-import React, { forwardRef, useEffect, useRef } from "react";
-import { FC, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { Flex, Button, Dropdown, Select, Avatar, Menu } from "antd";
-import type { MenuProps } from "antd";
-import { postComment, getComments, deleteComment } from "../services/api"; // adjust the path as needed
-import { PostCommentInterface } from "../services/schema"; // adjust the path as needed
+import { Flex } from "antd";
+import { postComment, getComments, deleteComment } from "../services/api"; 
+import { PostCommentInterface } from "../services/schema"; 
 import moment from "moment";
 import Cookies from "js-cookie";
 import NProgress from "nprogress";
 import SignInModal from "./SignInModal";
 import LogInModal from "./LogInModal";
+import { StaticImageData } from "next/image";
 // CSS
 import "../styles/comments.css";
-// import Like from "../../../public/images/like.svg";
-import Send from "../../../public/images/send.svg";
-import SelectDrop from "../../../public/images/select-drop.svg";
-import bydefaultUserImage from "../../assets/images/not-logged-in-user.png";
 import { Toaster, toast } from "sonner";
 import Link from "next/link";
 import OptionsHorizontal from "../../../public/images/OptionsHorizontal.svg";
@@ -103,7 +99,7 @@ export default function Comments({
         console.error("Error posting comment:", error.message);
         toast.error(
           error.message ||
-            "Failed to create comment.. Please try again later :-)"
+            "Failed to create comment.. Please try again later :-)",
         );
       }
     } finally {
@@ -119,7 +115,7 @@ export default function Comments({
   };
 
   const [deletingCommentId, setDeletingCommentId] = useState<string | null>(
-    null
+    null,
   );
   const handleDeleteComment = async (commentId: string) => {
     try {
@@ -128,14 +124,14 @@ export default function Comments({
       const result = await deleteComment(commentId);
 
       setComments((prev) =>
-        prev.filter((comment) => comment._id !== commentId)
+        prev.filter((comment) => comment._id !== commentId),
       );
       toast.success(result?.msg || "Comment deleted successfully! 🗑️");
 
       setIsDropdownOpen((prev) => ({ ...prev, [commentId]: false })); // Close dropdown
     } catch (error: any) {
       toast.error(
-        error.message || "Failed to delete comment.. Please try again later 😞"
+        error.message || "Failed to delete comment.. Please try again later 😞",
       );
       console.error("Error deleting comment:", error);
     } finally {
@@ -175,6 +171,32 @@ export default function Comments({
     document.body.classList.add("modal-opened");
   };
 
+  const DEFAULT_AVATAR = `/images/default-user.webp`;
+
+  const initialSrc = profileImage
+    ? `${backendBaseUrl}/${profileImage}`
+    : DEFAULT_AVATAR;
+
+  const [imgSrc, setImgSrc] = useState(initialSrc);
+
+  function CommentAvatar({ imageUrl, fallback }: {imageUrl: string | StaticImageData, fallback: string | StaticImageData}) {
+    const [src, setSrc] = useState(imageUrl);
+
+    return (
+      <Image
+        src={src}
+        alt="User profile"
+        width={40}
+        height={40}
+        className="rounded-full object-cover"
+        onError={() => {
+          if (src !== fallback) {
+            setSrc(fallback);
+          }
+        }}
+      />
+    );
+  }
   return (
     <>
       <Toaster position="top-right" />
@@ -184,100 +206,101 @@ export default function Comments({
       <Flex vertical className="comments-list">
         <div className="comments-list-inner">
           <p className="comments-list--name">Total Comments: {totalComments}</p>
-          {comments.map((comment) => (
-            <div
-              key={comment._id}
-              className="comments-list--item"
-              id="commentDiv"
-            >
-              <div className="comments-list--item--img">
-                {/* this image tag is for commented user */}
+          {comments.map((comment) => {
+            const commentImgSrc = comment.author.profileImage
+              ? `${backendBaseUrl}${comment.author.profileImage}`
+              : DEFAULT_AVATAR;
+            return (
+              <div
+                key={comment._id}
+                className="comments-list--item"
+                id="commentDiv"
+              >
+                <div className="comments-list--item--img">
+                  {/* this image tag is for commented user */}
 
-                <Image
-                  src={
-                    comment.author.profileImage
-                      ? `${backendBaseUrl}${comment.author.profileImage}`
-                      : bydefaultUserImage
-                  }
-                  alt="User profile"
-                  width={40}
-                  height={40}
-                />
-              </div>
-              <div className="comments-list--item--details">
-                <Flex align="center" gap={8} justify="space-between">
-                  <Flex align="center" gap={8}>
-                    <Link
-                      href={`/user/${
-                        comment.author.username || loggedInUsername
-                      }`}
-                      onClick={() => NProgress.start()}
-                      className="comments-list--name"
-                    >
-                      {comment.author.username || loggedInUsername}
-                    </Link>
-                    <p>•</p>
-                    <p className="comments-list--date">
-                      {moment(comment.createdAt).format("Do MMM, YYYY")}
-                    </p>
+                   <CommentAvatar
+          imageUrl={commentImgSrc}
+          fallback={DEFAULT_AVATAR}
+        />
+                </div>
+                <div className="comments-list--item--details">
+                  <Flex align="center" gap={8} justify="space-between">
+                    <Flex align="center" gap={8}>
+                      <Link
+                        href={`/user/${
+                          comment.author.username || loggedInUsername
+                        }`}
+                        onClick={() => NProgress.start()}
+                        className="comments-list--name"
+                      >
+                        {comment.author.username || loggedInUsername}
+                      </Link>
+                      <p>•</p>
+                      <p className="comments-list--date">
+                        {moment(comment.createdAt).format("Do MMM, YYYY")}
+                      </p>
+                    </Flex>
                   </Flex>
-                </Flex>
-                <div className="awnser-box--awnser">
-                  <p className="awnser-box--awnser">{comment.content}</p>
+                  <div className="awnser-box--awnser">
+                    <p className="awnser-box--awnser">{comment.content}</p>
+                  </div>
+                </div>
+
+                <div className="relative">
+                  {accessToken && (
+                    <button
+                      ref={optionsButtonRef}
+                      className="optionsMain group cursor-pointer"
+                      style={{
+                        backgroundColor: "white",
+                        border: "none",
+                        width: "24px",
+                        height: "24px",
+                      }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleDropdown(comment._id);
+                      }}
+                    >
+                      <OptionsHorizontal
+                        className="optionIconSize"
+                        height={20}
+                        width={20}
+                      />
+                    </button>
+                  )}
+
+                  {/* Delete Dropdown */}
+
+                  {isDropdownOpen[comment._id] && (
+                    <div className="dropdown" ref={dropdownRef}>
+                      {(loggedInUsername === comment.author.username ||
+                        loggedInUsername === blogAuthor) && (
+                        <button
+                          className="dropdownBtn"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleDeleteComment(comment._id);
+                          }}
+                        >
+                          {deletingCommentId === comment._id ? (
+                            <span className=".loading-dots-delete">
+                              Deleting
+                            </span>
+                          ) : (
+                            <span className="dropdownText text-[#dc2626]!">Delete</span>
+                          )}
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
-
-              <div className="relative">
-                {accessToken && (
-                  <button
-                    ref={optionsButtonRef}
-                    className="optionsMain group cursor-pointer"
-                    style={{
-                      backgroundColor: "white",
-                      border: "none",
-                      width: "24px",
-                      height: "24px",
-                    }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      toggleDropdown(comment._id);
-                    }}
-                  >
-                    <OptionsHorizontal
-                      className="optionIconSize"
-                      height={20}
-                      width={20}
-                    />
-                  </button>
-                )}
-
-                {/* Delete Dropdown */}
-
-                {isDropdownOpen[comment._id] && (
-                  <div className="dropdown" ref={dropdownRef}>
-                    {(loggedInUsername === comment.author.username ||
-                      loggedInUsername === blogAuthor) && (
-                      <button
-                        className="deleteText"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleDeleteComment(comment._id);
-                        }}
-                      >
-                        {deletingCommentId === comment._id ? (
-                          <span className=".loading-dots-delete">Deleting</span>
-                        ) : (
-                          <span className="deleteText">Delete</span>
-                        )}
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Load More Button (visible only if there are more comments) */}
@@ -298,23 +321,23 @@ export default function Comments({
               {/* This image tag is for logged in user so use profile image from cookies here */}
               {accessToken ? (
                 <Image
-                  src={`${backendBaseUrl}${profileImage}` || bydefaultUserImage}
+                  src={imgSrc}
                   alt="name"
                   width={40}
                   height={40}
+                  onError={() => {
+                    if (imgSrc !== DEFAULT_AVATAR) {
+                      setImgSrc(DEFAULT_AVATAR);
+                    }
+                  }}
                 />
               ) : (
-                <Image
-                  src={bydefaultUserImage}
-                  alt="name"
-                  width={40}
-                  height={40}
-                />
+                <Image src={DEFAULT_AVATAR} alt="name" width={40} height={40} />
               )}
             </div>
             <p>Add your comment</p>
           </Flex>
-          <div className="commentAlignment flex-col lg:flex-row">
+          <div className="commentAlignment flex-col lg:flex-row items-center">
             <div className="addCommentInputDiv">
               <input
                 type="text"
@@ -324,15 +347,26 @@ export default function Comments({
                 className="custom-input"
               />
             </div>
+
             <button
               disabled={isPosting}
-              className="w-full self-stretch flex items-center justify-center gap-1 rounded-md px-[18px] py-2 font-medium bg-green-600 hover:bg-green-700 transition-colors duration-300 ease-in-out commentBtn whitespace-nowrap cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
               onClick={handleAddComment}
+              className="flex items-center justify-center h-8 w-8 bg-transparent"
             >
               {isPosting ? (
-                <span className="loading-dots !text-white">Posting</span>
+                <div className="flex items-center gap-1">
+                  <div className="h-2 w-2 bg-green-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                  <div className="h-2 w-2 bg-green-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                  <div className="h-2 w-2 bg-green-500 rounded-full animate-bounce" />
+                </div>
               ) : (
-                "Add Comment"
+                <Image
+                  src="/images/send-comment-icon.svg"
+                  alt="Send Comment"
+                  width={20}
+                  height={20}
+                  className="object-contain cursor-pointer"
+                />
               )}
             </button>
           </div>

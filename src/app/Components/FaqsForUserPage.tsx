@@ -1,9 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { Flex, Button, Skeleton } from "antd";
-import type { MenuProps } from "antd";
+import { Flex, Button} from "antd";
 import Cookies from "js-cookie";
 import { getHighlightedBlogs, reactToBlog } from "../services/api";
 import { ReactionPayload } from "../services/schema"; // ensure correct path
@@ -11,15 +9,13 @@ import { ReactionPayload } from "../services/schema"; // ensure correct path
 import "../styles/awnserbox.css";
 // Images
 
-import notLoggedInIcon from "../../assets/images/not-logged-in-user.png";
-import Like from "../../../public/images/like.svg";
 import Comment from "../../../public/images/comment.svg";
-import BoxIcon from "../../../public/images/box.svg";
 import BoxIconPng from "../../assets/images/box.png";
 import SignInModal from "../Components/SignInModal";
 import LogInModal from "../Components/LogInModal";
 import moment from "moment";
 import Link from "next/link";
+import BlogSkeleton from "./BlogSkeleton";
 
 interface Fly {
   id: number;
@@ -200,7 +196,7 @@ export default function FaqsForUserPage({
     const observer = new IntersectionObserver(
       (entries) => {
         // If the loadMoreRef container is visible and not currently loading, trigger loadMoreBlogs
-        if (entries[0].isIntersecting && !loadingMore) {
+        if (entries[0].isIntersecting && !loadingMore && hasMore) {
           loadMoreBlogs();
         }
       },
@@ -221,6 +217,11 @@ export default function FaqsForUserPage({
       }
     };
   }, [loadMoreBlogs, loadingMore, hasMore]);
+
+    useEffect(() => {
+    setBlogs(initialBlogs);
+    offsetRef.current = initialBlogs.length;
+  }, [initialBlogs]);
   return (
     <>
       {blogs && blogs.length > 0
@@ -238,6 +239,15 @@ export default function FaqsForUserPage({
                 ? "dislike"
                 : "");
 
+                  const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
+                  const DEFAULT_AVATAR = `/images/default-user.webp`;
+                
+                  const initialSrc = blog?.author?.profileImage
+                    ? `${backendBaseUrl}/${blog?.author?.profileImage}`
+                    : DEFAULT_AVATAR;
+                
+                  const [imgSrc, setImgSrc] = useState(initialSrc);
+
             return (
               <div key={blog._id} className="awnser-box">
                 <Link href={`/${blog.slug}`}>
@@ -252,10 +262,11 @@ export default function FaqsForUserPage({
                       <Flex gap={2} align="center">
                         <div className="awnser-box--company">
                           <Image
-                            src={`https://blogs-backend-ftie.onrender.com/${blog.author.profileImage}` || notLoggedInIcon}
-                            alt="Placeholder avatar"
+                             src={imgSrc}
+                            alt={blog.author.username}
                             width={40}
                             height={40}
+                            onError={() => setImgSrc(DEFAULT_AVATAR)}
                           />
                         </div>
                         <span className="usernameBlogsHome">
@@ -401,26 +412,11 @@ export default function FaqsForUserPage({
       )}
 
       {/* Loading Skeleton for Infinite Scroll */}
-      <div ref={loadMoreRef} style={{ padding: "20px 0" }}>
-        {loadingMore && (
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "30px" }}
-          >
-            {/* Skeleton for header */}
-            <div
-              className="skeletonHeaderProfile"
-              style={{ marginBottom: "30px" }}
-            >
-              <div>
-                <Skeleton.Avatar size={70} shape="circle" />
-              </div>
-              <div style={{ flex: 1 }}>
-                <Skeleton active paragraph={{ rows: 1, width: "100%" }} />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+     <div ref={loadMoreRef}>
+             {loadingMore && (
+               <BlogSkeleton/>
+             )}
+           </div>
 
       {/* Modals */}
       <SignInModal
