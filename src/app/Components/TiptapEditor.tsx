@@ -32,6 +32,8 @@ import bash from "highlight.js/lib/languages/bash";
 import json from "highlight.js/lib/languages/json";
 import Youtube from "@tiptap/extension-youtube";
 import { notification } from "antd";
+import { uploadBlogImage } from "../services/api";
+import Cookies from "js-cookie";
 
 // ─── lowlight setup ────────────────────────────────────────────────────────────
 const lowlight = createLowlight();
@@ -287,6 +289,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   initialContent,
   onContentChange,
 }) => {
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [imageCount, setImageCount] = useState<number>(0);
   const maxImages = 3;
   const maxImageSize = 500 * 1024;
@@ -306,6 +309,23 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
 
   // ─── Image with caption ──────────────────────────────────────────────────
   const CustomImage = ImageExt.extend({
+    addAttributes() {
+      return {
+        ...this.parent?.(),
+
+        class: {
+          default: null,
+        },
+
+        id: {
+          default: null,
+        },
+
+        caption: {
+          default: null,
+        },
+      };
+    },
     addNodeView() {
       return ({ node, getPos, editor }) => {
         const container = document.createElement("figure");
@@ -314,6 +334,9 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
 
         const img = document.createElement("img");
         img.setAttribute("src", node.attrs.src);
+        if (node.attrs.class) {
+          img.setAttribute("class", node.attrs.class);
+        }
         img.style.cssText =
           "max-width:700px;width:100%;display:block;border-radius:6px;";
 
@@ -385,7 +408,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
       HorizontalRule,
       CodeBlockLowlight.configure({ lowlight }),
       CustomImage.configure({
-        allowBase64: true,
+        allowBase64: false,
         HTMLAttributes: {
           style: "max-width:700px;width:100%;border-radius:6px;",
         },
@@ -432,23 +455,61 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
             notifyError("Limit Exceeded", "Max 3 images allowed.");
             return true;
           }
-          const reader = new FileReader();
-          reader.onload = () => {
-            const coords = view.posAtCoords({
-              left: event.clientX,
-              top: event.clientY,
+          const coords = view.posAtCoords({
+            left: event.clientX,
+            top: event.clientY,
+          });
+
+          if (!coords) return true;
+
+          const tempUrl = URL.createObjectURL(file);
+
+          // insert image
+          view.dispatch(
+            view.state.tr.insert(
+              coords.pos,
+              view.state.schema.nodes.image.create({ src: tempUrl }),
+            ),
+          );
+
+          setImageCount((c) => c + 1);
+
+          // upload in background
+          const token = Cookies.get("accessToken") || "";
+
+          uploadBlogImage(file, token)
+            .then((res) => {
+              setUploadError(null);
+              const finalUrl = res.imageUrl;
+
+              if (!editor) return true;
+              const tr = editor.view.state.tr;
+
+              editor.view.state.doc.descendants((node: any, pos: number) => {
+                if (node.type.name === "image" && node.attrs.src === tempUrl) {
+                  tr.setNodeMarkup(pos, undefined, {
+                    ...node.attrs,
+                    src: finalUrl,
+                  });
+                }
+              });
+
+              editor.view.dispatch(tr);
+              URL.revokeObjectURL(tempUrl);
+            })
+            .catch(() => {
+              if (!editor) return true;
+              const tr = editor.view.state.tr;
+
+              editor.view.state.doc.descendants((node: any, pos: number) => {
+                if (node.type.name === "image" && node.attrs.src === tempUrl) {
+                  tr.delete(pos, pos + node.nodeSize);
+                }
+              });
+
+              editor.view.dispatch(tr);
+              setImageCount((c) => Math.max(0, c - 1));
             });
-            if (coords) {
-              view.dispatch(
-                view.state.tr.insert(
-                  coords.pos,
-                  view.state.schema.nodes.image.create({ src: reader.result }),
-                ),
-              );
-              setImageCount((c) => c + 1);
-            }
-          };
-          reader.readAsDataURL(file);
           return true;
         }
         return false;
@@ -464,9 +525,11 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   }, [draftContent, initialContent, editor]);
 
   // ─── toolbar handlers ────────────────────────────────────────────────────
-  const handleAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file || !editor) return;
+
+    // ✅ validation (same as yours)
     if (
       ![
         "image/jpeg",
@@ -479,25 +542,78 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
       notifyError("Invalid Type", "Only JPG, PNG, GIF, WEBP allowed.");
       return;
     }
+
     if (file.size > maxImageSize) {
       notifyError("Too Large", "Each image must be < 500KB.");
       return;
     }
+
     if (imageCount >= maxImages) {
       notifyError("Limit Exceeded", "Max 3 images.");
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      editor
-        ?.chain()
-        .focus()
-        .setImage({ src: reader.result as string })
-        .run();
-      setImageCount((c) => c + 1);
-    };
-    reader.readAsDataURL(file);
-    // reset so same file can be re-uploaded
+
+    // ✅ STEP 1: create blob preview
+    const tempUrl = URL.createObjectURL(file);
+
+    // insert image with temp URL
+    editor
+      .chain()
+      .focus()
+      .setImage({
+        src: tempUrl,
+        class: "uploading-image",
+      } as any)
+      .run();
+    setImageCount((c) => c + 1);
+
+    try {
+      // ✅ STEP 2: upload to backend
+      const token = Cookies.get("accessToken") || "";
+      const res = await uploadBlogImage(file, token);
+
+      const finalUrl = res.imageUrl;
+
+      // ✅ STEP 3: replace temp URL with real URL
+      const { state, view } = editor;
+      const tr = state.tr;
+
+      state.doc.descendants((node: any, pos: number) => {
+        if (node.type.name === "image" && node.attrs.src === tempUrl) {
+          tr.setNodeMarkup(pos, undefined, {
+            ...node.attrs,
+            src: finalUrl,
+          });
+        }
+      });
+
+      view.dispatch(tr);
+
+      // cleanup blob URL
+      URL.revokeObjectURL(tempUrl);
+    } catch (error) {
+      console.error("Upload failed", error);
+
+      setUploadError("Image upload failed. Please try again.");
+      setTimeout(() => {
+  setUploadError(null);
+}, 5000);
+      
+
+      // ❌ remove failed image
+      const { state, view } = editor;
+      const tr = state.tr;
+
+      state.doc.descendants((node, pos) => {
+        if (node.type.name === "image" && node.attrs.src === tempUrl) {
+          tr.delete(pos, pos + node.nodeSize);
+        }
+      });
+
+      view.dispatch(tr);
+      setImageCount((c) => Math.max(0, c - 1));
+    }
+
     e.target.value = "";
   };
 
@@ -536,7 +652,9 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
 
   // ─── render ──────────────────────────────────────────────────────────────
   return (
+    
     <div className="tiptap-wrapper" style={{ position: "relative" }}>
+     
       {/* ── Toolbar ── */}
       <div
         className="tiptap-toolbar"
@@ -1058,7 +1176,22 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
         />
       </div>
 
+      
       {/* ── Editor content ── */}
+      {uploadError && (
+  <div
+    style={{
+      background: "#fee2e2",
+      color: "#b91c1c",
+      padding: "8px 12px",
+      borderRadius: "6px",
+      marginBottom: "10px",
+      fontSize: "14px",
+    }}
+  >
+    {uploadError}
+  </div>
+)}
       <EditorContent
         editor={editor}
         className="tiptap-editor-content"

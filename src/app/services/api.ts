@@ -18,11 +18,12 @@ import {
   ForgotPasswordResetSchema,
   DraftResponse,
   UnreadNotificationCountResponse,
+  UploadBlogImageResponse,
 } from "./schema";
 
 // const url = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
-const url = "https://blogs-backend-ftie.onrender.com/api"
-// const url = "http://localhost:8000/api";
+// const url = "https://blogs-backend-ftie.onrender.com/api"
+const url = "http://localhost:8000/api";
 const accessToken = Cookies.get("accessToken");
 import { redirect } from "next/navigation";
 export const signUpUser = async (userData: SignUpSchema) => {
@@ -956,5 +957,30 @@ export const getUnreadNotificationCount = async (
     return response.data;
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const uploadBlogImage = async (
+  file: File,
+  token: string
+): Promise<UploadBlogImageResponse> => {
+  try {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const response = await axios.post(
+      `${url}/upload-image`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
   }
 };

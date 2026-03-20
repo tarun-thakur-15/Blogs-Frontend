@@ -85,3 +85,8 @@ export interface ForgotPasswordResetSchema {
 export interface UnreadNotificationCountResponse {
   unreadCount: number;
 }
+
+export interface UploadBlogImageResponse {
+  msg: string;
+  imageUrl: string;
+}

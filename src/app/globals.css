@@ -1482,7 +1482,7 @@ textarea.ant-input {
 
 @media (max-width: 767px) {
   .forImageInsideContent img {
-    height: 70% !important;
+    height: 50% !important;
   }
 }
 
@@ -1524,3 +1524,9 @@ textarea.ant-input {
   display: flex !important;
   flex-direction: row !important;
 }
+
+.uploading-image {
+  opacity: 0.6;
+  filter: blur(1px);
+}
+

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import '@ant-design/v5-patch-for-react-19';
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./Components/Header";
+import { Toaster } from "sonner";
 import ProgressBar from "./Components/ProgressBar";
 // import { ThemeProvider } from "./context/ThemeContext";
 
@@ -61,12 +63,22 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log("Toaster mounted");
   return (
     // <ThemeProvider>
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
       >
+        <Toaster
+          position="top-right"
+          richColors
+          toastOptions={{
+            style: {
+              zIndex: 9999999999,
+            },
+          }}
+        />
         <ProgressBar />
         <Header />
         <main>{children}</main>

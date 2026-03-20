@@ -10,7 +10,7 @@ import DefaultImage from "../../assets/images/not-logged-in-user.png";
 import CloseIcons from "../../../public/images/closeIcon.svg";
 import { ClipLoader } from "react-spinners";
 import { saveDraft } from "../services/api";
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
 
 export default function FaqDrawer({
   visible,
@@ -154,7 +154,7 @@ export default function FaqDrawer({
           <div
             style={{ display: "flex", flexDirection: "column", gap: "18px" }}
           >
-            <Toaster position="top-right" />
+            {/* <Toaster position="top-right" /> */}
 
             {/* Topic */}
             <input
