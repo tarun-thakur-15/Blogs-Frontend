@@ -1,6 +1,6 @@
 // In FaqDrawer.tsx
 "use client";
-import { Button, Drawer, Input, notification } from "antd";
+import { Button, Drawer} from "antd";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
@@ -9,7 +9,7 @@ import TiptapEditor from "./TiptapEditor";
 import DefaultImage from "../../assets/images/not-logged-in-user.png";
 import CloseIcons from "../../../public/images/closeIcon.svg";
 import { ClipLoader } from "react-spinners";
-import { saveDraft, getDraft } from "../services/api";
+import { saveDraft } from "../services/api";
 // import toast from "react-hot-toast";
 import { Toaster, toast } from "sonner";
 export default function DraftDrawer({
@@ -89,7 +89,7 @@ const [contentValue, setContentValue] = useState(content || "");
         } finally {
           +setIsSaving(false);
         }
-      }, 3000);
+      }, 6000);
     } else {
       // nothing to save
       +setIsSaving(false);
