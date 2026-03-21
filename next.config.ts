@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
-import type { Configuration as WebpackConfig } from 'webpack';
+import type { Configuration as WebpackConfig } from "webpack";
 
 const nextConfig = {
   images: {
-        remotePatterns: [
+    remotePatterns: [
       {
         protocol: "http",
         hostname: "localhost",
@@ -11,6 +11,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "blogs-backend-ftie.onrender.com",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com", // ✅ ADD THIS
       },
     ],
   },
@@ -22,7 +26,7 @@ const nextConfig = {
       test: /\.svg$/,
       use: [
         {
-          loader: '@svgr/webpack',
+          loader: "@svgr/webpack",
           options: {
             typescript: true,
             icon: true,
@@ -35,5 +39,3 @@ const nextConfig = {
 };
 
 export default nextConfig;
-
-

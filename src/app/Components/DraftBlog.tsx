@@ -67,7 +67,7 @@ const isDraftsEmpty =
         </div>
       ) : (
         draftBlogs.map((blog) => (
-          <div className="awnser-box" key={blog._id}>
+          <div className="awnser-box rounded-xl bg-white dark:bg-neutral-900 shadow-sm hover:shadow-lg transition-shadow duration-300" key={blog._id}>
             <div className="awnser-box-header">
               <p className="awnser-box--question">{blog.title}</p>
             </div>

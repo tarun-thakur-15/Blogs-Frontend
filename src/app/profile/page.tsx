@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import "../styles/page.css";
 import "../styles/comments.css";
 import CompanyHeader from "../Components/ComapnyHeaderForProfilePage";
-import { Divider, Flex, Skeleton } from "antd";
+import { Divider } from "antd";
 import { getProfileDetails } from "../services/api";
 import Cookies from "js-cookie";
 import ClientTabsWrapper from "../Components/ClientTabsWrapper";
@@ -17,12 +17,14 @@ export default function CompanyPage() {
   const [loading, setLoading] = useState(true);
 
   const accessToken = Cookies.get("accessToken") || "";
-  if (!accessToken) {
-    router.push("/");
-  }
   const usernameFromCookies = Cookies.get("username") || "";
 
   useEffect(() => {
+    if (!accessToken) {
+      router.push("/");
+      return;
+    }
+
     const fetchProfile = async () => {
       try {
         const data = await getProfileDetails(usernameFromCookies, accessToken);

@@ -952,7 +952,6 @@ export const getUnreadNotificationCount = async (
         ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
       },
     });
-    console.log("unread notification count api response:- ", response);
 
     return response.data;
   } catch (error) {

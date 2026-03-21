@@ -115,7 +115,6 @@ export default function Header() {
 
   //logout function to clear all the cookies and then page reload
   const logout = () => {
-    console.log("sign out button clicked");
     const cookies = Cookies.get(); // Get all cookies
     Object.keys(cookies).forEach((cookie) => {
       Cookies.remove(cookie); // Remove each cookie
@@ -126,7 +125,7 @@ export default function Header() {
   const DEFAULT_AVATAR = `/images/default-user.webp`;
 
   const initialSrc = profileImage
-    ? `${backendBaseUrl}/${profileImage}`
+    ? `${profileImage}`
     : DEFAULT_AVATAR;
 
   const [imgSrc, setImgSrc] = useState(initialSrc);

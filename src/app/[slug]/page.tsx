@@ -58,7 +58,6 @@ const BlogDetailPage = async ({ params }: PageProps) => {
 
   // Compare Created At and Updated At
   const isSameDate = createdAt.getTime() === updatedAt.getTime();
-  console.log("blogdata.content is: ", blogData.content);
 
   return (
     <main className={"main single-page marginTop"}>

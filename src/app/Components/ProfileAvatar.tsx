@@ -23,9 +23,18 @@ export default function ProfileAvatar({
   height = 40,
   className = "",
 }: ProfileAvatarProps) {
-  const initialSrc = profileImage
-    ? `${backendBaseUrl}/${profileImage}`
-    : DEFAULT_AVATAR;
+  function getImageSrc(img: any) {
+    if (!img) return DEFAULT_AVATAR;
+
+    // ✅ Cloudinary or any external URL
+    if (img.startsWith("http")) {
+      return img;
+    }
+
+    // ✅ Local image → prepend baseUrl
+    return `${backendBaseUrl}/${img}`;
+  }
+  const initialSrc = getImageSrc(profileImage);
 
   const [imgSrc, setImgSrc] = useState(initialSrc);
 

@@ -63,7 +63,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  console.log("Toaster mounted");
   return (
     // <ThemeProvider>
     <html lang="en">

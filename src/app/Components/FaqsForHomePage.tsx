@@ -1,12 +1,10 @@
 "use client";
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { Flex, Button, Skeleton } from "antd";
-import { useRouter } from "next/navigation";
+import { Flex, Button } from "antd";
 import Link from "next/link";
 import Image from "next/image";
 import Comment from "../../../public/images/comment.svg";
 import BoxIconPng from "../../assets/images/box.png";
-import notLoggedInIcon from "../../assets/images/not-logged-in-user.png";
 import moment from "moment";
 import { getAllBlogs, reactToBlog } from "../services/api";
 import { ReactionPayload } from "../services/schema"; // ensure correct path

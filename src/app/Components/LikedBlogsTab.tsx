@@ -1,13 +1,11 @@
 "use client";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { Flex, Button, Skeleton } from "antd";
-import type { MenuProps } from "antd";
+import { Flex, Button } from "antd";
 import Cookies from "js-cookie";
 import { getLikedBlogs } from "../services/api";
 import { ReactionPayload } from "../services/schema"; // ensure correct path
-import { Toaster, toast } from "sonner";
+import { Toaster } from "sonner";
 // CSS
 import "../styles/awnserbox.css";
 // Images
@@ -75,7 +73,6 @@ export default function LikedBlogsTab({
   const [selectedReactions, setSelectedReactions] = useState<
     Record<string, ReactionPayload["reactionType"]>
   >({});
-  const [archieveloading, setArchieveLoading] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(null);
 
   const showModal = () => {
@@ -91,27 +88,6 @@ export default function LikedBlogsTab({
   // Use a mapping of blogId to an array of fly objects
   const [flyMap, setFlyMap] = useState<Record<string, Fly[]>>({});
   const AccessToken = Cookies.get("accessToken")!;
-
-  // Fly animation function scoped per blog
-  const handleClickForBlog =
-    (blogId: string, emoji: string) =>
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      const id = Date.now();
-      const button = e.currentTarget;
-      const startX = button.offsetLeft + button.offsetWidth / 2;
-      const startY = button.offsetTop;
-      setFlyMap((prev) => ({
-        ...prev,
-        [blogId]: [...(prev[blogId] || []), { id, startX, startY, emoji }],
-      }));
-      setTimeout(() => {
-        setFlyMap((prev) => ({
-          ...prev,
-          [blogId]: prev[blogId]?.filter((f) => f.id !== id) || [],
-        }));
-      }, 1500);
-    };
-
   const loadMoreBlogs = useCallback(async () => {
     setLoadingMore(true);
     try {
@@ -165,11 +141,20 @@ export default function LikedBlogsTab({
 
   const baseUrl = "https://blogs-backend-ftie.onrender.com/";
   const DEFAULT_AVATAR = `/images/default-user.webp`;
+  function getImageSrc(img: any) {
+  if (!img) return DEFAULT_AVATAR;
+
+  // ✅ Cloudinary or any external URL
+  if (img.startsWith("http")) {
+    return img;
+  }
+
+  // ✅ Local image → prepend baseUrl
+  return `${baseUrl}/${img}`;
+}
 
   function BlogCard({ blog }: BlogCardProps) {
-    const initialSrc = blog.author.profileImage
-      ? `${baseUrl}/${blog.author.profileImage}`
-      : DEFAULT_AVATAR;
+    const initialSrc = getImageSrc(blog.author.profileImage);
 
     const [imgSrc, setImgSrc] = useState(initialSrc);
 
@@ -202,7 +187,7 @@ export default function LikedBlogsTab({
                     : "");
 
           return (
-            <div key={blog._id} className="awnser-box">
+            <div key={blog._id} className="awnser-box rounded-xl bg-white dark:bg-neutral-900 shadow-sm hover:shadow-lg transition-shadow duration-300">
               <Toaster position="top-right" />
               <Link href={`/${blog.slug}`}>
                 <div className="awnser-box-header">

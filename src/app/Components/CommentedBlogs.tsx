@@ -96,7 +96,7 @@ export default function CommentedBlogs({ initialBlogs }: CommentedBlogsProps) {
       {initialBlogs.map((blog, index) => (
         <div
           key={`${blog.blogId}-${index}`}
-          className="awnser-box"
+          className="awnser-box rounded-xl bg-white dark:bg-neutral-900 shadow-sm hover:shadow-lg transition-shadow duration-300"
           style={{ marginBottom: "20px" }}
         >
           <div className="awnser-box-header">

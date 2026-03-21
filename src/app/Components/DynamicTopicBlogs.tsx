@@ -243,17 +243,26 @@ export default function DynamicTopicBlogs({
                       ? "dislike"
                       : "");
 
-                                        const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
-                                        const DEFAULT_AVATAR = `/images/default-user.webp`;
-                                      
-                                        const initialSrc = blog?.author?.profileImage
-                                          ? `${backendBaseUrl}/${blog?.author?.profileImage}`
-                                          : DEFAULT_AVATAR;
-                                      
-                                        const [imgSrc, setImgSrc] = useState(initialSrc);
+            const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
+            const DEFAULT_AVATAR = `/images/default-user.webp`;
+            function getImageSrc(img: any) {
+              if (!img) return DEFAULT_AVATAR;
+
+              // ✅ Cloudinary or any external URL
+              if (img.startsWith("http")) {
+                return img;
+              }
+
+              // ✅ Local image → prepend baseUrl
+              return `${backendBaseUrl}/${img}`;
+            }
+
+            const initialSrc = getImageSrc(blog.author.profileImage);
+
+            const [imgSrc, setImgSrc] = useState(initialSrc);
 
             return (
-              <div key={blog._id} className="awnser-box">
+              <div key={blog._id} className="awnser-box rounded-xl bg-white dark:bg-neutral-900 shadow-sm hover:shadow-lg transition-shadow duration-300">
                 <Link href={`/${blog.slug}`}>
                   <div className="awnser-box-header">
                     <p className="awnser-box--question">{blog.title}</p>

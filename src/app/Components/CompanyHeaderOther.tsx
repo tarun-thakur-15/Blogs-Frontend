@@ -18,6 +18,7 @@ import SelectDrop from "../../../public/images/select-drop.svg";
 import Cookies from "js-cookie";
 import NProgress from "nprogress";
 import { Toaster, toast } from "sonner";
+import FollowersFollowingModal from "./FollowersFollowingModal";
 
 interface CompanyHeaderOtherProps {
   username: string;
@@ -126,7 +127,7 @@ export default function CompanyHeaderOther({
         root: null,
         rootMargin: "0px",
         threshold: 0.1,
-      }
+      },
     );
 
     if (loadMoreRef.current) {
@@ -152,7 +153,7 @@ export default function CompanyHeaderOther({
               const data = await getFollowingList(
                 username,
                 followingOffset,
-                10
+                10,
               );
               const newFollowing = data.following || [];
               if (newFollowing.length < 10) setHasMoreFollowing(false);
@@ -164,7 +165,7 @@ export default function CompanyHeaderOther({
           })();
         }
       },
-      { root: null, rootMargin: "0px", threshold: 0.1 }
+      { root: null, rootMargin: "0px", threshold: 0.1 },
     );
     if (followingLoadMoreRef.current) {
       observer.observe(followingLoadMoreRef.current);
@@ -190,7 +191,7 @@ export default function CompanyHeaderOther({
     } catch (error: any) {
       console.error("Error toggling follow:", error);
       toast.error(
-        error.message || "Failed to update follow status. Please try again. ❌"
+        error.message || "Failed to update follow status. Please try again. ❌",
       );
       // Optionally, revert local state on error:
       setLocalIsFollowed((prev) => !prev);
@@ -312,132 +313,24 @@ export default function CompanyHeaderOther({
           )}
         </Flex>
       </Flex>
-      {/* followers modal */}
-      <Modal
+      <FollowersFollowingModal
         open={isSubscriberListModalOpen}
-        onCancel={() => setIsSubscriberListModalOpen(false)}
-        footer={null}
-        styles={{
-          body: { height: "100%", overflowY: "auto", padding: "1rem" },
-        }}
-        className="!w-screen !h-screen !m-0 !p-0 !rounded-none sm:!w-auto sm:!h-auto sm:!m-4 sm:!p-6 sm:!rounded-lg"
-      >
-        <div
-          className="followersModalParent"
-          style={{ maxWidth: "100%", width: "100%" }}
-        >
-          <div className="followersSpanParent" style={{ maxWidth: "100%" }}>
-            <span className="followersSpan">Followers</span>
-          </div>
-          <Input
-            className="home-search"
-            placeholder="Search"
-            prefix={<Search className="searchIcon" />}
-            style={{ maxWidth: "100%" }}
-            value={followersQuery}
-            onChange={(e) => setFollowersQuery(e.target.value)}
-          />
-          <div className="followersList" style={{ maxWidth: "100%" }}>
-            {loadingFollowers ? (
-              <Skeleton active avatar paragraph={{ rows: 1, width: "100%" }} />
-            ) : followers.length > 0 ? (
-              followers.map((follower) => (
-                <Link
-                  onClick={() => NProgress.start()}
-                  key={follower._id}
-                  className="followerItem"
-                  href={`/user/${follower.username}`}
-                >
-                  <div className="followerItemInner">
-                    <div className="followerIconContainer">
-                      <Image
-                        src={
-                          `https://blogs-backend-ftie.onrender.com/${follower.profileImage}` ||
-                          bydefaultUser
-                        }
-                        alt="following user"
-                        className="followerIcon object-cover"
-                        width={40}
-                        height={40}
-                      />
-                    </div>
-                    <div className="followerInfo">
-                      <span className="followerName">{follower.fullName}</span>
-                      <span className="followerUsername">
-                        @{follower.username}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <p>No followers found.</p>
-            )}
-          </div>
-        </div>
-      </Modal>
-      {/* Following Modal */}
-      <Modal
+        onClose={() => setIsSubscriberListModalOpen(false)}
+        title="Followers"
+        users={followers}
+        loading={loadingFollowers}
+        searchValue={followersQuery}
+        onSearchChange={setFollowersQuery}
+      />
+      <FollowersFollowingModal
         open={isFollowingModalOpen}
-        onCancel={() => setIsFollowingModalOpen(false)}
-        footer={null}
-        styles={{
-          body: { height: "100%", overflowY: "auto", padding: "1rem" },
-        }}
-        className="!w-screen !h-screen !m-0 !p-0 !rounded-none sm:!w-auto sm:!h-auto sm:!m-4 sm:!p-6 sm:!rounded-lg"
-      >
-        <div
-          className="followersModalParent"
-          style={{ maxWidth: "100%", width: "100%" }}
-        >
-          <div className="followersSpanParent" style={{ maxWidth: "100%" }}>
-            <span className="followersSpan">Following</span>
-          </div>
-          <Input
-            className="home-search"
-            placeholder="Search"
-            prefix={<Search className="searchIcon" />}
-            style={{ maxWidth: "100%" }}
-            value={followingQuery}
-            onChange={(e) => setFollowingQuery(e.target.value)}
-          />
-          <div className="followersList" style={{ maxWidth: "100%" }}>
-            {loadingFollowing ? (
-              <Skeleton active avatar paragraph={{ rows: 1, width: "100%" }} />
-            ) : followingList.length > 0 ? (
-              followingList.map((user) => (
-                <Link
-                  onClick={() => NProgress.start()}
-                  key={user._id}
-                  className="followerItem"
-                  href={`/user/${user.username}`}
-                >
-                  <div className="followerItemInner">
-                    <div className="followerIconContainer">
-                      <Image
-                        src={
-                          `https://blogs-backend-ftie.onrender.com/${user.profileImage}` ||
-                          bydefaultUser
-                        }
-                        alt="following user"
-                        className="followerIcon object-cover"
-                        width={40}
-                        height={40}
-                      />
-                    </div>
-                    <div className="followerInfo">
-                      <span className="followerName">{user.fullName}</span>
-                      <span className="followerUsername">@{user.username}</span>
-                    </div>
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <p>No following found.</p>
-            )}
-          </div>
-        </div>
-      </Modal>
+        onClose={() => setIsFollowingModalOpen(false)}
+        title="Following"
+        users={followingList}
+        loading={loadingFollowing}
+        searchValue={followingQuery}
+        onSearchChange={setFollowingQuery}
+      />
     </>
   );
 }

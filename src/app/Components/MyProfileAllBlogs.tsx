@@ -328,12 +328,11 @@ export default function MyProfileAllBlogs({
     };
   }, [isDropdownOpen]);
 
-  const baseUrl = "https://blogs-backend-ftie.onrender.com/";
   const DEFAULT_AVATAR = `/images/default-user.webp`;
 
   function BlogCard({ blog }: BlogCardProps) {
     const initialSrc = blog.author.profileImage
-      ? `${baseUrl}/${blog.author.profileImage}`
+      ? `${blog.author.profileImage}`
       : DEFAULT_AVATAR;
 
     const [imgSrc, setImgSrc] = useState(initialSrc);
@@ -368,7 +367,7 @@ export default function MyProfileAllBlogs({
                       : "");
 
             return (
-              <div key={`${blog._id}-${index}`} className="awnser-box">
+              <div key={`${blog._id}-${index}`} className="awnser-box rounded-xl bg-white dark:bg-neutral-900 shadow-sm hover:shadow-lg transition-shadow duration-300">
                 <Link href={`/${blog.slug}`}>
                   <div className="awnser-box-header">
                     <p className="awnser-box--question">{blog.title}</p>

@@ -15,7 +15,52 @@ import Link from "next/link";
 import { searchBlogsAndUsers } from "../services/api";
 import NProgress from "nprogress";
 import SearchIcon from "../../../public/images/search.svg";
-import defaultIamge from "../../../public/images/redDot.png";
+
+const DEFAULT_AVATAR = "/images/default-user.webp";
+const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
+
+function getImageSrc(img: string | undefined) {
+  if (!img) return DEFAULT_AVATAR;
+
+  if (img.startsWith("http")) {
+    return img;
+  }
+
+  return `${backendBaseUrl}/${img}`;
+}
+
+interface SafeImageProps {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  className?: string;
+}
+
+export const SafeImage = ({
+  src,
+  alt,
+  width,
+  height,
+  className,
+}: SafeImageProps) => {
+  const [imgSrc, setImgSrc] = useState(src);
+
+  return (
+    <Image
+      src={imgSrc}
+      alt={alt}
+      width={width}
+      height={height}
+      className={className}
+      onError={() => {
+        if (imgSrc !== DEFAULT_AVATAR) {
+          setImgSrc(DEFAULT_AVATAR);
+        }
+      }}
+    />
+  );
+};
 
 const CustomAutoComplete: React.FC = () => {
   const [value, setValue] = useState("");
@@ -23,7 +68,6 @@ const CustomAutoComplete: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const router = useRouter();
 
   const onSearch = (query: string) => {
     setValue(query);
@@ -56,12 +100,8 @@ const CustomAutoComplete: React.FC = () => {
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full">
                 {/* LEFT: Profile image */}
                 <div className="h-[30px] w-[30px] overflow-hidden border-[100%]">
-                  <Image
-                    src={
-                      blog.author.profileImage?.startsWith("http")
-                        ? blog.author.profileImage
-                        : `https://blogs-backend-ftie.onrender.com/${blog.author.profileImage}`
-                    }
+                  <SafeImage
+                    src={getImageSrc(blog.author.profileImage)}
                     alt={blog.author.fullName}
                     width={32}
                     height={32}
@@ -83,7 +123,6 @@ const CustomAutoComplete: React.FC = () => {
                 <div className="flex flex-col sm:items-end text-right self-start">
                   <p className="!text-xs sm:!text-sm text-foreground font-medium !mb-0">
                     {blog.author.fullName}
-                   
                   </p>
                   <p className="!text-xs text-muted-foreground !mb-0">
                     {new Date(blog.createdAt).toLocaleDateString()}
@@ -106,18 +145,12 @@ const CustomAutoComplete: React.FC = () => {
               className="flex items-center gap-3 w-full mt-[6px] h-[40px] justify-center"
             >
               <div className="h-[30px] w-[33px] overflow-hidden !ml-[10px]">
-                <Image
-                  src={
-                    user.profileImage?.startsWith("http")
-                      ? user.profileImage
-                      : `https://blogs-backend-ftie.onrender.com/${user.profileImage}`
-                     
-                  }
+                <SafeImage
+                  src={getImageSrc(user.profileImage)}
                   alt={user.fullName}
                   width={36}
                   height={36}
                   className="rounded-full object-cover h-full w-full"
-                  
                 />
               </div>
               <div className="flex w-full justify-start items-center gap-[10px] h-6">
@@ -135,33 +168,30 @@ const CustomAutoComplete: React.FC = () => {
         if (blogOptions.length > 0) {
           allOptions.push(
             <CommandGroup
-                key="blogs"
-  heading={
-    <h4 className="px-3 py-1 pl-[10px] text-xs font-semibold text-foreground bg-muted">
-      Blogs
-    </h4>
-  }
-
+              key="blogs"
+              heading={
+                <h4 className="px-3 py-1 pl-[10px] text-xs font-semibold text-foreground bg-muted">
+                  Blogs
+                </h4>
+              }
             >
               {blogOptions}
-            </CommandGroup>
+            </CommandGroup>,
           );
         }
 
         if (userOptions.length > 0) {
           allOptions.push(
             <CommandGroup
-              
               heading={
-    <h4 className="px-3 py-1 pl-[10px] text-xs font-semibold text-foreground bg-muted">
-      Users
-    </h4>
-  }
+                <h4 className="px-3 py-1 pl-[10px] text-xs font-semibold text-foreground bg-muted">
+                  Users
+                </h4>
+              }
               key="users"
-              
             >
               {userOptions}
-            </CommandGroup>
+            </CommandGroup>,
           );
         }
 
@@ -180,39 +210,38 @@ const CustomAutoComplete: React.FC = () => {
     };
   }, []);
   useEffect(() => {
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      wrapperRef.current &&
-      !wrapperRef.current.contains(event.target as Node)
-    ) {
-      setIsOpen(false);
-    }
-  };
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
 
-  document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, []);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div ref={wrapperRef} className="relative w-full !mb-5">
-<div className="relative ">
-  {/* Search Icon */}
-  <div className="absolute inset-y-0 left-0 flex items-center !pl-3 pointer-events-none">
-    <SearchIcon className="w-5 h-5 text-muted-foreground searchIcon" />
-  </div>
+      <div className="relative ">
+        {/* Search Icon */}
+        <div className="absolute inset-y-0 left-0 flex items-center !pl-3 pointer-events-none">
+          <SearchIcon className="w-5 h-5 text-muted-foreground searchIcon" />
+        </div>
 
-  {/* Input Field */}
-  <Input
-    value={value}
-    onChange={(e) => onSearch(e.target.value)}
-    placeholder="Search blogs or users"
-    className="w-full !pl-[35px] h-11 rounded-lg border border-input bg-background shadow-sm focus:ring-2 focus:ring-primary"
-  />
-</div>
-
+        {/* Input Field */}
+        <Input
+          value={value}
+          onChange={(e) => onSearch(e.target.value)}
+          placeholder="Search blogs or users"
+          className="w-full !pl-[35px] h-11 rounded-lg border border-input bg-background shadow-sm focus:ring-2 focus:ring-primary"
+        />
+      </div>
 
       {isOpen && (
         <div className="absolute z-50 mt-1 w-full bg-background border border-border rounded-lg shadow-lg overflow-hidden max-h-96 overflow-y-auto">

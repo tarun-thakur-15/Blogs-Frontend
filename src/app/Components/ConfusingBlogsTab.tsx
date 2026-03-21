@@ -1,11 +1,9 @@
 "use client";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
-import { Flex, Button} from "antd";
+import { Flex, Button } from "antd";
 import Cookies from "js-cookie";
-import {
-  getConfusingBlogs
-} from "../services/api";
+import { getConfusingBlogs } from "../services/api";
 import { ReactionPayload } from "../services/schema"; // ensure correct path
 import { Toaster } from "sonner";
 // CSS
@@ -36,7 +34,7 @@ export interface BlogPreview {
   content: string;
   slug: string;
   createdAt: string;
-  author: { username: string, profileImage?: string };
+  author: { username: string; profileImage?: string };
   isFavourite: boolean;
   commentCount: number;
   reaction: {
@@ -96,7 +94,6 @@ export default function ConfusingBlogsTab({
   const handleClickForBlog =
     (blogId: string, emoji: string) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
-
       const id = Date.now();
       const button = e.currentTarget;
       const startX = button.offsetLeft + button.offsetWidth / 2;
@@ -116,11 +113,7 @@ export default function ConfusingBlogsTab({
   const loadMoreBlogs = useCallback(async () => {
     setLoadingMore(true);
     try {
-      const data = await getConfusingBlogs(
-        offsetRef.current,
-        10,
-        AccessToken
-      );
+      const data = await getConfusingBlogs(offsetRef.current, 10, AccessToken);
       if (data.blogs && data.blogs.length > 0) {
         setBlogs((prev) => {
           const newBlogs = [...prev, ...data.blogs];
@@ -149,7 +142,7 @@ export default function ConfusingBlogsTab({
         root: null,
         rootMargin: "0px",
         threshold: 0.1,
-      }
+      },
     );
 
     if (loadMoreRef.current) {
@@ -168,168 +161,161 @@ export default function ConfusingBlogsTab({
     setIsDropdownOpen((prev) => (prev === blogId ? null : blogId));
   };
 
-      const baseUrl = "https://blogs-backend-ftie.onrender.com/";
-      const DEFAULT_AVATAR = `/images/default-user.webp`;
-    
-      function BlogCard({ blog }: BlogCardProps) {
-        const initialSrc = blog.author.profileImage
-          ? `${baseUrl}/${blog.author.profileImage}`
-          : DEFAULT_AVATAR;
-    
-        const [imgSrc, setImgSrc] = useState(initialSrc);
-    
-        return (
-          <Image
-            src={imgSrc}
-            alt={blog.author.username}
-            width={40}
-            height={40}
-            onError={() => setImgSrc(DEFAULT_AVATAR)}
-          />
-        );
-      }
+  const baseUrl = "https://blogs-backend-ftie.onrender.com/";
+  const DEFAULT_AVATAR = `/images/default-user.webp`;
+  function getImageSrc(img: any) {
+    if (!img) return DEFAULT_AVATAR;
+
+    // ✅ Cloudinary or any external URL
+    if (img.startsWith("http")) {
+      return img;
+    }
+
+    // ✅ Local image → prepend baseUrl
+    return `${baseUrl}/${img}`;
+  }
+
+  function BlogCard({ blog }: BlogCardProps) {
+    const initialSrc = getImageSrc(blog.author.profileImage);
+    const [imgSrc, setImgSrc] = useState(initialSrc);
+
+    return (
+      <Image
+        src={imgSrc}
+        alt={blog.author.username}
+        width={40}
+        height={40}
+        onError={() => setImgSrc(DEFAULT_AVATAR)}
+      />
+    );
+  }
 
   return (
     <>
-      {blogs && blogs.length > 0
-        ? blogs.map((blog, index) => {
-            // Determine the selected reaction for the blog
-            const currentReaction =
-              selectedReactions[blog._id] ??
-              (blog.isLiked
-                ? "like"
-                : blog.isAmazing
+      {blogs && blogs.length > 0 ? (
+        blogs.map((blog, index) => {
+          // Determine the selected reaction for the blog
+          const currentReaction =
+            selectedReactions[blog._id] ??
+            (blog.isLiked
+              ? "like"
+              : blog.isAmazing
                 ? "amazing"
                 : blog.isConfusing
-                ? "confusing"
-                : blog.isDisliked
-                ? "dislike"
-                : "");
+                  ? "confusing"
+                  : blog.isDisliked
+                    ? "dislike"
+                    : "");
 
-            return (
-              <div key={`${blog._id}-${index}`} className="awnser-box">
-                <Toaster position="top-right" />
-                <Link href={`/${blog.slug}`}>
-                  <div className="awnser-box-header">
-                    <p className="awnser-box--question">{blog.title}</p>
-                  </div>
-                  <div className="awnser-box-body">
-                    <p className="awnser-box--awnser forImageInsideContent" dangerouslySetInnerHTML={{ __html: blog.content }} />
-                  </div>
-                  <div className="awnser-box-footer">
-                    <Flex justify="space-between" align="center">
-                      <Flex gap={2} align="center">
-                        <div className="awnser-box--company">
-                          <BlogCard key={blog._id} blog={blog} />
-                        </div>
-                        <span className="usernameBlogsHome">
-                          {" "}
-                          &nbsp; {blog?.author?.username || ""} &nbsp;{" "}
-                        </span>
-                        <Flex gap={4} align="center">
-                          <p className="date">
-                            {moment(blog.createdAt).format("Do MMM, YYYY")}
-                          </p>
-                        </Flex>
-                      </Flex>
-                      <Flex
-                        gap={12}
-                        align="center"
-                        style={{ position: "relative" }}
-                      >
-                        <div
-                          className="crown-button-container"
-                          style={{ display: "flex", gap: "12px" }}
-                        >
-                          {/* Like Button */}
-                          <Button
-                            type="text"
-                          >
-                            <p
-                              className={`reactionCountOnHome `}
-                            >
-                              👍
-                            </p>
-                            <p>{blog.reaction?.like?.count ?? 0}</p>
-                          </Button>
-
-                          {/* Amazing Button */}
-                          <Button
-                            type="text"
-                          >
-                            <p
-                              className={`reactionCountOnHome `}
-                            >
-                              🔥
-                            </p>
-                            <p>{blog.reaction?.amazing?.count ?? 0}</p>
-                          </Button>
-
-                          {/* Confusing Button */}
-                          <Button
-                            type="text"
-                          >
-                            <p
-                              className={`reactionCountOnHome fontSizeIfSelected`}
-                            >
-                              😵‍💫
-                            </p>
-                            <p>{blog.reaction?.confusing?.count ?? 0}</p>
-                          </Button>
-
-                          {/* Dislike Button */}
-                          <Button
-                            type="text"
-                          >
-                            <p
-                              className={`reactionCountOnHome `}
-                            >
-                              👎
-                            </p>
-                            <p>{blog.reaction?.dislike?.count ?? 0}</p>
-                          </Button>
-
-                          {/* Render fly animations */}
-                          {flyMap[blog._id]?.map((fly) => (
-                            <span
-                              key={fly.id}
-                              className="fly-animation"
-                              style={{
-                                left: `${fly.startX}px`,
-                                top: `${fly.startY}px`,
-                              }}
-                            >
-                              {fly.emoji}
-                            </span>
-                          ))}
-                        </div>
-
-                        {/* Comment Button */}
-                        <Button className="add-like" type="text">
-                          <Comment width={15} height={15} className="commentIcon" />
-                          <p className="reactionCountOnHome">
-                            {blog.commentCount}
-                          </p>
-                        </Button>
+          return (
+            <div key={`${blog._id}-${index}`} className="awnser-box rounded-xl bg-white dark:bg-neutral-900 shadow-sm hover:shadow-lg transition-shadow duration-300">
+              <Toaster position="top-right" />
+              <Link href={`/${blog.slug}`}>
+                <div className="awnser-box-header">
+                  <p className="awnser-box--question">{blog.title}</p>
+                </div>
+                <div className="awnser-box-body">
+                  <p
+                    className="awnser-box--awnser forImageInsideContent"
+                    dangerouslySetInnerHTML={{ __html: blog.content }}
+                  />
+                </div>
+                <div className="awnser-box-footer">
+                  <Flex justify="space-between" align="center">
+                    <Flex gap={2} align="center">
+                      <div className="awnser-box--company">
+                        <BlogCard key={blog._id} blog={blog} />
+                      </div>
+                      <span className="usernameBlogsHome">
+                        {" "}
+                        &nbsp; {blog?.author?.username || ""} &nbsp;{" "}
+                      </span>
+                      <Flex gap={4} align="center">
+                        <p className="date">
+                          {moment(blog.createdAt).format("Do MMM, YYYY")}
+                        </p>
                       </Flex>
                     </Flex>
-                  </div>
-                </Link>
-              </div>
-            );
-          })
-        : (
-          <>
-          <div className="no-data-profile">
-                      <Image src={BoxIconPng} alt="No blogs" />
-                      <div>
-                        <h2>
-                          No confusing blogs. 😊
-                        </h2>
+                    <Flex
+                      gap={12}
+                      align="center"
+                      style={{ position: "relative" }}
+                    >
+                      <div
+                        className="crown-button-container"
+                        style={{ display: "flex", gap: "12px" }}
+                      >
+                        {/* Like Button */}
+                        <Button type="text">
+                          <p className={`reactionCountOnHome `}>👍</p>
+                          <p>{blog.reaction?.like?.count ?? 0}</p>
+                        </Button>
+
+                        {/* Amazing Button */}
+                        <Button type="text">
+                          <p className={`reactionCountOnHome `}>🔥</p>
+                          <p>{blog.reaction?.amazing?.count ?? 0}</p>
+                        </Button>
+
+                        {/* Confusing Button */}
+                        <Button type="text">
+                          <p
+                            className={`reactionCountOnHome fontSizeIfSelected`}
+                          >
+                            😵‍💫
+                          </p>
+                          <p>{blog.reaction?.confusing?.count ?? 0}</p>
+                        </Button>
+
+                        {/* Dislike Button */}
+                        <Button type="text">
+                          <p className={`reactionCountOnHome `}>👎</p>
+                          <p>{blog.reaction?.dislike?.count ?? 0}</p>
+                        </Button>
+
+                        {/* Render fly animations */}
+                        {flyMap[blog._id]?.map((fly) => (
+                          <span
+                            key={fly.id}
+                            className="fly-animation"
+                            style={{
+                              left: `${fly.startX}px`,
+                              top: `${fly.startY}px`,
+                            }}
+                          >
+                            {fly.emoji}
+                          </span>
+                        ))}
                       </div>
-                    </div>
-          </>
-        )}
+
+                      {/* Comment Button */}
+                      <Button className="add-like" type="text">
+                        <Comment
+                          width={15}
+                          height={15}
+                          className="commentIcon"
+                        />
+                        <p className="reactionCountOnHome">
+                          {blog.commentCount}
+                        </p>
+                      </Button>
+                    </Flex>
+                  </Flex>
+                </div>
+              </Link>
+            </div>
+          );
+        })
+      ) : (
+        <>
+          <div className="no-data-profile">
+            <Image src={BoxIconPng} alt="No blogs" />
+            <div>
+              <h2>No confusing blogs. 😊</h2>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* No more blogs message */}
       {!hasMore && blogs.length > 0 && (
@@ -344,11 +330,7 @@ export default function ConfusingBlogsTab({
       )}
 
       {/* Loading Skeleton for Infinite Scroll */}
-      <div ref={loadMoreRef}>
-        {loadingMore && (
-          <BlogSkeleton/>
-        )}
-      </div>
+      <div ref={loadMoreRef}>{loadingMore && <BlogSkeleton />}</div>
 
       {/* Modals */}
       <SignInModal

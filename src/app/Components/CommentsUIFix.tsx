@@ -3,8 +3,8 @@ import { useEffect, useRef } from "react";
 import { useState } from "react";
 import Image from "next/image";
 import { Flex } from "antd";
-import { postComment, getComments, deleteComment } from "../services/api"; 
-import { PostCommentInterface } from "../services/schema"; 
+import { postComment, getComments, deleteComment } from "../services/api";
+import { PostCommentInterface } from "../services/schema";
 import moment from "moment";
 import Cookies from "js-cookie";
 import NProgress from "nprogress";
@@ -172,14 +172,28 @@ export default function Comments({
   };
 
   const DEFAULT_AVATAR = `/images/default-user.webp`;
+  function getImageSrc(img: any) {
+    if (!img) return DEFAULT_AVATAR;
 
-  const initialSrc = profileImage
-    ? `${backendBaseUrl}/${profileImage}`
-    : DEFAULT_AVATAR;
+    // ✅ Cloudinary or any external URL
+    if (img.startsWith("http")) {
+      return img;
+    }
 
+    // ✅ Local image → prepend baseUrl
+    return `${backendBaseUrl}/${img}`;
+  }
+
+  const initialSrc = getImageSrc(profileImage);
   const [imgSrc, setImgSrc] = useState(initialSrc);
 
-  function CommentAvatar({ imageUrl, fallback }: {imageUrl: string | StaticImageData, fallback: string | StaticImageData}) {
+  function CommentAvatar({
+    imageUrl,
+    fallback,
+  }: {
+    imageUrl: string | StaticImageData;
+    fallback: string | StaticImageData;
+  }) {
     const [src, setSrc] = useState(imageUrl);
 
     return (
@@ -207,9 +221,7 @@ export default function Comments({
         <div className="comments-list-inner">
           <p className="comments-list--name">Total Comments: {totalComments}</p>
           {comments.map((comment) => {
-            const commentImgSrc = comment.author.profileImage
-              ? `${backendBaseUrl}${comment.author.profileImage}`
-              : DEFAULT_AVATAR;
+            const commentImgSrc = getImageSrc(comment.author.profileImage);
             return (
               <div
                 key={comment._id}
@@ -219,10 +231,10 @@ export default function Comments({
                 <div className="comments-list--item--img">
                   {/* this image tag is for commented user */}
 
-                   <CommentAvatar
-          imageUrl={commentImgSrc}
-          fallback={DEFAULT_AVATAR}
-        />
+                  <CommentAvatar
+                    imageUrl={commentImgSrc}
+                    fallback={DEFAULT_AVATAR}
+                  />
                 </div>
                 <div className="comments-list--item--details">
                   <Flex align="center" gap={8} justify="space-between">
@@ -291,7 +303,9 @@ export default function Comments({
                               Deleting
                             </span>
                           ) : (
-                            <span className="dropdownText text-[#dc2626]!">Delete</span>
+                            <span className="dropdownText text-[#dc2626]!">
+                              Delete
+                            </span>
                           )}
                         </button>
                       )}

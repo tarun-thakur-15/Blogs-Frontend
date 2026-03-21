@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
-import { Flex, Button} from "antd";
+import { Flex, Button } from "antd";
 import Cookies from "js-cookie";
 import { getHighlightedBlogs, reactToBlog } from "../services/api";
 import { ReactionPayload } from "../services/schema"; // ensure correct path
@@ -33,7 +33,7 @@ export interface BlogPreview {
   previewContent: string;
   slug: string;
   createdAt: string;
-  author: { username: string, profileImage?: string };
+  author: { username: string; profileImage?: string };
   isFavourite: boolean;
   commentCount: number;
   reactions: {
@@ -85,17 +85,16 @@ export default function FaqsForUserPage({
   const handleReaction = async (
     slug: string,
     reactionType: ReactionPayload["reactionType"],
-    blogId: string
+    blogId: string,
   ) => {
-   
     try {
       const result = await reactToBlog(slug, { reactionType }, AccessToken);
-   
+
       // Update the local state with the new reaction counts for the blog that was updated
       setBlogs((prevBlogs) =>
         prevBlogs.map((blog) =>
-          blog.slug === slug ? { ...blog, reactions: result.reaction } : blog
-        )
+          blog.slug === slug ? { ...blog, reactions: result.reaction } : blog,
+        ),
       );
       setSelectedReactions((prev) => ({ ...prev, [blogId]: reactionType }));
     } catch (error) {
@@ -107,7 +106,6 @@ export default function FaqsForUserPage({
   const handleClickForBlog =
     (blogId: string, emoji: string) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      
       const id = Date.now();
       const button = e.currentTarget;
       const startX = button.offsetLeft + button.offsetWidth / 2;
@@ -137,7 +135,7 @@ export default function FaqsForUserPage({
     (
       blogId: string,
       slug: string,
-      reactionType: ReactionPayload["reactionType"]
+      reactionType: ReactionPayload["reactionType"],
     ) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
@@ -174,7 +172,7 @@ export default function FaqsForUserPage({
         offsetRef.current,
         10,
         username,
-        AccessToken
+        AccessToken,
       );
       if (data.blogs && data.blogs.length > 0) {
         setBlogs((prev) => {
@@ -204,7 +202,7 @@ export default function FaqsForUserPage({
         root: null,
         rootMargin: "0px",
         threshold: 0.1,
-      }
+      },
     );
 
     if (loadMoreRef.current) {
@@ -218,7 +216,7 @@ export default function FaqsForUserPage({
     };
   }, [loadMoreBlogs, loadingMore, hasMore]);
 
-    useEffect(() => {
+  useEffect(() => {
     setBlogs(initialBlogs);
     offsetRef.current = initialBlogs.length;
   }, [initialBlogs]);
@@ -232,37 +230,47 @@ export default function FaqsForUserPage({
               (blog.isLiked
                 ? "like"
                 : blog.isAmazing
-                ? "amazing"
-                : blog.isConfusing
-                ? "confusing"
-                : blog.isDisliked
-                ? "dislike"
-                : "");
+                  ? "amazing"
+                  : blog.isConfusing
+                    ? "confusing"
+                    : blog.isDisliked
+                      ? "dislike"
+                      : "");
 
-                  const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
-                  const DEFAULT_AVATAR = `/images/default-user.webp`;
-                
-                  const initialSrc = blog?.author?.profileImage
-                    ? `${backendBaseUrl}/${blog?.author?.profileImage}`
-                    : DEFAULT_AVATAR;
-                
-                  const [imgSrc, setImgSrc] = useState(initialSrc);
+            const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
+            const DEFAULT_AVATAR = `/images/default-user.webp`;
+            function getImageSrc(img: any) {
+              if (!img) return DEFAULT_AVATAR;
+
+              // ✅ Cloudinary or any external URL
+              if (img.startsWith("http")) {
+                return img;
+              }
+
+              // ✅ Local image → prepend baseUrl
+              return `${backendBaseUrl}/${img}`;
+            }
+            const initialSrc = getImageSrc(blog.author.profileImage);
+            const [imgSrc, setImgSrc] = useState(initialSrc);
 
             return (
-              <div key={blog._id} className="awnser-box">
+              <div key={blog._id} className="awnser-box rounded-xl bg-white dark:bg-neutral-900 shadow-sm hover:shadow-lg transition-shadow duration-300">
                 <Link href={`/${blog.slug}`}>
                   <div className="awnser-box-header">
                     <p className="awnser-box--question">{blog.title}</p>
                   </div>
                   <div className="awnser-box-body">
-                    <p className="awnser-box--awnser" dangerouslySetInnerHTML={{ __html: blog.previewContent }}/>
+                    <p
+                      className="awnser-box--awnser"
+                      dangerouslySetInnerHTML={{ __html: blog.previewContent }}
+                    />
                   </div>
                   <div className="awnser-box-footer">
                     <Flex justify="space-between" align="center">
                       <Flex gap={2} align="center">
                         <div className="awnser-box--company">
                           <Image
-                             src={imgSrc}
+                            src={imgSrc}
                             alt={blog.author.username}
                             width={40}
                             height={40}
@@ -290,7 +298,7 @@ export default function FaqsForUserPage({
                             onClick={handleReactionWithAnimation(
                               blog._id,
                               blog.slug,
-                              "like"
+                              "like",
                             )}
                           >
                             <p
@@ -311,7 +319,7 @@ export default function FaqsForUserPage({
                             onClick={handleReactionWithAnimation(
                               blog._id,
                               blog.slug,
-                              "amazing"
+                              "amazing",
                             )}
                           >
                             <p
@@ -332,7 +340,7 @@ export default function FaqsForUserPage({
                             onClick={handleReactionWithAnimation(
                               blog._id,
                               blog.slug,
-                              "confusing"
+                              "confusing",
                             )}
                           >
                             <p
@@ -353,7 +361,7 @@ export default function FaqsForUserPage({
                             onClick={handleReactionWithAnimation(
                               blog._id,
                               blog.slug,
-                              "dislike"
+                              "dislike",
                             )}
                           >
                             <p
@@ -385,7 +393,11 @@ export default function FaqsForUserPage({
 
                         {/* Comment Button */}
                         <Button className="add-like" type="text">
-                          <Comment width={15} height={15} className="commentIcon" />
+                          <Comment
+                            width={15}
+                            height={15}
+                            className="commentIcon"
+                          />
                           <p className="reactionCountOnHome">
                             {blog.commentCount}
                           </p>
@@ -412,11 +424,7 @@ export default function FaqsForUserPage({
       )}
 
       {/* Loading Skeleton for Infinite Scroll */}
-     <div ref={loadMoreRef}>
-             {loadingMore && (
-               <BlogSkeleton/>
-             )}
-           </div>
+      <div ref={loadMoreRef}>{loadingMore && <BlogSkeleton />}</div>
 
       {/* Modals */}
       <SignInModal

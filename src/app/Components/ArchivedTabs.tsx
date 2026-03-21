@@ -276,12 +276,11 @@ export default function ArchivedTabs({
     };
   }, []);
 
-    const baseUrl = "https://blogs-backend-ftie.onrender.com/";
     const DEFAULT_AVATAR = `/images/default-user.webp`;
   
     function BlogCard({ blog }: BlogCardProps) {
       const initialSrc = blog.author.profileImage
-        ? `${baseUrl}/${blog.author.profileImage}`
+        ? `${blog.author.profileImage}`
         : DEFAULT_AVATAR;
   
       const [imgSrc, setImgSrc] = useState(initialSrc);
@@ -315,7 +314,7 @@ export default function ArchivedTabs({
               : "");
 
           return (
-            <div key={blog._id} className="awnser-box">
+            <div key={blog._id} className="awnser-box rounded-xl bg-white dark:bg-neutral-900 shadow-sm hover:shadow-lg transition-shadow duration-300">
               <Toaster position="top-right" />
               <Link href={`/${blog.slug}`}>
                 <div className="awnser-box-header">

@@ -47,7 +47,7 @@ const RelatedFaqs = () => {
   return (
     <>
       <div>
-        <div className="awnser-box" style={{ marginBottom: "16px" }}>
+        <div className="awnser-box rounded-xl bg-white dark:bg-neutral-900 shadow-sm hover:shadow-lg transition-shadow duration-300" style={{ marginBottom: "16px" }}>
           <div className="awnser-box-header">
             <p className="awnser-box--question">title</p>
           </div>

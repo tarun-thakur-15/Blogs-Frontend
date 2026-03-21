@@ -226,9 +226,9 @@ export default function AllBlogsUserPage({
   }, [loadMoreBlogs, loadingMore, hasMore]);
 
   useEffect(() => {
-  setBlogs(initialBlogs);
-  offsetRef.current = initialBlogs.length;
-}, [initialBlogs]);
+    setBlogs(initialBlogs);
+    offsetRef.current = initialBlogs.length;
+  }, [initialBlogs]);
 
   return (
     <>
@@ -247,17 +247,26 @@ export default function AllBlogsUserPage({
                       ? "dislike"
                       : "");
 
-  const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
-  const DEFAULT_AVATAR = `/images/default-user.webp`;
+            const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
+            const DEFAULT_AVATAR = `/images/default-user.webp`;
+            function getImageSrc(img: any) {
+              if (!img) return DEFAULT_AVATAR;
 
-  const initialSrc = blog?.author?.profileImage
-    ? `${backendBaseUrl}/${blog?.author?.profileImage}`
-    : DEFAULT_AVATAR;
+              // ✅ Cloudinary or any external URL
+              if (img.startsWith("http")) {
+                return img;
+              }
 
-  const [imgSrc, setImgSrc] = useState(initialSrc);
+              // ✅ Local image → prepend baseUrl
+              return `${backendBaseUrl}/${img}`;
+            }
+
+            const initialSrc = getImageSrc(blog.author.profileImage);
+
+            const [imgSrc, setImgSrc] = useState(initialSrc);
 
             return (
-              <div key={`${blog._id}-${index}`} className="awnser-box">
+              <div key={`${blog._id}-${index}`} className="awnser-box rounded-xl bg-white dark:bg-neutral-900 shadow-sm hover:shadow-lg transition-shadow duration-300">
                 <Link href={`/${blog.slug}`}>
                   <div className="awnser-box-header">
                     <p className="awnser-box--question">{blog.title}</p>
@@ -273,7 +282,7 @@ export default function AllBlogsUserPage({
                       <Flex gap={2} align="center">
                         <div className="awnser-box--company">
                           <Image
-                          src={imgSrc}
+                            src={imgSrc}
                             alt={blog.author.username}
                             width={40}
                             height={40}
