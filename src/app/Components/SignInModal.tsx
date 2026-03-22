@@ -5,7 +5,6 @@ import OtpInput from "react-otp-input";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { signUpUser, verifyUser, resedOtp } from "../services/api";
-import Cookies from "js-cookie";
 // CSS
 import "../styles/signin.css";
 // IMAGES
@@ -90,13 +89,7 @@ const SignInModal: React.FC<CustomModalProps> = ({
       const response = await verifyUser(payload);
    
       setOtpLoading(false);
-      // After successful verification set the necessary informaion in Cookies:-
-      Cookies.set("email", response.email, { expires: 7 });
-      Cookies.set("accessToken", response.accessToken, { expires: 7 });
-      Cookies.set("username", response.username || "", { expires: 7 });
-      Cookies.set("fullname", response.fullname || "", { expires: 7 });
-      Cookies.set("profileImage", response.profileImage || "", { expires: 7 });
-      window.location.reload();
+      window.location.href = "/lekhan/home";
     } catch (error: any) {
       setOtpLoading(false);
       setError(true);

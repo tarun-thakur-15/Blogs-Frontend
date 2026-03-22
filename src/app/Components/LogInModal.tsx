@@ -1,6 +1,5 @@
 "use client";
-import { useState, useLayoutEffect, useEffect } from "react";
-import Cookies from "js-cookie";
+import { useState, useLayoutEffect } from "react";
 import { Flex, Button, Modal, Form, Input } from "antd";
 import OtpInput from "react-otp-input";
 import Image from "next/image";
@@ -102,30 +101,27 @@ const LogInModal: React.FC<CustomModalProps> = ({
     setIsModalOpen(false);
   };
   // Login form submission handler
-  const handleLogin = async (values: any) => {
-    try {
-      setSaveLoading(true);
-      // Create payload matching the Login interface
-      const payload = {
-        identifier: values.identifier,
-        password: values.password,
-      };
-      const response = await loginUser(payload);
+const handleLogin = async (values: any) => {
+  try {
+    setSaveLoading(true);
 
-      // Store returned values in cookies
-      Cookies.set("accessToken", response.accessToken);
-      Cookies.set("email", response.email);
-      Cookies.set("username", response.username);
-      Cookies.set("fullname", response.fullname);
-      Cookies.set("profileImage", response.profileImage);
-      setSaveLoading(false);
-      window.location.reload();
-      // Redirect after successful login (e.g., to dashboard)
-    } catch (error: any) {
-      setSaveLoading(false);
-      setErrorMessage(error.message || "Login failed");
-    }
-  };
+    const payload = {
+      identifier: values.identifier,
+      password: values.password,
+    };
+
+    await loginUser(payload);
+
+    setSaveLoading(false);
+
+    // 🔥 IMPORTANT: force navigation so middleware runs
+    window.location.href = "/lekhan/home";
+
+  } catch (error: any) {
+    setSaveLoading(false);
+    setErrorMessage(error.message || "Login failed");
+  }
+};
   return (
     <>
       <Modal
@@ -136,7 +132,6 @@ const LogInModal: React.FC<CustomModalProps> = ({
           formLevel === 2
             ? "sign-in-modal success"
             : "sign-in-modal login" +
-              
               " !w-screen !h-screen !m-0 !p-0 !rounded-none" +
               " sm:!w-auto sm:!h-auto sm:!m-4 sm:!p-6 sm:!rounded-lg"
         }
@@ -161,22 +156,15 @@ const LogInModal: React.FC<CustomModalProps> = ({
               autoComplete="on"
             >
               <Form.Item name="identifier" rules={identifierRules} hasFeedback>
-                <Input
-                  placeholder="Enter your email or username"
-                  
-                />
+                <Input placeholder="Enter your email or username" />
               </Form.Item>
               <Form.Item
                 name="password"
                 rules={[
                   { required: true, message: "Please enter your password!" },
-                  
                 ]}
               >
-                <Input.Password
-                  placeholder="Enter your password"
-                 
-                />
+                <Input.Password placeholder="Enter your password" />
               </Form.Item>
 
               <Form.Item>
@@ -216,7 +204,7 @@ const LogInModal: React.FC<CustomModalProps> = ({
                   type="email"
                   placeholder="Enter your email"
                   value={emailInput}
-          onChange={(e) => setEmailInput(e.target.value)}
+                  onChange={(e) => setEmailInput(e.target.value)}
                   prefix={<Email />}
                 />
               </Form.Item>
@@ -238,7 +226,7 @@ const LogInModal: React.FC<CustomModalProps> = ({
                     } catch (error: any) {
                       setSendOtpLoading(false);
                       setErrorMessage(
-                        error?.response?.data?.msg || "Something went wrong."
+                        error?.response?.data?.msg || "Something went wrong.",
                       );
                     }
                   }}
@@ -292,7 +280,7 @@ const LogInModal: React.FC<CustomModalProps> = ({
                     } catch (error: any) {
                       setOtpLoadingforgetpassword(false);
                       setErrorMessage(
-                        error?.response?.data?.msg || "Invalid OTP"
+                        error?.response?.data?.msg || "Invalid OTP",
                       );
                       setError(true);
                     }
@@ -354,7 +342,7 @@ const LogInModal: React.FC<CustomModalProps> = ({
                 } catch (error: any) {
                   setResetLoading(false);
                   setErrorMessage(
-                    error?.response?.data?.msg || "Failed to reset password"
+                    error?.response?.data?.msg || "Failed to reset password",
                   );
                 }
               }}

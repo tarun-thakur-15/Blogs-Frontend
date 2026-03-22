@@ -2,6 +2,8 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Flex, Button } from "antd";
+import { useAuthStore } from "../stores/authStore";
+import { getMe } from "../services/api";
 import {
   Tooltip,
   TooltipContent,
@@ -16,30 +18,39 @@ import SettingIcon from "../../../public/images/setting.svg";
 import SignOutIcon from "../../../public/images/sign-out.svg";
 import Bell from "../../../public/images/bell.svg";
 import "../styles/header.css";
-import Cookies from "js-cookie";
 import FaqDrawer from "./FaqDrawer";
 import NProgress from "nprogress";
 import Lekhan from "../../assets/images/LekhanTransparent.png";
 import NotificationDrawer from "./NotificationDrawer";
-import { getUnreadNotificationCount } from "../services/api";
+import { getUnreadNotificationCount, logoutUser } from "../services/api";
 
 export default function Header() {
-  const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const { user, isLoggedIn } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const popoverRef = useRef<HTMLDivElement | null>(null);
   const avatarRef = useRef<HTMLDivElement>(null);
-  const [email, setEmail] = useState<string | null>(null);
-  const [username, setUsername] = useState<string | null>(null);
-  const [fullName, setFullName] = useState<string | null>(null);
   const [isDrawerVisible, setDrawerVisible] = useState(false);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
+
+  useEffect(() => {
+  const initAuth = async () => {
+    try {
+      const data = await getMe();
+      useAuthStore.getState().setUser(data);
+    } catch {
+      useAuthStore.getState().logout();
+    }
+  };
+
+  initAuth();
+}, []);
+
   const router = useRouter();
 
-  const token = Cookies.get("accessToken");
-  const profileImage = Cookies.get("profileImage");
+  
+
   const [isNotificationDrawerOpen, setIsNotificationDrawerOpen] =
     useState<boolean>(false);
   const toggleNotificationDrawer = () => {
@@ -60,22 +71,7 @@ export default function Header() {
     document.body.classList.add("modal-opened");
   };
 
-  //this useEffect will check for accessToken, email, username, fullname to conditionally display the logged in state
-  useEffect(() => {
-    const storedEmail = Cookies.get("email");
-    const storedUsername = Cookies.get("username");
-    const storedFullName = Cookies.get("fullname");
-    const accessToken = Cookies.get("accessToken");
 
-    if (storedEmail && storedUsername && storedFullName && accessToken) {
-      setEmail(storedEmail);
-      setUsername(storedUsername);
-      setFullName(storedFullName);
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -100,7 +96,7 @@ export default function Header() {
   useEffect(() => {
     const fetchUnreadCount = async () => {
       try {
-        const data = await getUnreadNotificationCount(token);
+        const data = await getUnreadNotificationCount();
 
         if (data?.unreadCount) {
           setUnreadNotifications(data.unreadCount);
@@ -114,21 +110,32 @@ export default function Header() {
   }, []);
 
   //logout function to clear all the cookies and then page reload
-  const logout = () => {
-    const cookies = Cookies.get(); // Get all cookies
-    Object.keys(cookies).forEach((cookie) => {
-      Cookies.remove(cookie); // Remove each cookie
-      window.location.reload();
-    });
-  };
+const logout = async () => {
+  try {
+    await logoutUser(); // 🔥 call backend
 
-  const DEFAULT_AVATAR = `/images/default-user.webp`;
+    // clear Zustand state
+    useAuthStore.getState().logout();
 
-  const initialSrc = profileImage
-    ? `${profileImage}`
-    : DEFAULT_AVATAR;
+    // redirect user
+    window.location.href = "/lekhan";
+  } catch (error) {
+    console.error(error);
+  }
+};
 
-  const [imgSrc, setImgSrc] = useState(initialSrc);
+const DEFAULT_AVATAR = `/images/default-user.webp`;
+
+const [imgSrc, setImgSrc] = useState(DEFAULT_AVATAR);
+
+// 🔥 Sync with Zustand user
+useEffect(() => {
+  if (user?.profileImage) {
+    setImgSrc(user.profileImage);
+  } else {
+    setImgSrc(DEFAULT_AVATAR);
+  }
+}, [user]);
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
@@ -154,7 +161,7 @@ export default function Header() {
           <Link className="logo" href={"/"}>
             <Image
               src={Lekhan}
-              alt="Blogs"
+              alt="Lekhan"
               className="w-[79px] h-[31px] lg:w-[130px] lg:h-[50px]"
             />
           </Link>
@@ -215,7 +222,7 @@ export default function Header() {
                       <div className="avatar">
                         <Image
                           src={imgSrc}
-                          alt={username || fullName || "Profile Picture"}
+                          alt={user?.username || user?.fullname || "Profile Picture"}
                           width={40}
                           height={40}
                           onError={() => {
@@ -225,8 +232,8 @@ export default function Header() {
                           }}
                         />
                       </div>
-                      <p className="profile-popover--name">{fullName}</p>
-                      <p className="profile-popover--id">{username}</p>
+                      <p className="profile-popover--name">{user?.fullname}</p>
+                      <p className="profile-popover--id">{user?.username}</p>
                     </div>
                     <Flex gap={6} vertical className="profile-popover--actions">
                       <Button

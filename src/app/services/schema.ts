@@ -90,3 +90,10 @@ export interface UploadBlogImageResponse {
   msg: string;
   imageUrl: string;
 }
+
+export interface MeResponse {
+  email: string;
+  username: string;
+  fullname: string;
+  profileImage: string;
+}

@@ -1,59 +1,38 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const exceptionPaths = ["/home", "/user"];
-const publicPaths    = ["/"];
-const protectedRoutes = ["/profile"];
-
-// Only run on “real” pages — skip Next internals, static files, APIs
 export const config = {
   matcher: [
-    '/((?!_next|api|service|.*\\..*).*)',
+    "/((?!_next|api|service|.*\\..*).*)",
   ],
 };
 
 export function proxy(req: NextRequest) {
   const url = req.nextUrl.clone();
   const path = req.nextUrl.pathname;
+
+  // 🔥 Read httpOnly cookie
   const token = req.cookies.get("accessToken")?.value;
 
-  // 1) Always allow Next.js internals, static files, etc.
-  // (Handled by the matcher above :contentReference[oaicite:4]{index=4})
+  const isLoggedIn = !!token;
 
-  // 2) Exception paths: open to everyone
-  if (exceptionPaths.some(p => path.startsWith(p))) {
-    return NextResponse.next();
-  }
-
-  // 3) Not logged-in & trying to access a protected route → send to /
-  const isProtected = protectedRoutes.some(p => path.startsWith(p));
-  if (!token && isProtected) {
-    url.pathname = "/";
+  // ===============================
+  // 🚫 PROTECT PRIVATE ROUTES
+  // ===============================
+  if (!isLoggedIn && path.startsWith("/lekhan/profile")) {
+    url.pathname = "/lekhan";
     return NextResponse.redirect(url);
   }
 
-  // 4) Logged-in & trying to access the public root → send to /home
-  if (token && path === "/") {
-    url.pathname = "/home";
+  // ===============================
+  // 🚫 BLOCK LOGIN PAGE FOR LOGGED-IN USERS
+  // ===============================
+  if (isLoggedIn && path === "/lekhan") {
+    url.pathname = "/lekhan/home";
     return NextResponse.redirect(url);
   }
 
-  // 5) Logged-in & onboarding flow when hitting "/"
-  if (token && path === "/") {
-    const status = req.cookies.get("onboarding_status")?.value;
-    if (status === "otp_verified") {
-      url.pathname = "/preferences";
-      return NextResponse.redirect(url);
-    }
-    if (status === "interest_added") {
-      url.pathname = "/bio";
-      return NextResponse.redirect(url);
-    }
-    if (status === "profile_completed") {
-      url.pathname = "/home";
-      return NextResponse.redirect(url);
-    }
-  }
-
-  // 6) Everything else — allow through
+  // ===============================
+  // ✅ ALLOW EVERYTHING ELSE
+  // ===============================
   return NextResponse.next();
 }

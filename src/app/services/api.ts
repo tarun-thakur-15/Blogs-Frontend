@@ -19,12 +19,12 @@ import {
   DraftResponse,
   UnreadNotificationCountResponse,
   UploadBlogImageResponse,
+  MeResponse,
 } from "./schema";
 
 // const url = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
-const url = "https://blogs-backend-ftie.onrender.com/api"
+const url = "https://blogs-backend-ftie.onrender.com/api";
 // const url = "http://localhost:8000/api";
-const accessToken = Cookies.get("accessToken");
 import { redirect } from "next/navigation";
 export const signUpUser = async (userData: SignUpSchema) => {
   try {
@@ -66,14 +66,15 @@ export const loginUser = async (userData: Login) => {
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true, // 🔥 MUST (this sends/receives cookies)
     });
+
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      const errorMessage = error.response?.data?.msg || "Failed to register";
+      const errorMessage = error.response?.data?.msg || "Failed to login";
       throw new Error(errorMessage);
     }
-    // console.error(error);
     throw error;
   }
 };
@@ -115,44 +116,32 @@ export const resedOtp = async (userData: ResendOtp) => {
   }
 };
 
-//this bottom api is following ISR (Incremental Site Rendering) that's we why we using fetch and not axios. 
-export const getAllBlogs = async (offset = 0, limit = 10, token?: string) => {
-  const accessToken = token || Cookies.get("accessToken");
-
+//this bottom api is following ISR (Incremental Site Rendering) that's we why we using fetch and not axios.
+export const getAllBlogs = async (offset = 0, limit = 10) => {
   try {
     const response = await fetch(
       `${url}/getAllBlogs?offset=${offset}&limit=${limit}`,
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
-      }
+        credentials: "include",
+      },
     );
 
     if (!response.ok) {
       throw new Error("Failed to fetch blogs");
     }
 
-    const data = await response.json(); 
+    const data = await response.json();
     return data;
-
   } catch (error) {
     console.error(error);
     throw error;
   }
 };
 
-export const getPerticularBlog = async (slug: string, token?: string) => {
-  const accessToken = token || "";
-
+export const getPerticularBlog = async (slug: string) => {
   try {
     const response = await fetch(`${url}/getPerticularBlog/${slug}`, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-      },
-      
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -165,15 +154,10 @@ export const getPerticularBlog = async (slug: string, token?: string) => {
   }
 };
 
-export const getProfileDetails = async (username: string, token?: string) => {
-  const accessToken = token || "";
-
+export const getProfileDetails = async (username: string) => {
   try {
     const response = await fetch(`${url}/getProfileDetails/${username}`, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-      },
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -192,17 +176,12 @@ export const getHighlightedBlogs = async (
   offset: number,
   limit: number,
   username: string,
-  token?: string,
 ) => {
-  const accessToken = token || Cookies.get("accessToken");
   try {
     const response = await axios.get(
       `${url}/getHighlightedBlogs/${username}?offset=${offset}&limit=${limit}`,
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
 
@@ -213,17 +192,13 @@ export const getHighlightedBlogs = async (
 };
 
 export const toggleHighlight = async (slug: string, token?: string) => {
-  const accessToken = token || Cookies.get("accessToken");
   try {
     // PATCH request with no request body; the API toggles the status based on current state
     const response = await axios.patch(
       `${url}/toggleHighlight/${slug}`,
       {},
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
     return response.data;
@@ -237,13 +212,9 @@ export const reactToBlog = async (
   payload: ReactionPayload,
   token: string,
 ) => {
-  const accessToken = token || Cookies.get("accessToken");
   try {
     const response = await axios.patch(`${url}/reactToBlog/${slug}`, payload, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-      },
+      withCredentials: true,
     });
     return response.data;
   } catch (error) {
@@ -255,17 +226,12 @@ export const getFollowersList = async (
   username: string,
   offset: number,
   limit: number,
-  token?: string,
 ) => {
-  const accessToken = token || Cookies.get("accessToken");
   try {
     const response = await axios.get(
       `${url}/getFollowersList/${username}?offset=${offset}&limit=${limit}`,
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
     return response.data; // assuming response.data.followers is an array of follower objects
@@ -278,17 +244,12 @@ export const getFollowingList = async (
   username: string,
   offset: number,
   limit: number,
-  token?: string,
 ) => {
-  const accessToken = token || Cookies.get("accessToken");
   try {
     const response = await axios.get(
       `${url}/getFollowingList/${username}?offset=${offset}&limit=${limit}`,
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
     return response.data; // assuming response.data.followers is an array of follower objects
@@ -298,13 +259,9 @@ export const getFollowingList = async (
 };
 
 export const toggleFavourite = async (slug: string, token?: string) => {
-  const accessToken = token || Cookies.get("accessToken");
   try {
     const response = await axios.patch(`${url}/favouriteBlog/${slug}`, null, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-      },
+      withCredentials: true,
     });
     return response.data;
   } catch (error) {
@@ -313,16 +270,12 @@ export const toggleFavourite = async (slug: string, token?: string) => {
 };
 
 export const toggleFollow = async (username: string, token?: string) => {
-  const accessToken = token || Cookies.get("accessToken");
   try {
     const response = await axios.patch(
       `${url}/followUnfollow/${username}`,
       {},
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
     return response.data; // Handle response properly
@@ -335,17 +288,12 @@ export const getUserBlogs = async (
   offset: number,
   limit: number,
   username: string,
-  token?: string,
 ) => {
-  const accessToken = token || Cookies.get("accessToken");
   try {
     const response = await axios.get(
       `${url}/getUserBlogs/${username}?offset=${offset}&limit=${limit}`,
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
 
@@ -373,17 +321,12 @@ export const getBlogsByTopic = async (
   topic: string,
   offset: number,
   limit: number,
-  token?: string,
 ) => {
-  const accessToken = token || Cookies.get("accessToken");
   try {
     const response = await axios.get(
       `${url}/getBlogsByTopic/${username}/${topic}?offset=${offset}&limit=${limit}`,
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
 
@@ -394,17 +337,11 @@ export const getBlogsByTopic = async (
 };
 
 export const createBlog = async (blogData: CreateBlog, token?: string) => {
-  const accessToken = token || Cookies.get("accessToken");
-  
-    const response = await axios.post(`${url}/createBlog`, blogData, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-      },
-    });
+  const response = await axios.post(`${url}/createBlog`, blogData, {
+    withCredentials: true,
+  });
 
-    return response.data;
-  
+  return response.data;
 };
 
 export const searchBlogsAndUsers = async (
@@ -427,17 +364,10 @@ export const searchBlogsAndUsers = async (
   }
 };
 
-export const postComment = async (
-  commentData: PostCommentInterface,
-  token?: string,
-) => {
-  const accessToken = token || Cookies.get("accessToken");
+export const postComment = async (commentData: PostCommentInterface) => {
   try {
     const response = await axios.post(`${url}/postComment`, commentData, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-      },
+      withCredentials: true,
     });
     return response.data;
   } catch (error) {
@@ -449,17 +379,12 @@ export const getComments = async (
   slug: string,
   offset: number = 0,
   limit: number = 10,
-  token?: string,
 ) => {
-  const accessToken = token || Cookies.get("accessToken");
   try {
     const response = await axios.get(
       `${url}/getComments/${slug}?offset=${offset}&limit=${limit}`,
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
     return response.data; // expected to return { comments, totalComments }
@@ -469,13 +394,9 @@ export const getComments = async (
 };
 
 export const deleteComment = async (commentId: string, token?: string) => {
-  const accessToken = token || Cookies.get("accessToken");
   try {
     const response = await axios.delete(`${url}/deleteComment/${commentId}`, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-      },
+      withCredentials: true,
     });
     return response.data;
   } catch (error) {
@@ -484,20 +405,12 @@ export const deleteComment = async (commentId: string, token?: string) => {
 };
 
 // Search Followers API
-export const searchFollowers = async (
-  username: string,
-  query: string,
-  token?: string,
-) => {
-  const accessToken = token || Cookies.get("accessToken");
+export const searchFollowers = async (username: string, query: string) => {
   try {
     const response = await axios.get(
       `${url}/searchFollowers/${username}?q=${encodeURIComponent(query)}`,
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
     return response.data; // Expected to return { followers: [...] }
@@ -507,20 +420,12 @@ export const searchFollowers = async (
 };
 
 // Search Following API
-export const searchFollowing = async (
-  username: string,
-  query: string,
-  token?: string,
-) => {
-  const accessToken = token || Cookies.get("accessToken");
+export const searchFollowing = async (username: string, query: string) => {
   try {
     const response = await axios.get(
       `${url}/searchFollowing/${username}?q=${encodeURIComponent(query)}`,
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
     return response.data; // Expected to return { following: [...] }
@@ -530,19 +435,14 @@ export const searchFollowing = async (
 };
 
 export const getNotifications = async (
-  token?: string,
   offset: number = 0,
   limit: number = 10,
 ) => {
-  const accessToken = token || Cookies.get("accessToken");
   try {
     const response = await axios.get(
       `${url}/notifications?offset=${offset}&limit=${limit}`,
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
 
@@ -554,16 +454,11 @@ export const getNotifications = async (
 
 export const markAllNotificationsAsRead = async () => {
   try {
-    const accessToken = Cookies.get("accessToken");
-
     const response = await axios.post(
       `${url}/notifications/mark-all-read`, // ✅ Correct API endpoint
       {}, // ✅ No request body required
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
 
@@ -574,14 +469,10 @@ export const markAllNotificationsAsRead = async () => {
 };
 
 export const editABout = async (userData: EditAboutSchema, token: string) => {
-  const accessToken = token || Cookies.get("accessToken");
   try {
     // PATCH request with no request body; the API toggles the status based on current state
     const response = await axios.patch(`${url}/changeAbout`, userData, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-      },
+      withCredentials: true,
     });
     return response.data;
   } catch (error) {
@@ -589,22 +480,12 @@ export const editABout = async (userData: EditAboutSchema, token: string) => {
   }
 };
 
-export const getAllArchivedBlogs = async (
-  offset = 0,
-  limit = 10,
-  token?: string,
-) => {
-  // Use token passed in (for SSR) or get it client-side
-  const accessToken = token || Cookies.get("accessToken");
-
+export const getAllArchivedBlogs = async (offset = 0, limit = 10) => {
   try {
     const response = await axios.get(
       `${url}/getArchivedBlogs?offset=${offset}&limit=${limit}`,
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
     return response.data;
@@ -614,15 +495,9 @@ export const getAllArchivedBlogs = async (
 };
 
 export const getArchivedBlog = async (slug: string, token?: string) => {
-  // Use token passed in (for SSR) or get it client-side
-  const accessToken = token || Cookies.get("accessToken");
-
   try {
     const response = await axios.get(`${url}/getDetailedArchivedBlog/${slug}`, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-      },
+      withCredentials: true,
     });
     return response.data;
   } catch (error) {
@@ -631,13 +506,9 @@ export const getArchivedBlog = async (slug: string, token?: string) => {
 };
 
 export const deleteBlog = async (slug: string, token?: string) => {
-  const accessToken = token || Cookies.get("accessToken");
   try {
     const response = await axios.delete(`${url}/deleteBlog/${slug}`, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-      },
+      withCredentials: true,
     });
     return response.data;
   } catch (error) {
@@ -646,17 +517,13 @@ export const deleteBlog = async (slug: string, token?: string) => {
 };
 
 export const toggleArchieve = async (slug: string, token?: string) => {
-  const accessToken = token || Cookies.get("accessToken");
   try {
     // PATCH request with no request body; the API toggles the status based on current state
     const response = await axios.patch(
       `${url}/archiveBlog/${slug}`,
       {},
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
     return response.data;
@@ -666,17 +533,11 @@ export const toggleArchieve = async (slug: string, token?: string) => {
 };
 
 export const getLikedBlogs = async (offset = 0, limit = 10, token?: string) => {
-  // Use token passed in (for SSR) or get it client-side
-  const accessToken = token || Cookies.get("accessToken");
-
   try {
     const response = await axios.get(
       `${url}/getLikedBlogs?offset=${offset}&limit=${limit}`,
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
 
@@ -686,22 +547,12 @@ export const getLikedBlogs = async (offset = 0, limit = 10, token?: string) => {
   }
 };
 
-export const getDislikedBlogs = async (
-  offset = 0,
-  limit = 10,
-  token?: string,
-) => {
-  // Use token passed in (for SSR) or get it client-side
-  const accessToken = token || Cookies.get("accessToken");
-
+export const getDislikedBlogs = async (offset = 0, limit = 10) => {
   try {
     const response = await axios.get(
       `${url}/getDislikedBlogs?offset=${offset}&limit=${limit}`,
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
 
@@ -711,22 +562,12 @@ export const getDislikedBlogs = async (
   }
 };
 
-export const getConfusingBlogs = async (
-  offset = 0,
-  limit = 10,
-  token?: string,
-) => {
-  // Use token passed in (for SSR) or get it client-side
-  const accessToken = token || Cookies.get("accessToken");
-
+export const getConfusingBlogs = async (offset = 0, limit = 10) => {
   try {
     const response = await axios.get(
       `${url}/getConfusingBlogs?offset=${offset}&limit=${limit}`,
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
 
@@ -736,22 +577,12 @@ export const getConfusingBlogs = async (
   }
 };
 
-export const getAmazingBlogs = async (
-  offset = 0,
-  limit = 10,
-  token?: string,
-) => {
-  // Use token passed in (for SSR) or get it client-side
-  const accessToken = token || Cookies.get("accessToken");
-
+export const getAmazingBlogs = async (offset = 0, limit = 10) => {
   try {
     const response = await axios.get(
       `${url}/getAmazingBlogs?offset=${offset}&limit=${limit}`,
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
 
@@ -765,19 +596,12 @@ export const getCommentedBlogs = async (
   offset = 0,
   limit = 10,
   username: string,
-  token?: string,
 ) => {
-  // Use token passed in (for SSR) or get it client-side
-  const accessToken = token || Cookies.get("accessToken");
-
   try {
     const response = await axios.get(
       `${url}/getCommentedBlogs/${username}?offset=${offset}&limit=${limit}`,
       {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
 
@@ -797,10 +621,7 @@ export const changeProfilePicture = async (file: File, token?: string) => {
       `${url}/changeProfilePicture`,
       formData,
       {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
+        withCredentials: true,
       },
     );
     return response.data;
@@ -814,9 +635,7 @@ export const saveDraft = async (payload: DraftPayload) => {
       `${url}/saveDraft`,
       payload,
       {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        withCredentials: true,
       },
     );
     return response.data;
@@ -831,9 +650,7 @@ export const saveDraft = async (payload: DraftPayload) => {
 export const getDraft = async () => {
   try {
     const response = await axios.get<DraftResponse>(`${url}/getDraft`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      withCredentials: true,
     });
     return response.data;
   } catch (err: any) {
@@ -841,18 +658,10 @@ export const getDraft = async () => {
   }
 };
 
-export const updateFullName = async (
-  userData: EditFullNameSchema,
-  token?: string,
-) => {
-  const accessToken = token || Cookies.get("accessToken");
-
+export const updateFullName = async (userData: EditFullNameSchema) => {
   try {
     const response = await axios.patch(`${url}/changeFullName`, userData, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-      },
+      withCredentials: true,
     });
 
     return response.data;
@@ -861,17 +670,10 @@ export const updateFullName = async (
     redirect("/something-went-wrong");
   }
 };
-export const updateUsername = async (
-  userData: EditUsernameSchema,
-  token?: string,
-) => {
-  const accessToken = token || Cookies.get("accessToken");
+export const updateUsername = async (userData: EditUsernameSchema) => {
   try {
     const response = await axios.patch(`${url}/changeUsername`, userData, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-      },
+      withCredentials: true,
     });
     return response.data;
   } catch (error: any) {
@@ -940,17 +742,12 @@ export const resetForgottenPassword = async (
   }
 };
 
-export const getUnreadNotificationCount = async (
-  token?: string,
-): Promise<UnreadNotificationCountResponse | undefined> => {
-  const accessToken = token || Cookies.get("accessToken");
-
+export const getUnreadNotificationCount = async (): Promise<
+  UnreadNotificationCountResponse | undefined
+> => {
   try {
     const response = await axios.get(`${url}/notifications/unread-count`, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-      },
+      withCredentials: true,
     });
 
     return response.data;
@@ -961,25 +758,55 @@ export const getUnreadNotificationCount = async (
 
 export const uploadBlogImage = async (
   file: File,
-  token: string
 ): Promise<UploadBlogImageResponse> => {
   try {
     const formData = new FormData();
     formData.append("image", file);
 
-    const response = await axios.post(
-      `${url}/upload-image`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const response = await axios.post(`${url}/upload-image`, formData, {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
     return response.data;
   } catch (error) {
+    throw error;
+  }
+};
+
+export const getMe = async (): Promise<MeResponse> => {
+  try {
+    const response = await fetch(`${url}/me`, {
+      method: "GET",
+      credentials: "include", // 🔥 THIS IS THE KEY
+    });
+
+    if (!response.ok) {
+      throw new Error("Not authenticated");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const logoutUser = async (): Promise<void> => {
+  try {
+    const response = await fetch(`${url}/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to logout");
+    }
+  } catch (error) {
+    console.error("Logout error:", error);
     throw error;
   }
 };

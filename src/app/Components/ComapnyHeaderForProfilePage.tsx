@@ -14,8 +14,8 @@ import {
   updateUsername,
 } from "../services/api";
 import "../styles/signin.css";
+import { useAuthStore } from "../stores/authStore";
 // Images
-import Cookies from "js-cookie";
 import UserNotFound from "../../assets/images/not-logged-in-user.png";
 import EditIcon from "../../../public/images/edit.svg";
 import { Toaster, toast } from "sonner";
@@ -45,8 +45,8 @@ export default function CompanyHeader({
   followersCount,
   followingCount,
   totalBlogs,
-  usernameFromCookies,
 }: CompanyHeaderProps) {
+  const { user, setUser } = useAuthStore.getState();
   // USER ACTION
   const [isSubscriberListModalOpen, setIsSubscriberListModalOpen] =
     useState(false);
@@ -75,7 +75,6 @@ export default function CompanyHeader({
   const [newUsername, setNewUsername] = useState(username);
   const [usernameloading, setusernameLoading] = useState(false);
 
-  const token = Cookies.get("accessToken");
   // Function to open followers modal and load followers
   const openModal = async () => {
     setIsSubscriberListModalOpen(true);
@@ -181,24 +180,24 @@ export default function CompanyHeader({
   const fetchAllFollowers = useCallback(async () => {
     setLoadingFollowers(true);
     try {
-      const data = await searchFollowers(username, followersQuery, token);
+      const data = await searchFollowers(username, followersQuery);
       setFollowers(data.followers);
     } catch (error) {
       console.error("Error fetching followers:", error);
     }
     setLoadingFollowers(false);
-  }, [username, followersQuery, token]);
+  }, [username, followersQuery]);
 
   const fetchAllFollowing = useCallback(async () => {
     setLoadingFollowing(true);
     try {
-      const data = await searchFollowing(username, followingQuery, token);
+      const data = await searchFollowing(username, followingQuery);
       setFollowingList(data.following);
     } catch (error) {
       console.error("Error fetching following:", error);
     }
     setLoadingFollowing(false);
-  }, [username, followingQuery, token]);
+  }, [username, followingQuery]);
 
   // Call fetch functions when query changes
   useEffect(() => {
@@ -229,9 +228,11 @@ export default function CompanyHeader({
     try {
       // Call the API function to change the profile picture
       const response = await changeProfilePicture(file);
-      Cookies.set("profileImage", response.profileImage);
-      // Update the local state with the new profile image path (assumed to be returned in response)
-      window.location.reload();
+      if (!user) return;
+      setUser({
+        ...user,
+        profileImage: response.profileImage,
+      });
     } catch (error: any) {
       console.error("Error updating profile picture:", error);
       // Optionally, display an error message to the user here.
@@ -250,13 +251,15 @@ export default function CompanyHeader({
     setLoading(true);
     try {
       await updateFullName({ fullName: newFullName });
-      // ✅ Update full name in cookies
-      Cookies.set("fullname", newFullName);
+
+      if (!user) return;
+      setUser({
+        ...user,
+        fullname: newFullName,
+      });
       setIsEditing(false);
       toast.success("Full name updated");
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000); // wait 1s to show the toast before reload
+
       // Optional: refetch user profile or set fullName state
     } catch (error) {
       toast.error("Something went wrong");
@@ -276,16 +279,15 @@ export default function CompanyHeader({
     if (newUsername.trim() === "") return;
     setusernameLoading(true);
     try {
-      const token = Cookies.get("accessToken");
       const payload: EditUsernameSchema = { username: newUsername };
-      await updateUsername(payload, token || "");
-      // ✅ Update the username in cookies
-      Cookies.set("username", newUsername);
+      await updateUsername(payload);
+      if (!user) return;
+      setUser({
+        ...user,
+        username: newUsername,
+      });
       toast.success("Username updated successfully");
       setIsusernameEditing(false);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000); // delay a bit to let toast show before reload
     } catch (err: any) {
       toast.error(err.message || "Something went wrong");
     } finally {
@@ -294,7 +296,6 @@ export default function CompanyHeader({
   };
   const baseUrl = "https://blogs-backend-ftie.onrender.com/";
   const encodedImagePath = encodeURI(profileImage); // Handles spaces properly
-  const fullImageUrl = `${baseUrl}${encodedImagePath}`;
 
   const DEFAULT_AVATAR = `/images/default-user.webp`;
   const initialSrc = profileImage || DEFAULT_AVATAR;
@@ -465,8 +466,6 @@ export default function CompanyHeader({
         searchValue={followingQuery}
         onSearchChange={setFollowingQuery}
       />
-
-     
     </>
   );
 }
