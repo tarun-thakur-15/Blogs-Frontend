@@ -2,6 +2,9 @@
 import type { Configuration as WebpackConfig } from "webpack";
 
 const nextConfig = {
+  basePath: "/lekhan",
+  assetPrefix: "/lekhan/",
+  trailingSlash: false,
   images: {
     remotePatterns: [
       {
@@ -14,7 +17,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "res.cloudinary.com", // ✅ ADD THIS
+        hostname: "res.cloudinary.com",
       },
     ],
   },
