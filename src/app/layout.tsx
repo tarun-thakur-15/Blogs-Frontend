@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   description:
     "Lekhan is a modern blogging platform where writers share ideas, readers explore stories, and communities connect over meaningful content. Start writing today!",
   alternates: {
-    canonical: "https://lekhan-blogs.vercel.app/", // 👈 update if your final domain is different
+    canonical: "https://www.tarunthakur.com/lekhan/", // 👈 update if your final domain is different
   },
   icons: {
     icon: "/favicon.png", // 👈 make sure you have this in /public
@@ -37,11 +37,11 @@ export const metadata: Metadata = {
     title: "Lekhan – Write, Read, and Share Blogs",
     description:
       "A modern blogging platform where writers share ideas, readers explore stories, and communities connect over meaningful content.",
-    url: "https://lekhan-blogs.vercel.app/",
+    url: "https://www.tarunthakur.com/lekhan/",
     siteName: "Lekhan",
     images: [
       {
-        url: "https://lekhan-blogs.vercel.app/og-image.png", // 👈 put og-image.png in /public
+        url: "https://www.tarunthakur.com/lekhan/og-image.png", // 👈 put og-image.png in /public
         width: 1200,
         height: 630,
         alt: "Lekhan Preview",
