@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { Flex, Button } from "antd";
-import Cookies from "js-cookie";
 import { getLikedBlogs } from "../services/api";
 import { ReactionPayload } from "../services/schema"; // ensure correct path
 import { Toaster } from "sonner";
@@ -87,11 +86,10 @@ export default function LikedBlogsTab({
   };
   // Use a mapping of blogId to an array of fly objects
   const [flyMap, setFlyMap] = useState<Record<string, Fly[]>>({});
-  const AccessToken = Cookies.get("accessToken")!;
   const loadMoreBlogs = useCallback(async () => {
     setLoadingMore(true);
     try {
-      const data = await getLikedBlogs(offsetRef.current, 10, AccessToken);
+      const data = await getLikedBlogs(offsetRef.current, 10);
       if (data.blogs && data.blogs.length > 0) {
         setBlogs((prev) => {
           const newBlogs = [...prev, ...data.blogs];

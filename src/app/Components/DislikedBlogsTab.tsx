@@ -85,12 +85,11 @@ export default function DislikedBlogsTab({
   };
   // Use a mapping of blogId to an array of fly objects
   const [flyMap, setFlyMap] = useState<Record<string, Fly[]>>({});
-  const AccessToken = Cookies.get("accessToken")!;
 
   const loadMoreBlogs = useCallback(async () => {
     setLoadingMore(true);
     try {
-      const data = await getDislikedBlogs(offsetRef.current, 10, AccessToken);
+      const data = await getDislikedBlogs(offsetRef.current, 10);
       if (data.blogs && data.blogs.length > 0) {
         setBlogs((prev) => {
           const newBlogs = [...prev, ...data.blogs];

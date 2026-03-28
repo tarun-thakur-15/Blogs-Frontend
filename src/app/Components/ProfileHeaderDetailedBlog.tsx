@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
-import { Flex, Select, Modal, Input, Skeleton } from "antd";
+import { Flex, Select } from "antd";
 import Link from "next/link";
 import {
   getFollowersList,
@@ -11,8 +11,6 @@ import {
   searchFollowers,
   searchFollowing,
 } from "../services/api";
-import bydefaultUser from "../../assets/images/not-logged-in-user.png";
-import Search from "../../../public/images/search.svg";
 import DoneImage from "../../../public/images/done.svg";
 import SelectDrop from "../../../public/images/select-drop.svg";
 import Cookies from "js-cookie";
@@ -22,6 +20,7 @@ import SignInModal from "./SignInModal";
 import LogInModal from "./LogInModal";
 import DetailedBlogHeaderSkeleton from "./DetailedBlogHeaderSkeleton";
 import FollowersFollowingModal from "./FollowersFollowingModal";
+import { useAuthStore } from "../stores/authStore";
 
 interface ProfileHeaderDetailedBlogProps {
   username: string;
@@ -56,6 +55,7 @@ export default function ProfileHeaderDetailedBlog({
   blogSlug,
 }: ProfileHeaderDetailedBlogProps) {
   // State for Followers Modal
+  const { isLoggedIn } = useAuthStore();
   const [isSubscriberListModalOpen, setIsSubscriberListModalOpen] =
     useState(false);
   const [followers, setFollowers] = useState<any[]>([]);
@@ -76,8 +76,6 @@ export default function ProfileHeaderDetailedBlog({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [localIsFollowed, setLocalIsFollowed] = useState(isFollowed);
-
-  const token = Cookies.get("accessToken");
 
   // Function to open followers modal and load followers
   const openModal = async () => {
@@ -195,22 +193,18 @@ export default function ProfileHeaderDetailedBlog({
     return `${backendBaseUrl}/${img}`;
   }
   const initialSrc = getImageSrc(profileImage);
-
   const [imgSrc, setImgSrc] = useState(initialSrc);
 
   const handleFollowChange = async (value: string) => {
     setLocalIsFollowed((prev) => !prev);
     try {
-      const token = Cookies.get("accessToken");
-
-      // If token is not available, show login modal and return early
-      if (!token) {
+      if (!isLoggedIn) {
         showLoginModal();
         setLocalIsFollowed((prev) => !prev); // Revert the follow toggle
         return;
       }
 
-      const res = await toggleFollow(username, token);
+      const res = await toggleFollow(username);
       toast.success(
         res?.msg ||
           `You have ${
@@ -218,9 +212,7 @@ export default function ProfileHeaderDetailedBlog({
           } ${username} successfully! 🎉`,
       );
     } catch (error: any) {
-      const token = Cookies.get("accessToken");
-
-      if (!token) {
+      if (!isLoggedIn) {
         showLoginModal();
       } else {
         toast.error(
@@ -238,24 +230,24 @@ export default function ProfileHeaderDetailedBlog({
   const fetchAllFollowers = useCallback(async () => {
     setLoadingFollowers(true);
     try {
-      const data = await searchFollowers(username, followersQuery, token);
+      const data = await searchFollowers(username, followersQuery);
       setFollowers(data.followers);
     } catch (error) {
       console.error("Error fetching followers:", error);
     }
     setLoadingFollowers(false);
-  }, [username, followersQuery, token]);
+  }, [username, followersQuery]);
 
   const fetchAllFollowing = useCallback(async () => {
     setLoadingFollowing(true);
     try {
-      const data = await searchFollowing(username, followingQuery, token);
+      const data = await searchFollowing(username, followingQuery);
       setFollowingList(data.following);
     } catch (error) {
       console.error("Error fetching following:", error);
     }
     setLoadingFollowing(false);
-  }, [username, followingQuery, token]);
+  }, [username, followingQuery]);
 
   // Call fetch functions when query changes
   useEffect(() => {

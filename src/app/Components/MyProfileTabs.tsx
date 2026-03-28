@@ -70,7 +70,6 @@ export default function MyProfileTabs({
   topic,
   clickCount,
 }: MyProfileTabsProps) {
-  const token = Cookies.get("accessToken");
 
   // -------------------states and useEffect hor highlighted blogs-------------------
   const [highlightedBlogs, setHighlightedBlogs] = useState<BlogPreview[]>([]);
@@ -80,7 +79,7 @@ export default function MyProfileTabs({
   useEffect(() => {
     if (type === "Highlights") {
       setHighlightedBlogsLoading(true);
-      getHighlightedBlogs(0, 10, username, token)
+      getHighlightedBlogs(0, 10, username)
         .then((data) => {
           setHighlightedBlogs(data.blogs || []);
           setHighlightedBlogsLoading(false);
@@ -100,7 +99,7 @@ export default function MyProfileTabs({
   useEffect(() => {
     if (type === "AllBlogs") {
       setAllBlogsLoading(true);
-      getUserBlogs(0, 10, username, token)
+      getUserBlogs(0, 10, username)
         .then((data) => {
           setAllBlogs(data.blogs || []);
           setAllBlogsLoading(false);
@@ -120,7 +119,7 @@ export default function MyProfileTabs({
   useEffect(() => {
     if (type === "Archived Blogs") {
       setArchivedBlogsLoading(true);
-      getAllArchivedBlogs(0, 10, token)
+      getAllArchivedBlogs(0, 10)
         .then((data) => {
           setArchivedBlogs(data.blogs || []);
           setArchivedBlogsLoading(false);
@@ -166,19 +165,19 @@ useEffect(() => {
       let data;
       switch (reaction) {
         case "Likes":
-          data = await getLikedBlogs(0, 10, token);
+          data = await getLikedBlogs(0, 10);
           break;
         case "Dislikes":
-          data = await getDislikedBlogs(0, 10, token);
+          data = await getDislikedBlogs(0, 10);
           break;
         case "Amazing":
-          data = await getAmazingBlogs(0, 10, token);
+          data = await getAmazingBlogs(0, 10);
           break;
         case "Confusing":
-          data = await getConfusingBlogs(0, 10, token);
+          data = await getConfusingBlogs(0, 10);
           break;
         case "Comments":
-          data = await getCommentedBlogs(0, 10, username, token);
+          data = await getCommentedBlogs(0, 10, username);
           break;
         default:
           data = { blogs: [] };
@@ -195,7 +194,7 @@ useEffect(() => {
     if (type === "Activity") {
       fetchActivityBlogs(activityType);
     }
-  }, [type, activityType, token]);
+  }, [type, activityType]);
 
   
 

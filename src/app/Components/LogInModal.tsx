@@ -115,7 +115,11 @@ const handleLogin = async (values: any) => {
     setSaveLoading(false);
 
     // 🔥 IMPORTANT: force navigation so middleware runs
-    window.location.href = "/lekhan/home";
+   const basePath = window.location.pathname.startsWith("/lekhan")
+  ? "/lekhan"
+  : "";
+
+window.location.href = `${basePath}/home`;
 
   } catch (error: any) {
     setSaveLoading(false);

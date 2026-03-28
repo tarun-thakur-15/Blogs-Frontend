@@ -61,8 +61,7 @@ const [contentValue, setContentValue] = useState(content || "");
     try {
 
       const blogData = { topic: topicValue, title: titleValue, content: contentValue };
-      const token = Cookies.get("accessToken");
-      const result = await createBlog(blogData, token);
+      const result = await createBlog(blogData);
       toast.success(result.msg || "Blog created successfully!");
       setTimeout(() => {
         handleClose();

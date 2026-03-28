@@ -22,6 +22,7 @@ import moment from "moment";
 import Link from "next/link";
 import Options from "../../../public/images/options.svg";
 import BlogSkeleton from "./BlogSkeleton";
+import { useAuthStore } from "../stores/authStore";
 
 interface Fly {
   id: number;
@@ -67,8 +68,8 @@ export default function ArchivedTabs({
   username,
   topic,
 }: ArchivedTabs) {
+    const { isLoggedIn } = useAuthStore();
   const [blogs, setBlogs] = useState<BlogPreview[]>(initialBlogs);
-  // const [offset, setOffset] = useState(blogs.length);
   const offsetRef = useRef<number>(initialBlogs.length);
   const [loadingMore, setLoadingMore] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -93,7 +94,6 @@ export default function ArchivedTabs({
   };
   // Use a mapping of blogId to an array of fly objects
   const [flyMap, setFlyMap] = useState<Record<string, Fly[]>>({});
-  const AccessToken = Cookies.get("accessToken")!;
 
   const handleReaction = async (
     slug: string,
@@ -101,7 +101,7 @@ export default function ArchivedTabs({
     blogId: string
   ) => {
     try {
-      const result = await reactToBlog(slug, { reactionType }, AccessToken);
+      const result = await reactToBlog(slug, { reactionType });
 
       // Update the local state with the new reaction counts for the blog that was updated
       setBlogs((prevBlogs) =>
@@ -152,7 +152,7 @@ export default function ArchivedTabs({
     ) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      if (AccessToken) {
+      if (isLoggedIn) {
         const emojiSymbol = reactionEmojiMap[reactionType];
 
         // Determine if the current reaction is already selected
@@ -183,8 +183,7 @@ export default function ArchivedTabs({
     try {
       const data = await getAllArchivedBlogs(
         offsetRef.current,
-        10,
-        AccessToken
+        10
       );
       if (data.blogs && data.blogs.length > 0) {
         setBlogs((prev) => {
@@ -237,7 +236,7 @@ export default function ArchivedTabs({
 
       // Wait for 1 second before refreshing the highlighted blogs
       setTimeout(async () => {
-        const data = await getAllArchivedBlogs(0, 10, AccessToken);
+        const data = await getAllArchivedBlogs(0, 10);
         if (data.blogs) {
           setBlogs(data.blogs);
           // Optionally update the offsetRef if required:

@@ -19,6 +19,7 @@ import Cookies from "js-cookie";
 import NProgress from "nprogress";
 import { Toaster, toast } from "sonner";
 import FollowersFollowingModal from "./FollowersFollowingModal";
+import { useAuthStore } from "../stores/authStore";
 
 interface CompanyHeaderOtherProps {
   username: string;
@@ -71,10 +72,7 @@ export default function CompanyHeaderOther({
   const [hasMoreFollowing, setHasMoreFollowing] = useState(true);
   const followingLoadMoreRef = useRef<HTMLDivElement | null>(null);
   const [followingQuery, setFollowingQuery] = useState("");
-
   const [localIsFollowed, setLocalIsFollowed] = useState(isFollowed);
-
-  const token = Cookies.get("accessToken");
 
   // Function to open followers modal and load followers
   const openModal = async () => {
@@ -183,8 +181,7 @@ export default function CompanyHeaderOther({
     // Toggle the local state immediately
     setLocalIsFollowed((prev) => !prev);
     try {
-      const token = Cookies.get("accessToken");
-      const res = await toggleFollow(username, token);
+      const res = await toggleFollow(username);
 
       // Optionally, you can re-sync with API response if needed:
       // setLocalIsFollowed(res.isFollowed);
@@ -202,24 +199,24 @@ export default function CompanyHeaderOther({
   const fetchAllFollowers = useCallback(async () => {
     setLoadingFollowers(true);
     try {
-      const data = await searchFollowers(username, followersQuery, token);
+      const data = await searchFollowers(username, followersQuery);
       setFollowers(data.followers);
     } catch (error) {
       console.error("Error fetching followers:", error);
     }
     setLoadingFollowers(false);
-  }, [username, followersQuery, token]);
+  }, [username, followersQuery]);
 
   const fetchAllFollowing = useCallback(async () => {
     setLoadingFollowing(true);
     try {
-      const data = await searchFollowing(username, followingQuery, token);
+      const data = await searchFollowing(username, followingQuery);
       setFollowingList(data.following);
     } catch (error) {
       console.error("Error fetching following:", error);
     }
     setLoadingFollowing(false);
-  }, [username, followingQuery, token]);
+  }, [username, followingQuery]);
 
   // Call fetch functions when query changes
   useEffect(() => {

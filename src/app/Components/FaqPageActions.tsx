@@ -6,12 +6,12 @@ import CommentIcon from "../../../public/images/comment.svg";
 import { reactToBlog } from "../services/api"; // Ensure correct path
 import { ReactionPayload } from "../services/schema"; // Ensure correct path
 import "../styles/awnserbox.css";
-import Cookies from "js-cookie";
 import SignInModal from "./SignInModal";
 import LogInModal from "./LogInModal";
 import ShareModal from "./ShareModal";
 import ReportModal from "./ReportModal";
 import Share from "../../assets/images/Share.svg";
+import { useAuthStore } from "../stores/authStore";
 
 // Define your fly interface
 interface Fly {
@@ -72,6 +72,7 @@ export default function FaqPageActions({
   isDisliked,
   isConfusing,
 }: FaqPageProps) {
+    const { isLoggedIn } = useAuthStore();
   const [flies, setFlies] = useState<Fly[]>([]);
   // Create a local state for reaction counts initialized with the prop
   const [reactionState, setReactionState] = useState<ReactionType>(reaction);
@@ -130,7 +131,6 @@ export default function FaqPageActions({
   };
 
   const router = useRouter();
-  const AccessToken = Cookies.get("accessToken")!;
   // This function triggers the fly-up animation for this blog only.
   const handleClick =
     (emoji: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -157,7 +157,7 @@ export default function FaqPageActions({
     reactionType: ReactionPayload["reactionType"]
   ) => {
     try {
-      const result = await reactToBlog(slug, { reactionType }, AccessToken);
+      const result = await reactToBlog(slug, { reactionType });
 
       // Update the local reaction state with the API response.
       setReactionState(result.reaction);
@@ -171,7 +171,7 @@ export default function FaqPageActions({
     (reactionType: ReactionPayload["reactionType"]) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      if (AccessToken) {
+      if (isLoggedIn) {
         const emojiSymbol = reactionEmojiMap[reactionType];
         // Trigger fly-up animation for this blog.
         handleClick(emojiSymbol)(e);
@@ -339,7 +339,6 @@ export default function FaqPageActions({
         closeReportModal={closeReportModal}
         isAnimating={isAnimating}
         commentSlug={reportingCommentSlug}
-        accessToken={AccessToken}
       />
     </div>
   );

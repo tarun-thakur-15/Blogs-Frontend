@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import "./styles/homepage.css";
 import Image from "next/image";
 import Arrow from "../assets/images/arrow1.png";
-import Vector3 from "../assets/images/Vector3.png";
 import ImageTwo from "../assets/images/BlogImageTwo-removebg-preview.png";
 import ImageFour from "../assets/images/BlogImageFour-removebg-preview.png";
 import ImageFive from "../assets/images/BlogImageFive-removebg-preview.png";

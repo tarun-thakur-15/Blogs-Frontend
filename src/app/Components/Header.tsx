@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Flex, Button } from "antd";
 import { useAuthStore } from "../stores/authStore";
-import { getMe } from "../services/api";
 import {
   Tooltip,
   TooltipContent,
@@ -24,8 +23,12 @@ import Lekhan from "../../assets/images/LekhanTransparent.png";
 import NotificationDrawer from "./NotificationDrawer";
 import { getUnreadNotificationCount, logoutUser } from "../services/api";
 
+const DEFAULT_AVATAR = `/images/default-user.webp`;
+
 export default function Header() {
-  const { user, isLoggedIn } = useAuthStore();
+  // ✅ Use authStore — no more manual getMe() calls here
+  const { user, isLoggedIn, isHydrated } = useAuthStore();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -33,46 +36,39 @@ export default function Header() {
   const avatarRef = useRef<HTMLDivElement>(null);
   const [isDrawerVisible, setDrawerVisible] = useState(false);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
-
-  useEffect(() => {
-  const initAuth = async () => {
-    try {
-      const data = await getMe();
-      useAuthStore.getState().setUser(data);
-    } catch {
-      useAuthStore.getState().logout();
-    }
-  };
-
-  initAuth();
-}, []);
+  const [imgSrc, setImgSrc] = useState(DEFAULT_AVATAR);
+  const [mounted, setMounted] = useState(false);
 
   const router = useRouter();
 
-  
+  // ✅ Sync avatar with user from store
+  useEffect(() => {
+    if (user?.profileImage) {
+      setImgSrc(user.profileImage);
+    } else {
+      setImgSrc(DEFAULT_AVATAR);
+    }
+  }, [user]);
 
-  const [isNotificationDrawerOpen, setIsNotificationDrawerOpen] =
-    useState<boolean>(false);
-  const toggleNotificationDrawer = () => {
-    setIsNotificationDrawerOpen(!isNotificationDrawerOpen);
-  };
-  const toggleBottomDrawer = () => {
-    setDrawerVisible((prevVisible) => !prevVisible);
-  };
-  const showLoginModal = () => {
-    setIsModalOpen(false);
-    setIsLoginModalOpen(true);
-    document.body.classList.add("modal-opened");
-  };
+  // ✅ Fetch unread notifications only when logged in and hydrated
+  useEffect(() => {
+    if (!isHydrated || !isLoggedIn) return;
 
-  const showModal = () => {
-    setIsModalOpen(true);
-    setIsLoginModalOpen(false);
-    document.body.classList.add("modal-opened");
-  };
+    const fetchUnreadCount = async () => {
+      try {
+        const data = await getUnreadNotificationCount();
+        if (data?.unreadCount) {
+          setUnreadNotifications(data.unreadCount);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
+    fetchUnreadCount();
+  }, [isHydrated, isLoggedIn]); // ✅ only runs once auth state is known
 
-
+  // Close profile popover on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -86,61 +82,44 @@ export default function Header() {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // this below useEffect is for calling unread notification count api
-  useEffect(() => {
-    const fetchUnreadCount = async () => {
-      try {
-        const data = await getUnreadNotificationCount();
-
-        if (data?.unreadCount) {
-          setUnreadNotifications(data.unreadCount);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchUnreadCount();
-  }, []);
-
-  //logout function to clear all the cookies and then page reload
-const logout = async () => {
-  try {
-    await logoutUser(); // 🔥 call backend
-
-    // clear Zustand state
-    useAuthStore.getState().logout();
-
-    // redirect user
-    window.location.href = "/lekhan";
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const DEFAULT_AVATAR = `/images/default-user.webp`;
-
-const [imgSrc, setImgSrc] = useState(DEFAULT_AVATAR);
-
-// 🔥 Sync with Zustand user
-useEffect(() => {
-  if (user?.profileImage) {
-    setImgSrc(user.profileImage);
-  } else {
-    setImgSrc(DEFAULT_AVATAR);
-  }
-}, [user]);
-
-  const [mounted, setMounted] = useState(false);
+  // Prevent SSR mismatch
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const logout = async () => {
+    try {
+      await logoutUser();
+      useAuthStore.getState().logout();
+      window.location.href = "/lekhan";
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const showLoginModal = () => {
+    setIsModalOpen(false);
+    setIsLoginModalOpen(true);
+    document.body.classList.add("modal-opened");
+  };
+
+  const showModal = () => {
+    setIsModalOpen(true);
+    setIsLoginModalOpen(false);
+    document.body.classList.add("modal-opened");
+  };
+
+  const toggleNotificationDrawer = () =>
+    setIsNotificationDrawerOpen((prev) => !prev);
+
+  const toggleBottomDrawer = () =>
+    setDrawerVisible((prev) => !prev);
+
+  const [isNotificationDrawerOpen, setIsNotificationDrawerOpen] =
+    useState<boolean>(false);
 
   if (!mounted) return null;
 
@@ -155,9 +134,6 @@ useEffect(() => {
           className="desktop-nav"
           style={{ borderBottomWidth: "1px", justifyContent: "space-between" }}
         >
-          {/* commented dark mode toggle for now.. coz its not working perfectly on vercel */}
-          {/* <div className="md:w-[146.23px]">{isLoggedIn && <ThemeToggle />}</div> */}
-
           <Link className="logo" href={"/"}>
             <Image
               src={Lekhan}
@@ -167,9 +143,9 @@ useEffect(() => {
           </Link>
 
           <Flex gap={16} className="nav-btns" align="center">
-            {isLoggedIn ? (
+            {/* ✅ Wait for hydration before rendering auth-dependent UI */}
+            {!isHydrated ? null : isLoggedIn ? (
               <>
-                {" "}
                 <Button
                   type="text"
                   className="font-sm btnHoverOnDarkMode"
@@ -188,7 +164,6 @@ useEffect(() => {
                 >
                   <div className="bellWrapper">
                     <Bell className="NotificationIcon" />
-
                     {unreadNotifications > 0 && (
                       <span className="notificationBadge">
                         {unreadNotifications}
@@ -196,12 +171,14 @@ useEffect(() => {
                     )}
                   </div>
                 </Button>
+
+                {/* Avatar */}
                 <div
                   className="avatar"
                   ref={avatarRef}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setShowProfile((prevState) => !prevState);
+                    setShowProfile((prev) => !prev);
                   }}
                 >
                   <Image
@@ -210,12 +187,12 @@ useEffect(() => {
                     width={27}
                     height={27}
                     onError={() => {
-                      if (imgSrc !== DEFAULT_AVATAR) {
-                        setImgSrc(DEFAULT_AVATAR);
-                      }
+                      if (imgSrc !== DEFAULT_AVATAR) setImgSrc(DEFAULT_AVATAR);
                     }}
                   />
                 </div>
+
+                {/* Profile popover */}
                 {showProfile && (
                   <div className="profile-popover" ref={popoverRef}>
                     <div>
@@ -226,15 +203,14 @@ useEffect(() => {
                           width={40}
                           height={40}
                           onError={() => {
-                            if (imgSrc !== DEFAULT_AVATAR) {
-                              setImgSrc(DEFAULT_AVATAR);
-                            }
+                            if (imgSrc !== DEFAULT_AVATAR) setImgSrc(DEFAULT_AVATAR);
                           }}
                         />
                       </div>
                       <p className="profile-popover--name">{user?.fullname}</p>
                       <p className="profile-popover--id">{user?.username}</p>
                     </div>
+
                     <Flex gap={6} vertical className="profile-popover--actions">
                       <Button
                         onClick={() => {
@@ -246,30 +222,14 @@ useEffect(() => {
                         Edit Profile
                       </Button>
                     </Flex>
+
                     <span className="divider"></span>
-                    <Flex
-                      gap={8}
-                      vertical
-                      className="profile-popover--other-actions"
-                    >
-                      {/* <Button
-                        onClick={() => {
-                         
-                          setShowProfile(false);
-                        }}
-                      >
-                        <ChartIcon />
-                        View Activities
-                      </Button> */}
+
+                    <Flex gap={8} vertical className="profile-popover--other-actions">
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Button
-                              onClick={() => {
-                                // router.push("settings");
-                                setShowProfile(false);
-                              }}
-                            >
+                            <Button onClick={() => setShowProfile(false)}>
                               <SettingIcon className="settingIcon" />
                               Settings
                             </Button>
@@ -280,7 +240,9 @@ useEffect(() => {
                         </Tooltip>
                       </TooltipProvider>
                     </Flex>
+
                     <span className="divider"></span>
+
                     <Button className="signout" onClick={logout}>
                       <SignOutIcon className="signOutIcon" />
                       Sign Out
@@ -301,7 +263,6 @@ useEffect(() => {
           </Flex>
         </Flex>
       </div>
-      {/* notification drawer */}
 
       <NotificationDrawer
         open={isNotificationDrawerOpen}
@@ -321,4 +282,3 @@ useEffect(() => {
     </header>
   );
 }
-// ----

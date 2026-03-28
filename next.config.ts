@@ -1,9 +1,11 @@
 /** @type {import('next').NextConfig} */
 import type { Configuration as WebpackConfig } from "webpack";
 
+const isProd = process.env.NODE_ENV === "production";
+
 const nextConfig = {
-  basePath: "/lekhan",
-  assetPrefix: "/lekhan/",
+  basePath: isProd ? "/lekhan" : "",
+  assetPrefix: isProd ? "/lekhan" : "",
   trailingSlash: false,
   images: {
     remotePatterns: [

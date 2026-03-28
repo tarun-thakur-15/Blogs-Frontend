@@ -2,13 +2,11 @@
 import { useState } from "react";
 import LogInModal from "./LogInModal";
 import SignInModal from "./SignInModal";
-import Cookies from "js-cookie";
-import Image from "next/image";
-import Vector from "../../assets/images/vector.png";
+import { useAuthStore } from "../stores/authStore";
 export default function LoginToReadFullBlog() {
+    const { isLoggedIn } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const accessToken = Cookies.get("accessToken");
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -22,7 +20,7 @@ export default function LoginToReadFullBlog() {
   };
   return (
     <>
-      {!accessToken && (
+      {!isLoggedIn && (
         <div className="no-data-profile">
           <div style={{position: "relative"}}>
             <h2>

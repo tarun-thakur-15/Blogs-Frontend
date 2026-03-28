@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { Flex, Button } from "antd";
-import Cookies from "js-cookie";
 import { reactToBlog, getUserBlogs } from "../services/api";
 import { ReactionPayload } from "../services/schema"; // ensure correct path
 // CSS
@@ -16,6 +15,7 @@ import LogInModal from "../Components/LogInModal";
 import moment from "moment";
 import Link from "next/link";
 import BlogSkeleton from "./BlogSkeleton";
+import { useAuthStore } from "../stores/authStore";
 
 interface Fly {
   id: number;
@@ -58,8 +58,8 @@ export default function AllBlogsUserPage({
   username,
   topic,
 }: AllBlogsUserPage) {
+  const { isLoggedIn } = useAuthStore();
   const [blogs, setBlogs] = useState<BlogPreview[]>(initialBlogs);
-  // const [offset, setOffset] = useState(blogs.length);
   const offsetRef = useRef<number>(initialBlogs.length);
   const [loadingMore, setLoadingMore] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -82,7 +82,6 @@ export default function AllBlogsUserPage({
   };
   // Use a mapping of blogId to an array of fly objects
   const [flyMap, setFlyMap] = useState<Record<string, Fly[]>>({});
-  const AccessToken = Cookies.get("accessToken")!;
 
   const handleReaction = async (
     slug: string,
@@ -90,7 +89,7 @@ export default function AllBlogsUserPage({
     blogId: string,
   ) => {
     try {
-      const result = await reactToBlog(slug, { reactionType }, AccessToken);
+      const result = await reactToBlog(slug, { reactionType });
 
       // Update the local state with the new reaction counts for the blog that was updated
       setBlogs((prevBlogs) =>
@@ -141,7 +140,7 @@ export default function AllBlogsUserPage({
     ) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      if (AccessToken) {
+      if (isLoggedIn) {
         const emojiSymbol = reactionEmojiMap[reactionType];
 
         // Determine if the current reaction is already selected
@@ -174,7 +173,6 @@ export default function AllBlogsUserPage({
         offsetRef.current,
         10,
         username,
-        AccessToken,
       );
       if (data.blogs && data.blogs.length > 0) {
         setBlogs((prev) => {

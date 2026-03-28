@@ -4,7 +4,7 @@ interface NotificationDrawerProps {
   onClose: () => void;
   setUnreadNotifications: React.Dispatch<React.SetStateAction<number>>;
 }
-import { Flex, Button, Drawer, Skeleton } from "antd";
+import { Button, Drawer, Skeleton } from "antd";
 import { useEffect, useState } from "react";
 import { getNotifications, markAllNotificationsAsRead } from "../services/api";
 import { useNotifications } from "../hooks/notificationHook";
@@ -22,15 +22,13 @@ export default function NotificationDrawer({
   const { notifications, setNotifications } = useNotifications(
     Cookies.get("userId")!,
   );
-
-  const token = Cookies.get("accessToken") || "";
   const [loadingNotifications, setLoadingNotifications] = useState(false);
   const [localUnreadCount, setLocalUnreadCount] = useState(0);
   const [offset, setOffset] = useState(0);
   const fetchNotifications = async () => {
     setLoadingNotifications(true);
     try {
-      const data = await getNotifications(token, offset, 10);
+      const data = await getNotifications(offset, 10);
       setNotifications(data.notifications);
       setUnreadNotifications(data.unreadCount);
       setLocalUnreadCount(data.unreadCount);

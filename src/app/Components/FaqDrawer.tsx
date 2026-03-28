@@ -52,8 +52,7 @@ export default function FaqDrawer({
     setLoading(true);
     try {
       const blogData = { topic, title, content };
-      const token = Cookies.get("accessToken");
-      const result = await createBlog(blogData, token);
+      const result = await createBlog(blogData);
       toast.success(result.msg || "Blog created successfully!");
       setTimeout(() => {
         handleClose();

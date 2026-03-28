@@ -1,10 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { Flex, Button, Skeleton } from "antd";
-import type { MenuProps } from "antd";
-import Cookies from "js-cookie";
+import { Flex, Button } from "antd";
 import {
   getHighlightedBlogs,
   reactToBlog,
@@ -15,8 +12,6 @@ import { Toaster, toast } from "sonner";
 // CSS
 import "../styles/awnserbox.css";
 // Images
-
-import notLoggedInIcon from "../../assets/images/not-logged-in-user.png";
 import Comment from "../../../public/images/comment.svg";
 import BoxIconPng from "../../assets/images/box.png";
 import SignInModal from "../Components/SignInModal";
@@ -25,6 +20,7 @@ import moment from "moment";
 import Link from "next/link";
 import Options from "../../../public/images/options.svg";
 import BlogSkeleton from "./BlogSkeleton";
+import { useAuthStore } from "../stores/authStore";
 
 interface Fly {
   id: number;
@@ -70,7 +66,7 @@ export default function MyProfileHighlightedBlogs({
   username,
 }: ProfileHighlightedBlogsProps) {
   const [blogs, setBlogs] = useState<BlogPreview[]>(initialBlogs);
-  // const [offset, setOffset] = useState(blogs.length);
+      const { isLoggedIn } = useAuthStore();
   const offsetRef = useRef<number>(initialBlogs.length);
   const [loadingMore, setLoadingMore] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -95,7 +91,6 @@ export default function MyProfileHighlightedBlogs({
   };
   // Use a mapping of blogId to an array of fly objects
   const [flyMap, setFlyMap] = useState<Record<string, Fly[]>>({});
-  const AccessToken = Cookies.get("accessToken")!;
 
   const handleReaction = async (
     slug: string,
@@ -103,7 +98,7 @@ export default function MyProfileHighlightedBlogs({
     blogId: string,
   ) => {
     try {
-      const result = await reactToBlog(slug, { reactionType }, AccessToken);
+      const result = await reactToBlog(slug, { reactionType });
 
       // Update the local state with the new reaction counts for the blog that was updated
       setBlogs((prevBlogs) =>
@@ -154,7 +149,7 @@ export default function MyProfileHighlightedBlogs({
     ) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      if (AccessToken) {
+      if (isLoggedIn) {
         const emojiSymbol = reactionEmojiMap[reactionType];
 
         // Determine if the current reaction is already selected
@@ -187,7 +182,6 @@ export default function MyProfileHighlightedBlogs({
         offsetRef.current,
         10,
         username,
-        AccessToken,
       );
       if (data.blogs && data.blogs.length > 0) {
         setBlogs((prev) => {
@@ -240,7 +234,7 @@ export default function MyProfileHighlightedBlogs({
 
       // Wait for 1 second before refreshing the highlighted blogs
       setTimeout(async () => {
-        const data = await getHighlightedBlogs(0, 10, username, AccessToken);
+        const data = await getHighlightedBlogs(0, 10, username);
         if (data.blogs) {
           setBlogs(data.blogs);
           // Optionally update the offsetRef if required:

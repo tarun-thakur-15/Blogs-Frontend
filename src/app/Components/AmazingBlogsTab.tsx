@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { Flex, Button } from "antd";
-import Cookies from "js-cookie";
 import { getAmazingBlogs } from "../services/api";
 import { ReactionPayload } from "../services/schema";
 import { Toaster } from "sonner";
@@ -17,6 +16,7 @@ import LogInModal from "../Components/LogInModal";
 import moment from "moment";
 import Link from "next/link";
 import BlogSkeleton from "./BlogSkeleton";
+import { useAuthStore } from "../stores/authStore";
 
 interface Fly {
   id: number;
@@ -62,8 +62,8 @@ export default function AmazingBlogsTab({
   username,
   topic,
 }: AmazingBlogsTab) {
+    const { isLoggedIn } = useAuthStore();
   const [blogs, setBlogs] = useState<BlogPreview[]>(initialBlogs);
-  // const [offset, setOffset] = useState(blogs.length);
   const offsetRef = useRef<number>(initialBlogs.length);
   const [loadingMore, setLoadingMore] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -73,8 +73,6 @@ export default function AmazingBlogsTab({
   const [selectedReactions, setSelectedReactions] = useState<
     Record<string, ReactionPayload["reactionType"]>
   >({});
-  const [archieveloading, setArchieveLoading] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(null);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -88,7 +86,6 @@ export default function AmazingBlogsTab({
   };
   // Use a mapping of blogId to an array of fly objects
   const [flyMap, setFlyMap] = useState<Record<string, Fly[]>>({});
-  const AccessToken = Cookies.get("accessToken")!;
 
   // Fly animation function scoped per blog
   const handleClickForBlog =
@@ -113,7 +110,7 @@ export default function AmazingBlogsTab({
   const loadMoreBlogs = useCallback(async () => {
     setLoadingMore(true);
     try {
-      const data = await getAmazingBlogs(offsetRef.current, 10, AccessToken);
+      const data = await getAmazingBlogs(offsetRef.current, 10);
       if (data.blogs && data.blogs.length > 0) {
         setBlogs((prev) => {
           const newBlogs = [...prev, ...data.blogs];

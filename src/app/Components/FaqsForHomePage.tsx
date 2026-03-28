@@ -9,12 +9,12 @@ import moment from "moment";
 import { getAllBlogs, reactToBlog } from "../services/api";
 import { ReactionPayload } from "../services/schema"; // ensure correct path
 import "../styles/awnserbox.css";
-import Cookies from "js-cookie";
 import SignInModal from "./SignInModal";
 import LogInModal from "./LogInModal";
 import NProgress from "nprogress";
 import BlogSkeleton from "./BlogSkeleton";
 import ProfileAvatar from "./ProfileAvatar";
+import { useAuthStore } from "../stores/authStore";
 
 interface Fly {
   id: number;
@@ -55,6 +55,7 @@ interface FaqsForUserPageProps {
 
 const FaqsForUserPage: React.FC<FaqsForUserPageProps> = ({ initialBlogs }) => {
   const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
+  const { isLoggedIn } = useAuthStore();
   // Use a mapping of blogId to an array of fly objects
   const [flyMap, setFlyMap] = useState<Record<string, Fly[]>>({});
   const [blogs, setBlogs] = useState<BlogPreview[]>(initialBlogs);
@@ -63,7 +64,6 @@ const FaqsForUserPage: React.FC<FaqsForUserPageProps> = ({ initialBlogs }) => {
   const [loadingMore, setLoadingMore] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const [hasMore, setHasMore] = useState(true);
-  const AccessToken = Cookies.get("accessToken")!;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [selectedReactions, setSelectedReactions] = useState<
@@ -94,7 +94,7 @@ const FaqsForUserPage: React.FC<FaqsForUserPageProps> = ({ initialBlogs }) => {
     blogId: string,
   ) => {
     try {
-      const result = await reactToBlog(slug, { reactionType }, AccessToken);
+      const result = await reactToBlog(slug, { reactionType });
 
       // Update the local state with the new reaction counts for the blog that was updated
       setBlogs((prevBlogs) =>
@@ -146,7 +146,7 @@ const FaqsForUserPage: React.FC<FaqsForUserPageProps> = ({ initialBlogs }) => {
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       e.stopPropagation();
-      if (AccessToken) {
+      if (isLoggedIn) {
         const emojiSymbol = reactionEmojiMap[reactionType];
 
         // Determine if the current reaction is already selected

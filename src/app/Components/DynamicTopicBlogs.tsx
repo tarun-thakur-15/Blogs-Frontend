@@ -16,6 +16,7 @@ import LogInModal from "../Components/LogInModal";
 import moment from "moment";
 import Link from "next/link";
 import BlogSkeleton from "./BlogSkeleton";
+import { useAuthStore } from "../stores/authStore";
 
 interface Fly {
   id: number;
@@ -59,7 +60,7 @@ export default function DynamicTopicBlogs({
   topic,
 }: DynamicTopicBlogs) {
   const [blogs, setBlogs] = useState<BlogPreview[]>(initialBlogs);
-  // const [offset, setOffset] = useState(blogs.length);
+  const { isLoggedIn } = useAuthStore();
   const offsetRef = useRef<number>(initialBlogs.length);
   const [loadingMore, setLoadingMore] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -83,7 +84,6 @@ export default function DynamicTopicBlogs({
   const [selectedReactions, setSelectedReactions] = useState<
     Record<string, ReactionPayload["reactionType"]>
   >({});
-  const AccessToken = Cookies.get("accessToken")!;
 
   const handleReaction = async (
     slug: string,
@@ -91,7 +91,7 @@ export default function DynamicTopicBlogs({
     blogId: string,
   ) => {
     try {
-      const result = await reactToBlog(slug, { reactionType }, AccessToken);
+      const result = await reactToBlog(slug, { reactionType });
 
       // Update the local state with the new reaction counts for the blog that was updated
       setBlogs((prevBlogs) =>
@@ -143,7 +143,7 @@ export default function DynamicTopicBlogs({
     ) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      if (AccessToken) {
+      if (isLoggedIn) {
         const emojiSymbol = reactionEmojiMap[reactionType];
 
         // Determine if the current reaction is already selected
@@ -177,7 +177,6 @@ export default function DynamicTopicBlogs({
         topic,
         offsetRef.current,
         10,
-        AccessToken,
       );
       if (data.blogs && data.blogs.length > 0) {
         setBlogs((prev) => {

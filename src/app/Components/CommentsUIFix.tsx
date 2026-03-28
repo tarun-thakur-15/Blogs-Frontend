@@ -16,6 +16,7 @@ import "../styles/comments.css";
 import { Toaster, toast } from "sonner";
 import Link from "next/link";
 import OptionsHorizontal from "../../../public/images/OptionsHorizontal.svg";
+import { useAuthStore } from "../stores/authStore";
 
 interface CommentItem {
   _id: string;
@@ -40,8 +41,8 @@ export default function Comments({
   blogAuthor,
 }: CommentsProps) {
   const backendBaseUrl = "https://blogs-backend-ftie.onrender.com/";
+  const { isLoggedIn } = useAuthStore();
   const profileImage = Cookies.get("profileImage");
-  const accessToken = Cookies.get("accessToken");
   const [comments, setComments] = useState<CommentItem[]>(initialComments);
   const [totalComments, setTotalComments] =
     useState<number>(initialTotalComments);
@@ -55,7 +56,6 @@ export default function Comments({
   }>({});
   const optionsButtonRef = useRef<HTMLButtonElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
@@ -93,7 +93,7 @@ export default function Comments({
       setTotalComments((prev) => prev + 1);
       setNewCommentText(""); // Clear the input field
     } catch (error: any) {
-      if (!accessToken) {
+      if (!isLoggedIn) {
         showLoginModal();
       } else {
         console.error("Error posting comment:", error.message);
@@ -260,7 +260,7 @@ export default function Comments({
                 </div>
 
                 <div className="relative">
-                  {accessToken && (
+                  {isLoggedIn && (
                     <button
                       ref={optionsButtonRef}
                       className="optionsMain group cursor-pointer"
@@ -333,7 +333,7 @@ export default function Comments({
           <Flex gap={10} className="add-comment-box">
             <div className="comments-list--item--img">
               {/* This image tag is for logged in user so use profile image from cookies here */}
-              {accessToken ? (
+              {isLoggedIn ? (
                 <Image
                   src={imgSrc}
                   alt="name"

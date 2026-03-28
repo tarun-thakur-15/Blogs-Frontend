@@ -474,10 +474,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
 
           setImageCount((c) => c + 1);
 
-          // upload in background
-          const token = Cookies.get("accessToken") || "";
-
-          uploadBlogImage(file, token)
+          uploadBlogImage(file)
             .then((res) => {
               setUploadError(null);
               const finalUrl = res.imageUrl;
@@ -568,13 +565,12 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
     setImageCount((c) => c + 1);
 
     try {
-      // ✅ STEP 2: upload to backend
-      const token = Cookies.get("accessToken") || "";
-      const res = await uploadBlogImage(file, token);
+      //STEP 2: upload to backend
+      const res = await uploadBlogImage(file);
 
       const finalUrl = res.imageUrl;
 
-      // ✅ STEP 3: replace temp URL with real URL
+      //STEP 3: replace temp URL with real URL
       const { state, view } = editor;
       const tr = state.tr;
 

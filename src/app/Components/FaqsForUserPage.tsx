@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { Flex, Button } from "antd";
-import Cookies from "js-cookie";
 import { getHighlightedBlogs, reactToBlog } from "../services/api";
 import { ReactionPayload } from "../services/schema"; // ensure correct path
 // CSS
@@ -16,6 +15,7 @@ import LogInModal from "../Components/LogInModal";
 import moment from "moment";
 import Link from "next/link";
 import BlogSkeleton from "./BlogSkeleton";
+import { useAuthStore } from "../stores/authStore";
 
 interface Fly {
   id: number;
@@ -56,6 +56,7 @@ export default function FaqsForUserPage({
   initialBlogs,
   username,
 }: FaqsForUserPageProps) {
+  const { isLoggedIn } = useAuthStore();
   const [blogs, setBlogs] = useState<BlogPreview[]>(initialBlogs);
   // const [offset, setOffset] = useState(blogs.length);
   const offsetRef = useRef<number>(initialBlogs.length);
@@ -80,7 +81,6 @@ export default function FaqsForUserPage({
   };
   // Use a mapping of blogId to an array of fly objects
   const [flyMap, setFlyMap] = useState<Record<string, Fly[]>>({});
-  const AccessToken = Cookies.get("accessToken")!;
 
   const handleReaction = async (
     slug: string,
@@ -88,7 +88,7 @@ export default function FaqsForUserPage({
     blogId: string,
   ) => {
     try {
-      const result = await reactToBlog(slug, { reactionType }, AccessToken);
+      const result = await reactToBlog(slug, { reactionType });
 
       // Update the local state with the new reaction counts for the blog that was updated
       setBlogs((prevBlogs) =>
@@ -139,7 +139,7 @@ export default function FaqsForUserPage({
     ) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      if (AccessToken) {
+      if (isLoggedIn) {
         const emojiSymbol = reactionEmojiMap[reactionType];
 
         // Determine if the current reaction is already selected
@@ -168,12 +168,7 @@ export default function FaqsForUserPage({
   const loadMoreBlogs = useCallback(async () => {
     setLoadingMore(true);
     try {
-      const data = await getHighlightedBlogs(
-        offsetRef.current,
-        10,
-        username,
-        AccessToken,
-      );
+      const data = await getHighlightedBlogs(offsetRef.current, 10, username);
       if (data.blogs && data.blogs.length > 0) {
         setBlogs((prev) => {
           const newBlogs = [...prev, ...data.blogs];
@@ -254,7 +249,10 @@ export default function FaqsForUserPage({
             const [imgSrc, setImgSrc] = useState(initialSrc);
 
             return (
-              <div key={blog._id} className="awnser-box rounded-xl bg-white dark:bg-neutral-900 shadow-sm hover:shadow-lg transition-shadow duration-300">
+              <div
+                key={blog._id}
+                className="awnser-box rounded-xl bg-white dark:bg-neutral-900 shadow-sm hover:shadow-lg transition-shadow duration-300"
+              >
                 <Link href={`/${blog.slug}`}>
                   <div className="awnser-box-header">
                     <p className="awnser-box--question">{blog.title}</p>

@@ -48,13 +48,12 @@ export default function CompanyTabsContentOther({
   // Local state for blogs fetched by topic (when type === "Topic")
   const [topicBlogs, setTopicBlogs] = useState<BlogPreview[]>([]);
   const [loading, setLoading] = useState(false);
-  const token = Cookies.get("accessToken");
 
   // When the tab type is "Topic" and a topic is provided, fetch blogs for that topic
   useEffect(() => {
     if (type === "Topic" && topic) {
       setLoading(true);
-      getBlogsByTopic(username, topic, 0, 10, token)
+      getBlogsByTopic(username, topic, 0, 10)
         .then((data) => {
           setTopicBlogs(data.blogs || []);
           setLoading(false);
@@ -73,7 +72,7 @@ export default function CompanyTabsContentOther({
   useEffect(() => {
     if (type === "Highlights") {
       setHighlightedBlogsLoading(true);
-      getHighlightedBlogs(0, 10, username, token)
+      getHighlightedBlogs(0, 10, username)
         .then((data) => {
           setHighlightedBlogs(data.blogs || []);
           setHighlightedBlogsLoading(false);
@@ -93,7 +92,7 @@ export default function CompanyTabsContentOther({
   useEffect(() => {
     if (type === "All Blogs") {
       setAllBlogsLoading(true);
-      getUserBlogs(0, 10, username, token)
+      getUserBlogs(0, 10, username)
         .then((data) => {
           setAllBlogs(data.blogs || []);
           setAllBlogsLoading(false);

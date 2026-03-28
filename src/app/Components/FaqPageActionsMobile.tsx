@@ -1,23 +1,16 @@
 "use client";
-import { Button, Flex, Skeleton } from "antd";
-import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { Button } from "antd";
+import { useState } from "react";
 import CommentIcon from "../../../public/images/comment.svg";
-import BoxIconPng from "../../assets/images/box.png";
-import notLoggedInIcon from "../../assets/images/not-logged-in-user.png";
-import moment from "moment";
-import Link from "next/link";
 import { reactToBlog } from "../services/api"; // Ensure correct path
 import { ReactionPayload } from "../services/schema"; // Ensure correct path
 import "../styles/awnserbox.css";
-import Cookies from "js-cookie";
 import SignInModal from "./SignInModal";
 import LogInModal from "./LogInModal";
 import ShareModal from "./ShareModal";
 import ReportModal from "./ReportModal";
 import Share from "../../assets/images/Share.svg";
-import Report from "../../assets/images/Report.svg";
+import { useAuthStore } from "../stores/authStore";
 
 interface Fly {
   id: number;
@@ -77,6 +70,7 @@ export default function FaqPageActionsMobile({
   isConfusing,
 }: FaqPageProps) {
   const [flies, setFlies] = useState<Fly[]>([]);
+  const { isLoggedIn } = useAuthStore();
   // Create a local state for reaction counts initialized with the prop
   const [reactionState, setReactionState] = useState<ReactionType>(reaction);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -91,7 +85,7 @@ export default function FaqPageActionsMobile({
   const [isShareModalAnimating, setIsShareModalAnimating] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
 
-    //states for report modal
+  //states for report modal
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [reportingCommentSlug, setReportingCommentSlug] = useState("");
@@ -112,7 +106,7 @@ export default function FaqPageActionsMobile({
     }, 0);
   };
 
-    const showShareModal = () => {
+  const showShareModal = () => {
     const fullUrl = window.location.origin;
     setShareUrl(fullUrl);
     setIsShareModalOpen(true);
@@ -133,8 +127,6 @@ export default function FaqPageActionsMobile({
     document.body.classList.add("modal-opened");
   };
 
-  const router = useRouter();
-  const AccessToken = Cookies.get("accessToken")!;
   // This function triggers the fly-up animation for this blog only.
   const handleClick =
     (emoji: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -158,10 +150,10 @@ export default function FaqPageActionsMobile({
 
   // API call to update reaction; then update local reaction state from API response.
   const handleReaction = async (
-    reactionType: ReactionPayload["reactionType"]
+    reactionType: ReactionPayload["reactionType"],
   ) => {
     try {
-      const result = await reactToBlog(slug, { reactionType }, AccessToken);
+      const result = await reactToBlog(slug, { reactionType });
 
       // Update the local reaction state with the API response.
       setReactionState(result.reaction);
@@ -175,13 +167,13 @@ export default function FaqPageActionsMobile({
     (reactionType: ReactionPayload["reactionType"]) =>
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      if (AccessToken) {
+      if (isLoggedIn) {
         const emojiSymbol = reactionEmojiMap[reactionType];
         // Trigger fly-up animation for this blog.
         handleClick(emojiSymbol)(e);
         // Update local selected reaction: toggle if same reaction clicked again.
         setSelectedReaction((prev) =>
-          prev === reactionType ? null : reactionType
+          prev === reactionType ? null : reactionType,
         );
         // Call the API to update reaction counts.
         handleReaction(reactionType);
@@ -198,14 +190,14 @@ export default function FaqPageActionsMobile({
     selectedReaction !== null
       ? selectedReaction
       : isLiked
-      ? "like"
-      : isAmazing
-      ? "amazing"
-      : isConfusing
-      ? "confusing"
-      : isDisliked
-      ? "dislike"
-      : "";
+        ? "like"
+        : isAmazing
+          ? "amazing"
+          : isConfusing
+            ? "confusing"
+            : isDisliked
+              ? "dislike"
+              : "";
 
   const closeShareModal = () => {
     setIsShareModalAnimating(false);
@@ -287,17 +279,11 @@ export default function FaqPageActionsMobile({
           <p className="font-sm">{totalComments}</p>
         </div>
         <div className="flex gap-[5px]">
-          
-            <Button className="add-like" type="text" onClick={showShareModal}>
-              <Share
-                width={20}
-                height={20}
-                className="w-[20px] h-[20px]"
-              />
-            </Button>
-          
+          <Button className="add-like" type="text" onClick={showShareModal}>
+            <Share width={20} height={20} className="w-[20px] h-[20px]" />
+          </Button>
         </div>
-          {/* report button commented temporarily */}
+        {/* report button commented temporarily */}
 
         {/* <div className="flex gap-[5px]">
           
@@ -338,13 +324,12 @@ export default function FaqPageActionsMobile({
         isShareModalAnimating={isShareModalAnimating}
         shareUrl={`${shareUrl}/${slug}`}
       />
-                  <ReportModal
-              isReportModalOpen={isReportModalOpen}
-              closeReportModal={closeReportModal}
-              isAnimating={isAnimating}
-              commentSlug={reportingCommentSlug}
-              accessToken={AccessToken}
-            />
+      <ReportModal
+        isReportModalOpen={isReportModalOpen}
+        closeReportModal={closeReportModal}
+        isAnimating={isAnimating}
+        commentSlug={reportingCommentSlug}
+      />
     </>
   );
 }

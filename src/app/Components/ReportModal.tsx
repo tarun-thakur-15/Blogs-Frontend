@@ -10,7 +10,6 @@ interface ReportModalProps {
   closeReportModal?: () => void;
   isAnimating?: boolean;
   commentSlug?: any;
-  accessToken?: any;
 }
 
 export default function ReportModal({
@@ -18,7 +17,6 @@ export default function ReportModal({
   closeReportModal,
   isAnimating,
   commentSlug,
-  accessToken,
 }: ReportModalProps) {
   const [formLevel, setFormLevel] = useState(0);
   const [selectedReason, setSelectedReason] = useState("");

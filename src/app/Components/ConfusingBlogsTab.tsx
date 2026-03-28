@@ -17,6 +17,7 @@ import LogInModal from "../Components/LogInModal";
 import moment from "moment";
 import Link from "next/link";
 import BlogSkeleton from "./BlogSkeleton";
+import { useAuthStore } from "../stores/authStore";
 
 interface Fly {
   id: number;
@@ -63,7 +64,6 @@ export default function ConfusingBlogsTab({
   topic,
 }: ConfusingBlogsTab) {
   const [blogs, setBlogs] = useState<BlogPreview[]>(initialBlogs);
-  // const [offset, setOffset] = useState(blogs.length);
   const offsetRef = useRef<number>(initialBlogs.length);
   const [loadingMore, setLoadingMore] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -88,7 +88,6 @@ export default function ConfusingBlogsTab({
   };
   // Use a mapping of blogId to an array of fly objects
   const [flyMap, setFlyMap] = useState<Record<string, Fly[]>>({});
-  const AccessToken = Cookies.get("accessToken")!;
 
   // Fly animation function scoped per blog
   const handleClickForBlog =
@@ -113,7 +112,7 @@ export default function ConfusingBlogsTab({
   const loadMoreBlogs = useCallback(async () => {
     setLoadingMore(true);
     try {
-      const data = await getConfusingBlogs(offsetRef.current, 10, AccessToken);
+      const data = await getConfusingBlogs(offsetRef.current, 10);
       if (data.blogs && data.blogs.length > 0) {
         setBlogs((prev) => {
           const newBlogs = [...prev, ...data.blogs];

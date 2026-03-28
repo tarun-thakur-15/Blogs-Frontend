@@ -23,8 +23,8 @@ import {
 } from "./schema";
 
 // const url = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
-const url = "https://blogs-backend-ftie.onrender.com/api";
-// const url = "http://localhost:8000/api";
+// const url = "https://blogs-backend-ftie.onrender.com/api";
+const url = "http://localhost:8000/api";
 import { redirect } from "next/navigation";
 export const signUpUser = async (userData: SignUpSchema) => {
   try {
@@ -191,7 +191,7 @@ export const getHighlightedBlogs = async (
   }
 };
 
-export const toggleHighlight = async (slug: string, token?: string) => {
+export const toggleHighlight = async (slug: string) => {
   try {
     // PATCH request with no request body; the API toggles the status based on current state
     const response = await axios.patch(
@@ -210,7 +210,6 @@ export const toggleHighlight = async (slug: string, token?: string) => {
 export const reactToBlog = async (
   slug: string,
   payload: ReactionPayload,
-  token: string,
 ) => {
   try {
     const response = await axios.patch(`${url}/reactToBlog/${slug}`, payload, {
@@ -258,7 +257,7 @@ export const getFollowingList = async (
   }
 };
 
-export const toggleFavourite = async (slug: string, token?: string) => {
+export const toggleFavourite = async (slug: string) => {
   try {
     const response = await axios.patch(`${url}/favouriteBlog/${slug}`, null, {
       withCredentials: true,
@@ -269,7 +268,7 @@ export const toggleFavourite = async (slug: string, token?: string) => {
   }
 };
 
-export const toggleFollow = async (username: string, token?: string) => {
+export const toggleFollow = async (username: string) => {
   try {
     const response = await axios.patch(
       `${url}/followUnfollow/${username}`,
@@ -336,7 +335,7 @@ export const getBlogsByTopic = async (
   }
 };
 
-export const createBlog = async (blogData: CreateBlog, token?: string) => {
+export const createBlog = async (blogData: CreateBlog) => {
   const response = await axios.post(`${url}/createBlog`, blogData, {
     withCredentials: true,
   });
@@ -393,7 +392,7 @@ export const getComments = async (
   }
 };
 
-export const deleteComment = async (commentId: string, token?: string) => {
+export const deleteComment = async (commentId: string) => {
   try {
     const response = await axios.delete(`${url}/deleteComment/${commentId}`, {
       withCredentials: true,
@@ -468,7 +467,7 @@ export const markAllNotificationsAsRead = async () => {
   }
 };
 
-export const editABout = async (userData: EditAboutSchema, token: string) => {
+export const editABout = async (userData: EditAboutSchema) => {
   try {
     // PATCH request with no request body; the API toggles the status based on current state
     const response = await axios.patch(`${url}/changeAbout`, userData, {
@@ -494,7 +493,7 @@ export const getAllArchivedBlogs = async (offset = 0, limit = 10) => {
   }
 };
 
-export const getArchivedBlog = async (slug: string, token?: string) => {
+export const getArchivedBlog = async (slug: string) => {
   try {
     const response = await axios.get(`${url}/getDetailedArchivedBlog/${slug}`, {
       withCredentials: true,
@@ -505,7 +504,7 @@ export const getArchivedBlog = async (slug: string, token?: string) => {
   }
 };
 
-export const deleteBlog = async (slug: string, token?: string) => {
+export const deleteBlog = async (slug: string) => {
   try {
     const response = await axios.delete(`${url}/deleteBlog/${slug}`, {
       withCredentials: true,
@@ -516,7 +515,7 @@ export const deleteBlog = async (slug: string, token?: string) => {
   }
 };
 
-export const toggleArchieve = async (slug: string, token?: string) => {
+export const toggleArchieve = async (slug: string) => {
   try {
     // PATCH request with no request body; the API toggles the status based on current state
     const response = await axios.patch(
@@ -532,7 +531,7 @@ export const toggleArchieve = async (slug: string, token?: string) => {
   }
 };
 
-export const getLikedBlogs = async (offset = 0, limit = 10, token?: string) => {
+export const getLikedBlogs = async (offset = 0, limit = 10) => {
   try {
     const response = await axios.get(
       `${url}/getLikedBlogs?offset=${offset}&limit=${limit}`,
@@ -611,8 +610,7 @@ export const getCommentedBlogs = async (
   }
 };
 
-export const changeProfilePicture = async (file: File, token?: string) => {
-  const accessToken = token || Cookies.get("accessToken");
+export const changeProfilePicture = async (file: File) => {
   const formData = new FormData();
   formData.append("profileImage", file);
 

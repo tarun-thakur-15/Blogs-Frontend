@@ -37,7 +37,6 @@ interface CommentedBlogsProps {
 }
 
 export default function CommentedBlogs({ initialBlogs }: CommentedBlogsProps) {
-    const AccessToken = Cookies.get("accessToken")!;
     const username = Cookies.get("username")!;
       const offsetRef = useRef<number>(initialBlogs.length);
       const [loadingMore, setLoadingMore] = useState(false);
@@ -47,7 +46,7 @@ export default function CommentedBlogs({ initialBlogs }: CommentedBlogsProps) {
   const loadMoreBlogs = useCallback(async () => {
     setLoadingMore(true);
     try {
-      const data = await getCommentedBlogs(offsetRef.current, 10, username, AccessToken);
+      const data = await getCommentedBlogs(offsetRef.current, 10, username);
       if (data.blogs && data.blogs.length > 0) {
         setBlogs((prev) => {
           const newBlogs = [...prev, ...data.blogs];
