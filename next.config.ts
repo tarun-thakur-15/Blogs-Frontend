@@ -10,24 +10,12 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
+        protocol: "https",
+        hostname: "**",
+      },
+      {
         protocol: "http",
-        hostname: "localhost",
-      },
-      {
-        protocol: "https",
-        hostname: "blogs-backend-ftie.onrender.com",
-      },
-      {
-        protocol: "https",
-        hostname: "res.cloudinary.com",
-      },
-       {
-        protocol: "https",
-        hostname: "tarunthakur.com",
-      },
-       {
-        protocol: "https",
-        hostname: "tarunthakur.com/lekhan",
+        hostname: "**",
       },
     ],
   },
