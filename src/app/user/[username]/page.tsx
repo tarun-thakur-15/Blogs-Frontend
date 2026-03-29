@@ -6,7 +6,8 @@ import CompanyHeaderOther from "../../Components/CompanyHeaderForUserPage";
 import CompanyTabsContentOther from "../../Components/CompanyTabsContentOther";
 import { Tabs } from "antd";
 import { cookies } from "next/headers";
-import { getProfileDetails, getUserTopics } from "../../services/api";
+import { getUserTopics } from "../../services/api";
+import { getProfileDetails } from "@/app/services/apissr";
 
 interface UsernamePageProps {
   params: { username: string };
@@ -17,11 +18,11 @@ export default async function UsernamePage({ params }: UsernamePageProps) {
 
   // Get token from cookies on the server side
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken")?.value || "";
   const usernameFromCookies = cookieStore.get("username")?.value!;
 
   // Call the API to fetch the profile details for the given username
-  const profileData = await getProfileDetails(username, accessToken);
+  const profileData = await getProfileDetails(username);
+  console.log(profileData);
 
   //fetch all topics of a perticular user
   const userTopicsData = await getUserTopics(username);

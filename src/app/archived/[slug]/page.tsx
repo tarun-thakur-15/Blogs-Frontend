@@ -29,16 +29,10 @@ const ArchivedDetailPage = async ({ params }: PageProps) => {
 
   // Get token from cookies server side
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken")?.value || "";
   const usernameFromCookies = cookieStore.get("username")?.value;
 
   // Fetch the blog details using your API function.
-  const blogData = await getArchivedBlog(slug, accessToken);
-
-
-  //fetching comments
-//   const commentsData = await getComments(slug, 0, 10, accessToken);
-
+  const blogData = await getArchivedBlog(slug);
   const createdAt = new Date(blogData.blog.createdAt);
   const updatedAt = new Date(blogData.blog.updatedAt);
 

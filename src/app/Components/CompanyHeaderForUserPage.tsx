@@ -196,15 +196,14 @@ export default function CompanyHeaderOther({
           } ${username} successfully! 🎉`,
       );
     } catch (error: any) {
-      
-
       if (!isLoggedIn) {
         showLoginModal();
       } else {
-        toast.error(
-          error.message ||
-            "Failed to update follow status. Please try again. ❌",
-        );
+       setLocalIsFollowed((prev) => !prev);
+        const msg =
+          error?.response?.data?.msg ||
+          "Failed to update follow status. Please try again. ❌";
+        toast.error(msg);
       }
 
       // Always revert the follow state in case of error

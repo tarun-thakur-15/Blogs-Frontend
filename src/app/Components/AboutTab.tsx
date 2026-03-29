@@ -2,15 +2,14 @@
 import { Button, Flex } from "antd";
 import { useRef, useState, useEffect } from "react";
 import EditIcon from "../../../public/images/edit.svg";
-import { editABout } from "../services/api"; // adjust the import path as needed
+import { editABout } from "../services/api";
 import { Toaster, toast } from "sonner";
 
 interface AboutTabProps {
   about: string;
-  accessToken: string;
 }
 
-export default function AboutTab({ about, accessToken }: AboutTabProps) {
+export default function AboutTab({ about }: AboutTabProps) {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [aboutText, setAboutText] = useState<string>(about || "");
   const [loading, setLoading] = useState<boolean>(false);
@@ -26,15 +25,15 @@ export default function AboutTab({ about, accessToken }: AboutTabProps) {
   };
 
   const handleSave = async () => {
-    // Validate length (optional; backend enforces maximum of 100 characters)
-    if (aboutText.length > 100) {
+    // Validate length (optional; backend enforces maximum of 300 characters)
+    if (aboutText.length > 300) {
       // You can display an error message here if needed.
       return;
     }
     setLoading(true);
     try {
       // Call the API with { about: aboutText } as payload.
-      const result = await editABout({ about: aboutText }, accessToken);
+      const result = await editABout({ about: aboutText });
 
       toast.success(result.msg || "About Updated Successfully!");
       // Optionally display a success message here.
@@ -66,12 +65,29 @@ export default function AboutTab({ about, accessToken }: AboutTabProps) {
             value={aboutText}
             onChange={(e) => setAboutText(e.target.value)}
           />
+          <div className="flex justify-start gap-2 text-xs mt-1">
+            <span
+              className={`${
+                aboutText.length > 300
+                  ? "text-red-500!"
+                  : aboutText.length > 260
+                    ? "text-yellow-500!"
+                    : "text-gray-400!"
+              }`}
+            >
+              {aboutText.length} / 300
+            </span>
+
+            {aboutText.length > 300 && (
+              <span className="text-red-500!">Limit exceeded</span>
+            )}
+          </div>
+
           <Button
-          
             type="primary"
-            style={{ width: "100px" }}
+            style={{ width: "100px", marginTop: "20px" }}
             onClick={handleSave}
-            disabled={!aboutText || aboutText.length > 100 || loading}
+            disabled={!aboutText || aboutText.length > 300 || loading}
           >
             {loading ? "Saving..." : "Save"}
           </Button>

@@ -6,7 +6,6 @@ import AboutTab from "./AboutTab";
 import MyProfileTabs from "./MyProfileTabs";
 
 export default function ClientTabsWrapper({
-  accessToken,
   profileData,
   username,
 }: any) {
@@ -21,7 +20,7 @@ export default function ClientTabsWrapper({
       key: "about",
       label: "About",
       children: (
-        <AboutTab about={profileData.about} accessToken={accessToken} />
+        <AboutTab about={profileData.about} />
       ),
     },
     {

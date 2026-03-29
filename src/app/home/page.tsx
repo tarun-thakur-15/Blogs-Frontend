@@ -1,21 +1,16 @@
 // app/home/page.tsx
 // export const dynamic = "force-dynamic";
 export const revalidate = 60; // 1 hour
-
 import "../styles/page.css";
 import "../styles/awnserbox.css";
 import CustomAutoComplete from "../Components/CustomAutoComplete";
 import FaqsForHomePage from "../Components/FaqsForHomePage";
-import { cookies } from "next/headers";
 import { getAllBlogs } from "../services/api";
 
 async function HomePageServerSide() {
-  // Extract access token from cookies (server side)
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken")?.value || "";
 
   // Fetch blogs from your backend API with offset=0, limit=10
-  const blogsData = await getAllBlogs(0, 10, accessToken);
+  const blogsData = await getAllBlogs(0, 10);
 
   return (
     <main className="main">

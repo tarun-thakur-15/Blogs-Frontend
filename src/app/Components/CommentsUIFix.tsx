@@ -351,7 +351,7 @@ export default function Comments({
             </div>
             <p>Add your comment</p>
           </Flex>
-          <div className="commentAlignment flex-col lg:flex-row items-center">
+          <div className="commentAlignment flex-row lg:flex-row items-center">
             <div className="addCommentInputDiv">
               <input
                 type="text"

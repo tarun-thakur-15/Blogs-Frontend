@@ -437,7 +437,7 @@ button.ant-btn.ant-btn-text.add-social-media span {
 
 @media only screen and (max-width: 767px) {
     .ant-tabs.ant-tabs-top {
-        flex-direction: column;
+        flex-direction: column !important;
     }
     .ant-tabs-nav-list {
         flex-direction: row;

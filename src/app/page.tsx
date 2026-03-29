@@ -1,49 +1,12 @@
-"use client";
-import React, { useEffect, useState } from "react";
 import "./styles/homepage.css";
 import Image from "next/image";
-import Arrow from "../assets/images/arrow1.png";
 import ImageTwo from "../assets/images/BlogImageTwo-removebg-preview.png";
 import ImageFour from "../assets/images/BlogImageFour-removebg-preview.png";
 import ImageFive from "../assets/images/BlogImageFive-removebg-preview.png";
 import ImageSix from "../assets/images/BlogImageSix-removebg-preview.png";
-import LogInModal from "./Components/LogInModal";
-import Cookies from "js-cookie";
-import SignInModal from "./Components/SignInModal";
-const Home: React.FC = () => {
-  const [email, setEmail] = useState<string | null>(null);
-  const [username, setUsername] = useState<string | null>(null);
-  const [fullName, setFullName] = useState<string | null>(null);
-  useEffect(() => {
+import HomeButton from "./Components/HomePageButton";
 
-    const storedEmail = Cookies.get("email");
-    const storedUsername = Cookies.get("username");
-    const storedFullName = Cookies.get("fullname");
-    const accessToken = Cookies.get("accessToken");
-
-    if (storedEmail && storedUsername && storedFullName && accessToken) {
-      setEmail(storedEmail);
-      setUsername(storedUsername);
-      setFullName(storedFullName);
-      setIsLoggedIn(true);
- 
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, []);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
-    setIsLoginModalOpen(false);
-    document.body.classList.add("modal-opened");
-  };
-  const showLoginModal = () => {
-    setIsModalOpen(false);
-    setIsLoginModalOpen(true);
-    document.body.classList.add("modal-opened");
-  };
+export default function Home() {
   return (
     <>
       {/* ------------------section 1--------------------- */}
@@ -77,17 +40,8 @@ const Home: React.FC = () => {
                 </div>
               </div>
 
-              <div className="">
-                <button onClick={showLoginModal} className="buttonGetStarted">
-                  <span className="btnText">Get Started</span>
-                  <Image
-                    src={Arrow}
-                    alt="Get-Started"
-                    height={24}
-                    width={24}
-                    className="arrowImageSize"
-                  ></Image>
-                </button>
+              <div>
+                <HomeButton className="buttonGetStarted" showArrow={true} />
               </div>
             </div>
           </div>
@@ -107,9 +61,7 @@ const Home: React.FC = () => {
                   Your Story Deserves This Spotlight.
                 </p>
               </div>
-              <button onClick={showLoginModal} className="section5Btn">
-                Get Started
-              </button>
+              <HomeButton className="section5Btn" showArrow={false} />
             </div>
           </div>
         </div>
@@ -133,9 +85,7 @@ const Home: React.FC = () => {
                   </span>
                 </p>
               </div>
-              <button onClick={showLoginModal} className="section4Btn">
-                Get Started
-              </button>
+              <HomeButton className="section4Btn" showArrow={false} />
             </div>
           </div>
           <div className="SectionImageParent">
@@ -155,9 +105,7 @@ const Home: React.FC = () => {
                   inspires, informs, and leaves a mark.
                 </p>
               </div>
-              <button onClick={showLoginModal} className="section6Btn">
-                Get Started
-              </button>
+              <HomeButton className="section6Btn" showArrow={false} />
             </div>
           </div>
           <div className="SectionImageParent">
@@ -167,19 +115,6 @@ const Home: React.FC = () => {
           </div>
         </div>
       </section>
-      <SignInModal
-        setIsModalOpen={setIsModalOpen}
-        showLoginModal={showLoginModal}
-        isModalOpen={isModalOpen}
-      />
-      <LogInModal
-        setIsModalOpen={setIsLoginModalOpen}
-        showSignModal={showModal}
-        isModalOpen={isLoginModalOpen}
-      />
     </>
   );
 };
-
-export default Home;
-// ------------------

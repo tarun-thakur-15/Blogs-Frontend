@@ -138,27 +138,13 @@ export const getAllBlogs = async (offset = 0, limit = 10) => {
   }
 };
 
-export const getPerticularBlog = async (slug: string) => {
-  try {
-    const response = await fetch(`${url}/getPerticularBlog/${slug}`, {
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch blog");
-    }
-
-    return response.json();
-  } catch (error) {
-    redirect("/something-went-wrong");
-  }
-};
-
+//this getProfimeDetails is being used in profile page because profile page is client side rendered.. same api function you will get in apissr.tsx for /user/[username] page coz its server side renedered. 
 export const getProfileDetails = async (username: string) => {
   try {
     const response = await fetch(`${url}/getProfileDetails/${username}`, {
       credentials: "include",
     });
+    console.log("api response is: ", response);
 
     if (!response.ok) {
       throw new Error("Failed to fetch profile details");
@@ -269,18 +255,12 @@ export const toggleFavourite = async (slug: string) => {
 };
 
 export const toggleFollow = async (username: string) => {
-  try {
-    const response = await axios.patch(
-      `${url}/followUnfollow/${username}`,
-      {},
-      {
-        withCredentials: true,
-      },
-    );
-    return response.data; // Handle response properly
-  } catch (error) {
-    redirect("/something-went-wrong");
-  }
+  const response = await axios.patch(
+    `${url}/followUnfollow/${username}`,
+    {},
+    { withCredentials: true }
+  );
+  return response.data;
 };
 
 export const getUserBlogs = async (

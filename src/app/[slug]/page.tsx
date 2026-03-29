@@ -1,5 +1,6 @@
+
 export const dynamicParams = true;
-export const revalidate = 3600; // 1 hour
+export const revalidate = 3600; 
 import { format } from "date-fns";
 import "../styles/page.css";
 import "../styles/awnserbox.css";
@@ -9,21 +10,15 @@ import { Flex } from "antd";
 import Comments from "../Components/CommentsUIFix";
 import ProfileHeaderDetailedBlog from "../Components/ProfileHeaderDetailedBlog";
 import MiddleRelatedFaqs from "../Components/MiddleRelatedFaqs";
-import { getPerticularBlog, getComments } from "../services/api";
-import ReadTTS from "../Components/ReadTTS";
-import { cn } from "@/lib/utils";
-import ShareModal from "../Components/ShareModal";
+import { getComments } from "../services/api";
+import { getPerticularBlog } from "../services/apissr";
 import BlogContent from "../Components/Blogcontent";
 // Images
 import Divider from "../../assets/images/divider.png";
 import { cookies } from "next/headers";
 import FaqPageActions from "../Components/FaqPageActions";
 import FaqPageActionsMobile from "../Components/FaqPageActionsMobile";
-import DefaultImage from "../../assets/images/not-logged-in-user.png";
-import BoxIconPng from "../../assets/images/box.png";
-import LoginToRead from "../../assets/images/LoginToRead.jpeg";
 import LoginToReadFullBlog from "../Components/LoginToReadFullBlog";
-import Listen from "./../../../public/images/Listen.svg";
 import ProfileAvatar from "../Components/ProfileAvatar";
 
 interface PageProps {
@@ -31,19 +26,19 @@ interface PageProps {
 }
 
 const BlogDetailPage = async ({ params }: PageProps) => {
-    const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
+  const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
   const { slug } = await params;
 
   // Get token from cookies server side
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken")?.value || "";
   const usernameFromCookies = cookieStore.get("username")?.value;
 
   // Fetch the blog details using your API function.
-  const blogData = await getPerticularBlog(slug, accessToken);
+  const blogData = await getPerticularBlog(slug);
+  console.log(blogData);
 
   //fetching comments
-  const commentsData = await getComments(slug, 0, 10, accessToken);
+  const commentsData = await getComments(slug, 0, 10);
 
   const createdAt = new Date(blogData.createdAt);
   const updatedAt = new Date(blogData.updatedAt);
@@ -80,28 +75,7 @@ const BlogDetailPage = async ({ params }: PageProps) => {
           <p>/</p>
           <p>{blogData.topic}</p>
         </div>
-        <div>
-         
-          {/* something is wrong with this ReadTTS thing so commenting this for now */}
-          {/* <ReadTTS text={blogData.content}>
-            <button
-              className={cn(
-                "px-4 py-2 rounded-full h-[38px] w-[130px] flex justify-center",
-                "bg-gradient-to-r from-purple-500 to-blue-500",
-                "shadow-lg hover:shadow-xl",
-                "transition-all duration-300",
-                "hover:scale-105",
-                "text-white font-semibold text-sm",
-                "flex items-center gap-2",
-                "focus:outline-none focus:ring-2 focus:ring-purple-400",
-                "active:scale-95 active:shadow-sm"
-              )}
-            >
-              <Listen className="h-4 w-4" />
-              Listen Blog
-            </button>
-          </ReadTTS> */}
-        </div>
+        <div></div>
 
         <div className="single-answer-page">
           <div className="w-full flex justify-between">
@@ -109,10 +83,6 @@ const BlogDetailPage = async ({ params }: PageProps) => {
               <Flex vertical gap={30}>
                 <Flex vertical className="single-answer">
                   <h1>{blogData.title}</h1>
-                  {/* <div
-                    className="forImageInsideContent"
-                    dangerouslySetInnerHTML={{ __html: blogData.content }}
-                  /> */}
                   <BlogContent content={blogData.content} />
                   <LoginToReadFullBlog />
                   <Flex
