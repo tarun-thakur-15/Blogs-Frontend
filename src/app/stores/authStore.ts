@@ -1,7 +1,8 @@
 // stores/authStore.ts
 import { create } from "zustand";
 
-const API_URL = "http://localhost:8000/api"; // e.g. https://yourbackend.com/api
+// const API_URL = "http://localhost:8000/api"; 
+const url = "https://blogs-backend-ftie.onrender.com/api";
 
 interface User {
   email: string;
@@ -39,7 +40,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   // ✅ Hits /me — browser auto-sends the httpOnly cookie via credentials:"include"
   hydrate: async () => {
     try {
-      const res = await fetch(`${API_URL}/me`, {
+      const res = await fetch(`${url}/me`, {
         method: "GET",
         credentials: "include", // 🔥 sends httpOnly cookie automatically
       });

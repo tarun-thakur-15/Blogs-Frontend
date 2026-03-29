@@ -1,7 +1,8 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const url = "http://localhost:8000/api";
+// const url = "http://localhost:8000/api";
+const url = "https://blogs-backend-ftie.onrender.com/api";
 
 export const getPerticularBlog = async (slug: string) => {
   try {
