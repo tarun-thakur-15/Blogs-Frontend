@@ -21,6 +21,14 @@ const nextConfig = {
         protocol: "https",
         hostname: "res.cloudinary.com",
       },
+       {
+        protocol: "https",
+        hostname: "tarunthakur.com",
+      },
+       {
+        protocol: "https",
+        hostname: "tarunthakur.com/lekhan",
+      },
     ],
   },
   typescript: {
