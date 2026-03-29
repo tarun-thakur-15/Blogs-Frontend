@@ -45,6 +45,7 @@ export default function ProfileAvatar({
       alt={alt}
       width={width}
       height={height}
+      unoptimized
       onError={() => {
         if (imgSrc !== DEFAULT_AVATAR) {
           setImgSrc(DEFAULT_AVATAR);
