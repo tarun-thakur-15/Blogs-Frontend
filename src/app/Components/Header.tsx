@@ -22,6 +22,7 @@ import NProgress from "nprogress";
 import Lekhan from "../../assets/images/LekhanTransparent.png";
 import NotificationDrawer from "./NotificationDrawer";
 import { getUnreadNotificationCount, logoutUser } from "../services/api";
+import Cookies from "js-cookie";
 
 const DEFAULT_AVATAR = `/images/default-user.webp`;
 
@@ -94,7 +95,8 @@ export default function Header() {
     try {
       await logoutUser();
       useAuthStore.getState().logout();
-      window.location.href = "/lekhan";
+      Cookies.remove("accessToken");
+      window.location.href = "/";
     } catch (error) {
       console.error(error);
     }

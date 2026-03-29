@@ -9,13 +9,25 @@ const nextConfig = {
   trailingSlash: false,
   images: {
     remotePatterns: [
+         {
+      protocol: "https",
+      hostname: "**",
+    },
+    {
+      protocol: "http",
+      hostname: "**",
+    },
       {
         protocol: "https",
-        hostname: "**",
+        hostname: "blogs-backend-ftie.onrender.com",
       },
       {
-        protocol: "http",
-        hostname: "**",
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+       {
+        protocol: "https",
+        hostname: "tarunthakur.com",
       },
     ],
   },
