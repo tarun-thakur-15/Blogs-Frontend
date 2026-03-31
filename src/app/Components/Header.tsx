@@ -96,7 +96,8 @@ export default function Header() {
       await logoutUser();
       useAuthStore.getState().logout();
       Cookies.remove("accessToken");
-      window.location.href = "/";
+      window.location.href = "/lekhan";
+      // window.location.reload();
     } catch (error) {
       console.error(error);
     }
