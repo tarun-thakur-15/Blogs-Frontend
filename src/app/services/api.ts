@@ -67,6 +67,7 @@ export const loginUser = async (userData: Login) => {
       },
       withCredentials: true, // 🔥 MUST (this sends/receives cookies)
     });
+    console.log("Login api response: ",response);
 
     return response.data;
   } catch (error) {

@@ -129,7 +129,7 @@ const LogInModal: React.FC<CustomModalProps> = ({
         ? "/lekhan"
         : "";
 
-      window.location.href = `${basePath}/home`;
+      // window.location.href = `${basePath}/home`;
     } catch (error: any) {
       setSaveLoading(false);
       setErrorMessage(error.message || "Login failed");
