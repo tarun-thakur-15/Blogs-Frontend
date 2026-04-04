@@ -15,6 +15,7 @@ import "../styles/signin.css";
 // IMAGES
 import Email from "../../../public/images/set-email.svg";
 import SuccessGif from "../../../public/images/success.gif";
+import { useAuthStore } from "../stores/authStore";
 interface CustomModalProps {
   isModalOpen?: boolean;
   setIsModalOpen?: any;
@@ -48,6 +49,7 @@ const LogInModal: React.FC<CustomModalProps> = ({
   setIsModalOpen,
   showSignModal,
 }) => {
+  const setUser = useAuthStore((s) => s.setUser);
   const [form] = Form.useForm();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
@@ -101,31 +103,38 @@ const LogInModal: React.FC<CustomModalProps> = ({
     setIsModalOpen(false);
   };
   // Login form submission handler
-const handleLogin = async (values: any) => {
-  try {
-    setSaveLoading(true);
+  const handleLogin = async (values: any) => {
+    try {
+      setSaveLoading(true);
 
-    const payload = {
-      identifier: values.identifier,
-      password: values.password,
-    };
+      const payload = {
+        identifier: values.identifier,
+        password: values.password,
+      };
+      const userData = await loginUser(payload);
+      // ✅ Set auth state immediately — don't wait for hydrate() on next page
+      setUser({
+        email: userData.email,
+        username: userData.username,
+        fullname: userData.fullname,
+        profileImage: userData.profileImage,
+      });
 
-    await loginUser(payload);
+      await loginUser(payload);
 
-    setSaveLoading(false);
+      setSaveLoading(false);
 
-    // 🔥 IMPORTANT: force navigation so middleware runs
-   const basePath = window.location.pathname.startsWith("/lekhan")
-  ? "/lekhan"
-  : "";
+      // 🔥 IMPORTANT: force navigation so middleware runs
+      const basePath = window.location.pathname.startsWith("/lekhan")
+        ? "/lekhan"
+        : "";
 
-window.location.href = `${basePath}/home`;
-
-  } catch (error: any) {
-    setSaveLoading(false);
-    setErrorMessage(error.message || "Login failed");
-  }
-};
+      window.location.href = `${basePath}/home`;
+    } catch (error: any) {
+      setSaveLoading(false);
+      setErrorMessage(error.message || "Login failed");
+    }
+  };
   return (
     <>
       <Modal

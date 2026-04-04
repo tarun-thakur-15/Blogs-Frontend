@@ -1,7 +1,7 @@
 // stores/authStore.ts
 import { create } from "zustand";
 
-// const API_URL = "http://localhost:8000/api"; 
+// const url = "http://localhost:8000/api";
 const url = "https://blogs-backend-ftie.onrender.com/api";
 
 interface User {
@@ -29,29 +29,35 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({
       user,
       isLoggedIn: true,
+      isHydrated: true,
     }),
 
   logout: () =>
     set({
       user: null,
       isLoggedIn: false,
+      isHydrated: true,
     }),
 
   // ✅ Hits /me — browser auto-sends the httpOnly cookie via credentials:"include"
   hydrate: async () => {
+    console.log("hydrate() called");
     try {
       const res = await fetch(`${url}/me`, {
         method: "GET",
         credentials: "include", // 🔥 sends httpOnly cookie automatically
       });
-
+      console.log("hydrate /me status:", res.status);
       if (res.ok) {
         const user: User = await res.json();
+        console.log("hydrate user:", user);
         set({ user, isLoggedIn: true, isHydrated: true });
       } else {
+        console.log("hydrate failed - not ok");
         set({ user: null, isLoggedIn: false, isHydrated: true });
       }
-    } catch {
+    } catch (e) {
+      console.log("hydrate error:", e);
       set({ user: null, isLoggedIn: false, isHydrated: true });
     }
   },

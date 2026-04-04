@@ -29,7 +29,7 @@ export function proxy(req: NextRequest) {
   // ===============================
   // 🚫 BLOCK LANDING PAGE FOR LOGGED-IN USERS
   // ===============================
-  if (isLoggedIn && normalizedPath === "/") {
+  if (isLoggedIn && (normalizedPath === "/" || normalizedPath === "")) {
     url.pathname = `${basePath}/home`;
     return NextResponse.redirect(url);
   }

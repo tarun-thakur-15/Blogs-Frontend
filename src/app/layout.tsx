@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import '@ant-design/v5-patch-for-react-19';
+import "@ant-design/v5-patch-for-react-19";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./Components/Header";
 import { Toaster } from "sonner";
 import ProgressBar from "./Components/ProgressBar";
 import AuthHydrator from "./stores/Authhydrator";
-// import { ThemeProvider } from "./context/ThemeContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -65,7 +64,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // <ThemeProvider>
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
@@ -82,11 +80,8 @@ export default function RootLayout({
         />
         <ProgressBar />
         <Header />
-        <main>
-          {children}
-          </main>
+        <main>{children}</main>
       </body>
     </html>
-    // </ThemeProvider>
   );
 }
