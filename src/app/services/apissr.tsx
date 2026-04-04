@@ -5,8 +5,8 @@ import { redirect } from "next/navigation";
 // const url = "https://blogs-backend-ftie.onrender.com/api";
 // const url = process.env.NEXT_PUBLIC_API_BASE_URL || "/api/backend";
 const url = typeof window === "undefined"
-  ? "https://blogs-backend-ftie.onrender.com/api"  // server-side: use full URL
-  : (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api"); // client-side: use proxy
+  ? "https://blogs-backend-ftie.onrender.com/api"  // server-side
+  : (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api"); // client-side
 
 export const getPerticularBlog = async (slug: string) => {
   try {

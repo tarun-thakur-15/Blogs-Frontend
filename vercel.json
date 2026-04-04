@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/api/backend/:path*",
+      "source": "/backend/:path*",
       "destination": "https://blogs-backend-ftie.onrender.com/api/:path*"
     }
   ]
