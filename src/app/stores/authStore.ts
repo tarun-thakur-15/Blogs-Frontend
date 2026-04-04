@@ -3,7 +3,10 @@ import { create } from "zustand";
 
 // const url = "http://localhost:8000/api";
 // const url = "https://blogs-backend-ftie.onrender.com/api";
-const url = process.env.NEXT_PUBLIC_API_BASE_URL || "/api/backend";
+// const url = process.env.NEXT_PUBLIC_API_BASE_URL || "/api/backend";
+const url = typeof window === "undefined"
+  ? "https://blogs-backend-ftie.onrender.com/api"  // server-side: use full URL
+  : (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api"); // client-side: use proxy
 
 interface User {
   email: string;
