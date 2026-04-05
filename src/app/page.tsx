@@ -5,8 +5,20 @@ import ImageFour from "../assets/images/BlogImageFour-removebg-preview.png";
 import ImageFive from "../assets/images/BlogImageFive-removebg-preview.png";
 import ImageSix from "../assets/images/BlogImageSix-removebg-preview.png";
 import HomeButton from "./Components/HomePageButton";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value;
+
+  // 🔥 Redirect if logged in
+  if (token) {
+    redirect("/home");
+  }
+
   return (
     <>
       {/* ------------------section 1--------------------- */}
@@ -32,7 +44,7 @@ export default function Home() {
                     </h1>
                   </div>
                   <div className="description">
-                    <p className="pSection1 ">
+                    <p className="pSection1">
                       Discover a platform where your ideas spark conversations
                       and inspire change. Write today. Be heard.
                     </p>
@@ -47,6 +59,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+
       {/* ----------------section 2------------------ */}
       <section>
         <div className="containerSection5 sect5">
@@ -56,35 +69,25 @@ export default function Home() {
           </div>
           <div className="SectionImageParent">
             <div className="SectionTextDiv">
-              <div>
-                <p className="pSection5 normaliq-font">
-                  Your Story Deserves This Spotlight.
-                </p>
-              </div>
+              <p className="pSection5 normaliq-font">
+                Your Story Deserves This Spotlight.
+              </p>
               <HomeButton className="section5Btn" showArrow={false} />
             </div>
           </div>
         </div>
       </section>
+
       {/* ----------------section 3------------------ */}
       <section>
         <div className="containerSection4 sect4">
           <div className="SectionImageParent">
             <div className="SectionTextDiv">
-              <div>
-                <p className="pSection4 normaliq-font">
-                  Got a story, an idea, or an experience to share? Publish your
-                  blog and connect with a community that values your perspective
-                  <span className="dot normaliq-font">
-                    .
-                    {/* <Image
-                      src={Vector3}
-                      alt="Vector"
-                      className="sect4AbsoluteImage"
-                    /> */}
-                  </span>
-                </p>
-              </div>
+              <p className="pSection4 normaliq-font">
+                Got a story, an idea, or an experience to share? Publish your
+                blog and connect with a community that values your perspective
+                <span className="dot normaliq-font">.</span>
+              </p>
               <HomeButton className="section4Btn" showArrow={false} />
             </div>
           </div>
@@ -94,22 +97,20 @@ export default function Home() {
           </div>
         </div>
       </section>
+
       {/* ----------------section 4------------------ */}
       <section>
         <div className="containerSection2 sect6">
           <div className="SectionImageParent">
             <div className="SectionTextDiv">
-              <div>
-                <p className="pSection6 normaliq-font">
-                  Your ideas deserve the world’s attention. Start a blog that
-                  inspires, informs, and leaves a mark.
-                </p>
-              </div>
+              <p className="pSection6 normaliq-font">
+                Your ideas deserve the world’s attention. Start a blog that
+                inspires, informs, and leaves a mark.
+              </p>
               <HomeButton className="section6Btn" showArrow={false} />
             </div>
           </div>
           <div className="SectionImageParent">
-            {/* <Image src={Section6Image} alt="section" className="SectImage" /> */}
             <Image src={ImageSix} alt="section" className="SectImage" />
             <Image src={ImageSix} alt="section" className="SectImageMobile" />
           </div>
@@ -117,4 +118,4 @@ export default function Home() {
       </section>
     </>
   );
-};
+}
