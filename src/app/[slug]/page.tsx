@@ -1,6 +1,6 @@
-
 export const dynamicParams = true;
-export const revalidate = 3600; 
+export const dynamic = "force-dynamic";
+import { Metadata } from "next";
 import { format } from "date-fns";
 import "../styles/page.css";
 import "../styles/awnserbox.css";
@@ -9,7 +9,6 @@ import Image from "next/image";
 import { Flex } from "antd";
 import Comments from "../Components/CommentsUIFix";
 import ProfileHeaderDetailedBlog from "../Components/ProfileHeaderDetailedBlog";
-import MiddleRelatedFaqs from "../Components/MiddleRelatedFaqs";
 import { getComments } from "../services/api";
 import { getPerticularBlog } from "../services/apissr";
 import BlogContent from "../Components/Blogcontent";
@@ -18,11 +17,51 @@ import Divider from "../../assets/images/divider.png";
 import { cookies } from "next/headers";
 import FaqPageActions from "../Components/FaqPageActions";
 import FaqPageActionsMobile from "../Components/FaqPageActionsMobile";
-import LoginToReadFullBlog from "../Components/LoginToReadFullBlog";
 import ProfileAvatar from "../Components/ProfileAvatar";
+import { cache } from "react";
+// import LoginToReadFullBlog from "../Components/LoginToReadFullBlog";
+// import MiddleRelatedFaqs from "../Components/MiddleRelatedFaqs";
 
 interface PageProps {
   params: { slug: string };
+}
+const getBlogCached = cache(async (slug: string) => {
+  return await getPerticularBlog(slug);
+});
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = params;
+
+  try {
+    const blogData = await getBlogCached(slug);
+
+    if (!blogData) {
+      return {
+        title: "Blog Not Found",
+        description: "This blog does not exist",
+      };
+    }
+
+    return {
+      title: blogData.meta_title || blogData.title,
+      description: blogData.meta_description || "Read this blog on Lekhan",
+      openGraph: {
+        title: blogData.meta_title,
+        description: blogData.meta_description,
+        type: "article",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: blogData.meta_title,
+        description: blogData.meta_description,
+      },
+    };
+  } catch (err) {
+    return {
+      title: "Lekhan – Write, Read, and Share Blogs",
+      description:
+        "Lekhan is a modern blogging platform where writers share ideas, readers explore stories, and communities connect over meaningful content. Start writing today!",
+    };
+  }
 }
 
 const BlogDetailPage = async ({ params }: PageProps) => {
@@ -34,7 +73,7 @@ const BlogDetailPage = async ({ params }: PageProps) => {
   const usernameFromCookies = cookieStore.get("username")?.value;
 
   // Fetch the blog details using your API function.
-  const blogData = await getPerticularBlog(slug);
+  const blogData = await getBlogCached(slug);
   console.log(blogData);
 
   //fetching comments
