@@ -6,14 +6,12 @@ import Link from "next/link";
 import {
   getFollowersList,
   getFollowingList,
-  toggleFavourite,
   toggleFollow,
   searchFollowers,
   searchFollowing,
 } from "../services/api";
 import DoneImage from "../../../public/images/done.svg";
 import SelectDrop from "../../../public/images/select-drop.svg";
-import Cookies from "js-cookie";
 import NProgress from "nprogress";
 import { toast, Toaster } from "sonner";
 import SignInModal from "./SignInModal";

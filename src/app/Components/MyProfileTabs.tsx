@@ -1,7 +1,6 @@
 "use client";
-import React, { useState, forwardRef, useEffect } from "react";
-import { Flex, Select, Skeleton, Spin } from "antd";
-import Cookies from "js-cookie";
+import { useState, useEffect } from "react";
+import { Flex, Select } from "antd";
 import MyProfileHighlightedBlogs from "./MyProfileHighlightedBlogs";
 import MyProfileAllBlogs from "./MyProfileAllBlogs";
 import ArchivedTabs from "./ArchivedTabs";

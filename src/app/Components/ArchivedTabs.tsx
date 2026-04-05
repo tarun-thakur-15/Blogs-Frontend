@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { Flex, Button } from "antd";
-import Cookies from "js-cookie";
 import {
   reactToBlog,
   getAllArchivedBlogs,

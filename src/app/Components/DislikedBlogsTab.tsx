@@ -2,7 +2,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { Flex, Button } from "antd";
-import Cookies from "js-cookie";
 import { getDislikedBlogs } from "../services/api";
 import { ReactionPayload } from "../services/schema"; // ensure correct path
 import { Toaster } from "sonner";

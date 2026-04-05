@@ -33,7 +33,6 @@ import json from "highlight.js/lib/languages/json";
 import Youtube from "@tiptap/extension-youtube";
 import { notification } from "antd";
 import { uploadBlogImage } from "../services/api";
-import Cookies from "js-cookie";
 
 // ─── lowlight setup ────────────────────────────────────────────────────────────
 const lowlight = createLowlight();

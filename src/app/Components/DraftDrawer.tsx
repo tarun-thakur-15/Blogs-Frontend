@@ -4,13 +4,12 @@ import { Button, Drawer} from "antd";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
-import { createBlog } from "../services/api"; // Adjust the path as needed
+import { createBlog } from "../services/api"; 
 import TiptapEditor from "./TiptapEditor";
 import DefaultImage from "../../assets/images/not-logged-in-user.png";
 import CloseIcons from "../../../public/images/closeIcon.svg";
 import { ClipLoader } from "react-spinners";
 import { saveDraft } from "../services/api";
-// import toast from "react-hot-toast";
 import { Toaster, toast } from "sonner";
 export default function DraftDrawer({
   visible,

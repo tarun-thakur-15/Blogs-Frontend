@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { Flex, Button } from "antd";
-import Cookies from "js-cookie";
 import { getConfusingBlogs } from "../services/api";
 import { ReactionPayload } from "../services/schema"; // ensure correct path
 import { Toaster } from "sonner";
@@ -17,7 +16,6 @@ import LogInModal from "../Components/LogInModal";
 import moment from "moment";
 import Link from "next/link";
 import BlogSkeleton from "./BlogSkeleton";
-import { useAuthStore } from "../stores/authStore";
 
 interface Fly {
   id: number;

@@ -1,10 +1,9 @@
 "use client";
-import React, { useState, forwardRef, useEffect } from "react";
-import { Flex, Skeleton, Spin } from "antd";
+import { useState, useEffect } from "react";
+import { Flex } from "antd";
 import FaqsForUserPage from "../Components/FaqsForUserPage";
 import DynamicTopicBlogs from "./DynamicTopicBlogs";
 import AllBlogsUserPage from "./AllBlogsUserPage";
-import Cookies from "js-cookie";
 import {
   getBlogsByTopic,
   getHighlightedBlogs,
@@ -13,7 +12,6 @@ import {
 
 // CSS
 import "../styles/tabs.css";
-import DetailedBlogHeaderSkeleton from "./DetailedBlogHeaderSkeleton";
 import BlogSkeleton from "./BlogSkeleton";
 // IMAGES
 interface BlogPreview {
