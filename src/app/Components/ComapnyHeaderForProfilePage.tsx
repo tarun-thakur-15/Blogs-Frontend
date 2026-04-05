@@ -297,7 +297,7 @@ export default function CompanyHeader({
   const baseUrl = "https://blogs-backend-ftie.onrender.com/";
   const encodedImagePath = encodeURI(profileImage); // Handles spaces properly
 
-  const DEFAULT_AVATAR = `/images/default-user.webp`;
+  const DEFAULT_AVATAR = `https://www.tarunthakur.com/lekhan/images/default-user.webp`;
   const initialSrc = profileImage || DEFAULT_AVATAR;
 
   const [imgSrc, setImgSrc] = useState(initialSrc);

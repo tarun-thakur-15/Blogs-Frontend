@@ -50,7 +50,6 @@ export default function Comments({
   const [loading, setLoading] = useState<boolean>(false);
   const [newCommentText, setNewCommentText] = useState<string>("");
   const loggedInUsername = Cookies.get("username");
-  const [isDropdownClicked, setIsDropdownClicked] = useState<boolean>(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState<{
     [key: string]: boolean;
   }>({});
@@ -171,7 +170,7 @@ export default function Comments({
     document.body.classList.add("modal-opened");
   };
 
-  const DEFAULT_AVATAR = `/images/default-user.webp`;
+  const DEFAULT_AVATAR = `https://www.tarunthakur.com/lekhan/images/default-user.webp`;
   function getImageSrc(img: any) {
     if (!img) return DEFAULT_AVATAR;
 
@@ -346,7 +345,7 @@ export default function Comments({
                   }}
                 />
               ) : (
-                <Image src={DEFAULT_AVATAR} alt="name" width={40} height={40} />
+                <Image src={DEFAULT_AVATAR} alt="Add Comment" width={40} height={40} />
               )}
             </div>
             <p>Add your comment</p>

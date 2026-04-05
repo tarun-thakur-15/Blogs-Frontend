@@ -322,7 +322,7 @@ export default function MyProfileAllBlogs({
     };
   }, [isDropdownOpen]);
 
-  const DEFAULT_AVATAR = `/images/default-user.webp`;
+  const DEFAULT_AVATAR = `https://www.tarunthakur.com/lekhan/images/default-user.webp`;
 
   function BlogCard({ blog }: BlogCardProps) {
     const initialSrc = blog.author.profileImage

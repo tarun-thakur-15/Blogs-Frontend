@@ -24,7 +24,7 @@ import NotificationDrawer from "./NotificationDrawer";
 import { getUnreadNotificationCount, logoutUser } from "../services/api";
 import Cookies from "js-cookie";
 
-const DEFAULT_AVATAR = `/images/default-user.webp`;
+const DEFAULT_AVATAR = `https://www.tarunthakur.com/lekhan/images/default-user.webp`;
 
 export default function Header() {
   // ✅ Use authStore — no more manual getMe() calls here

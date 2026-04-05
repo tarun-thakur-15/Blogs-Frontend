@@ -4,7 +4,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
-const DEFAULT_AVATAR = "/images/default-user.webp";
+const DEFAULT_AVATAR = "https://www.tarunthakur.com/lekhan/images/default-user.webp";
 
 interface ProfileAvatarProps {
   profileImage?: string | String;

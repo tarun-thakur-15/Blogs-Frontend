@@ -15,7 +15,7 @@ import { searchBlogsAndUsers } from "../services/api";
 import NProgress from "nprogress";
 import SearchIcon from "../../../public/images/search.svg";
 
-const DEFAULT_AVATAR = "/images/default-user.webp";
+const DEFAULT_AVATAR = "https://www.tarunthakur.com/lekhan/images/default-user.webp";
 const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
 
 function getImageSrc(img: string | undefined) {

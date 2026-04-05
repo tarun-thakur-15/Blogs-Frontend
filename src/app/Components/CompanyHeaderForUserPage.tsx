@@ -211,7 +211,7 @@ export default function CompanyHeaderOther({
     }
   };
 
-  const DEFAULT_AVATAR = `/images/default-user.webp`;
+  const DEFAULT_AVATAR = `https://www.tarunthakur.com/lekhan/images/default-user.webp`;
   function getImageSrc(img: any) {
     if (!img) return DEFAULT_AVATAR;
 

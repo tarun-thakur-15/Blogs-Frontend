@@ -28,7 +28,7 @@ interface UserListModalProps {
   emptyText?: string;
 }
 
-const DEFAULT_AVATAR = "/images/default-user.webp";
+const DEFAULT_AVATAR = "https://www.tarunthakur.com/lekhan/images/default-user.webp";
 const backendBaseUrl = "https://blogs-backend-ftie.onrender.com";
 
 const FollowersFollowingModal: FC<UserListModalProps> = ({
