@@ -375,7 +375,7 @@ export default function Comments({
                 </div>
               ) : (
                 <Image
-                  src="/images/send-comment-icon.svg"
+                  src="https://www.tarunthakur.com/lekhan/images/send-comment-icon.svg"
                   alt="Send Comment"
                   width={20}
                   height={20}
