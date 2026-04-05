@@ -41,7 +41,7 @@ export default function Comments({
   blogAuthor,
 }: CommentsProps) {
   const backendBaseUrl = "https://blogs-backend-ftie.onrender.com/";
-  const { isLoggedIn } = useAuthStore();
+  const { isLoggedIn, user } = useAuthStore();
   const profileImage = Cookies.get("profileImage");
   const [comments, setComments] = useState<CommentItem[]>(initialComments);
   const [totalComments, setTotalComments] =
@@ -183,8 +183,14 @@ export default function Comments({
     return `${backendBaseUrl}/${img}`;
   }
 
-  const initialSrc = getImageSrc(profileImage);
-  const [imgSrc, setImgSrc] = useState(initialSrc);
+const [imgSrc, setImgSrc] = useState(DEFAULT_AVATAR);
+useEffect(() => {
+  if (user?.profileImage) {
+    setImgSrc(getImageSrc(user.profileImage));
+  } else {
+    setImgSrc(DEFAULT_AVATAR);
+  }
+}, [user]);
 
   function CommentAvatar({
     imageUrl,
@@ -335,14 +341,10 @@ export default function Comments({
               {isLoggedIn ? (
                 <Image
                   src={imgSrc}
-                  alt="name"
+                  alt="Add Comment"
                   width={40}
                   height={40}
-                  onError={() => {
-                    if (imgSrc !== DEFAULT_AVATAR) {
-                      setImgSrc(DEFAULT_AVATAR);
-                    }
-                  }}
+                  onError={() => setImgSrc(DEFAULT_AVATAR)}
                 />
               ) : (
                 <Image src={DEFAULT_AVATAR} alt="Add Comment" width={40} height={40} />
