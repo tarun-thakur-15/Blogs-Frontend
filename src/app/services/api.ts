@@ -22,7 +22,6 @@ import {
 } from "./schema";
 
 const url = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
-// const url = "https://blogs-backend-ftie.onrender.com/api";
 // const url = "http://localhost:8000/api";
 
 import { redirect } from "next/navigation";
@@ -144,7 +143,6 @@ export const getProfileDetails = async (username: string) => {
     const response = await fetch(`${url}/getProfileDetails/${username}`, {
       credentials: "include",
     });
-    console.log("api response is: ", response);
 
     if (!response.ok) {
       throw new Error("Failed to fetch profile details");
@@ -730,7 +728,7 @@ export const getUnreadNotificationCount = async (): Promise<
 
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 

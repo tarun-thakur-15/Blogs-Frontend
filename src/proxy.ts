@@ -12,12 +12,6 @@ export function proxy(req: NextRequest) {
   const token = req.cookies.get("accessToken")?.value;
   const isLoggedIn = !!token;
 
-  // 🔍 DEBUG
-  console.log("PATH:", path);
-  console.log("TOKEN:", token);
-  console.log("IS LOGGED IN:", isLoggedIn);
-  console.log("ALL COOKIES:", req.cookies.getAll());
-
   // 🌍 Detect basePath ("" for local, "/lekhan" for prod)
   const basePath = path.startsWith("/lekhan") ? "/lekhan" : "";
 

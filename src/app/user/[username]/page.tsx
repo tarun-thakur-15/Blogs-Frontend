@@ -22,7 +22,6 @@ export default async function UsernamePage({ params }: UsernamePageProps) {
 
   // Call the API to fetch the profile details for the given username
   const profileData = await getProfileDetails(username);
-  console.log(profileData);
 
   //fetch all topics of a perticular user
   const userTopicsData = await getUserTopics(username);

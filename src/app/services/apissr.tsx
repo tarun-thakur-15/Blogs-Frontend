@@ -2,7 +2,6 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 // const url = "http://localhost:8000/api";
-// const url = "https://blogs-backend-ftie.onrender.com/api";
 const url = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
 
 export const getPerticularBlog = async (slug: string) => {
@@ -19,7 +18,6 @@ export const getPerticularBlog = async (slug: string) => {
     if (!response.ok) {
       throw new Error("Failed to fetch blog");
     }
-
     return response.json();
   } catch (error) {
     redirect("/something-went-wrong");
@@ -48,3 +46,21 @@ export const getProfileDetails = async (username: string) => {
     redirect("/something-went-wrong");
   }
 };
+
+export async function getBlogForSEO(slug: string) {
+  try {
+    const res = await fetch(
+      `${url}/getPerticularBlog/${slug}`,
+      {
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) return null;
+
+    return res.json();
+  } catch (error) {
+    console.error("SEO fetch error:", error);
+    return null;
+  }
+}

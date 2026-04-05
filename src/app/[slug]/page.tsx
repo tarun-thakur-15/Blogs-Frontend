@@ -10,7 +10,7 @@ import { Flex } from "antd";
 import Comments from "../Components/CommentsUIFix";
 import ProfileHeaderDetailedBlog from "../Components/ProfileHeaderDetailedBlog";
 import { getComments } from "../services/api";
-import { getPerticularBlog } from "../services/apissr";
+import { getPerticularBlog, getBlogForSEO } from "../services/apissr";
 import BlogContent from "../Components/Blogcontent";
 // Images
 import Divider from "../../assets/images/divider.png";
@@ -28,40 +28,57 @@ interface PageProps {
 const getBlogCached = cache(async (slug: string) => {
   return await getPerticularBlog(slug);
 });
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = params;
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { slug } = await params;
 
-  try {
-    const blogData = await getBlogCached(slug);
+  const blogData = await getBlogForSEO(slug);
 
-    if (!blogData) {
-      return {
-        title: "Blog Not Found",
-        description: "This blog does not exist",
-      };
-    }
-
+  if (!blogData) {
     return {
-      title: blogData.meta_title || blogData.title,
-      description: blogData.meta_description || "Read this blog on Lekhan",
-      openGraph: {
-        title: blogData.meta_title,
-        description: blogData.meta_description,
-        type: "article",
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: blogData.meta_title,
-        description: blogData.meta_description,
-      },
-    };
-  } catch (err) {
-    return {
-      title: "Lekhan – Write, Read, and Share Blogs",
-      description:
-        "Lekhan is a modern blogging platform where writers share ideas, readers explore stories, and communities connect over meaningful content. Start writing today!",
+      title: "Blog Not Found",
+      description: "This blog does not exist",
     };
   }
+
+  const title = blogData.meta_title || blogData.title;
+  const description = blogData.meta_description;
+
+  return {
+    title,
+    description,
+
+    // 🔥 IMPORTANT: override OpenGraph completely
+    openGraph: {
+      title,
+      description,
+      url: `https://www.tarunthakur.com/lekhan/blog/${slug}`,
+      siteName: "Lekhan",
+      type: "article",
+      images: [
+        {
+          url: "https://www.tarunthakur.com/lekhan/og-image.png", // later replace with blog image
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+
+    // 🔥 IMPORTANT: override Twitter completely
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["https://www.tarunthakur.com/lekhan/og-image.png"],
+    },
+
+    // 🔥 OPTIONAL but good
+    alternates: {
+      canonical: `https://www.tarunthakur.com/lekhan/blog/${slug}`,
+    },
+  };
 }
 
 const BlogDetailPage = async ({ params }: PageProps) => {
@@ -74,7 +91,6 @@ const BlogDetailPage = async ({ params }: PageProps) => {
 
   // Fetch the blog details using your API function.
   const blogData = await getBlogCached(slug);
-  console.log(blogData);
 
   //fetching comments
   const commentsData = await getComments(slug, 0, 10);

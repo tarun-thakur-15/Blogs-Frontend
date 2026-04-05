@@ -31,7 +31,6 @@ export default function CompanyPage() {
       try {
         // ✅ Use username from authStore, not js-cookie
         const data = await getProfileDetails(user!.username);
-        console.log(data);
         setProfileData(data);
       } catch (error) {
         console.error(error);
