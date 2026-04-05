@@ -84,7 +84,7 @@ const BlogDetailPage = async ({ params }: PageProps) => {
                 <Flex vertical className="single-answer">
                   <h1>{blogData.title}</h1>
                   <BlogContent content={blogData.content} />
-                  <LoginToReadFullBlog />
+                  {/* <LoginToReadFullBlog /> */}
                   <Flex
                     justify="space-between"
                     align="center"

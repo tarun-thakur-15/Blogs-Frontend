@@ -74,7 +74,7 @@ const ArchivedDetailPage = async ({ params }: PageProps) => {
                 <Flex vertical className="single-answer">
                   <h2>{blogData.title}</h2>
                   <p dangerouslySetInnerHTML={{ __html: blogData.blog.content }} />
-                  <LoginToReadFullBlog />
+                  {/* <LoginToReadFullBlog /> */}
                   <Flex
                     justify="space-between"
                     align="center"
