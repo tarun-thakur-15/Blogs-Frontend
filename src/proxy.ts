@@ -22,7 +22,15 @@ export function proxy(req: NextRequest) {
   const basePath = path.startsWith("/lekhan") ? "/lekhan" : "";
 
   // Normalize path (remove basePath)
-  const normalizedPath = basePath ? path.replace(basePath, "") : path;
+  // const normalizedPath = basePath ? path.replace(basePath, "") : path;
+  let normalizedPath = path;
+
+if (basePath && path.startsWith(basePath)) {
+  normalizedPath = path.slice(basePath.length);
+}
+
+// ensure "/" fallback
+if (!normalizedPath) normalizedPath = "/";
 
   // ===============================
   // 🚫 PROTECT PRIVATE ROUTES
@@ -35,10 +43,19 @@ export function proxy(req: NextRequest) {
   // ===============================
   // 🚫 BLOCK LANDING PAGE FOR LOGGED-IN USERS
   // ===============================
-  if (isLoggedIn && (normalizedPath === "/" || normalizedPath === "")) {
-    url.pathname = `${basePath}/home`;
-    return NextResponse.redirect(url);
-  }
+  // if (isLoggedIn && (normalizedPath === "/" || normalizedPath === "")) {
+  //   url.pathname = `${basePath}/home`;
+  //   return NextResponse.redirect(url);
+  // }
+  const isLandingPage =
+  normalizedPath === "/" ||
+  normalizedPath === "" ||
+  normalizedPath === undefined;
+
+if (isLoggedIn && isLandingPage) {
+  url.pathname = `${basePath}/home`;
+  return NextResponse.redirect(url);
+}
 
   // ===============================
   // ✅ ALLOW EVERYTHING ELSE
