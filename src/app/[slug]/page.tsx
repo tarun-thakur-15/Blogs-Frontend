@@ -1,5 +1,5 @@
 export const dynamicParams = true;
-export const dynamic = "force-dynamic";
+export const revalidate = 60; // 1 hour
 import { Metadata } from "next";
 import { format } from "date-fns";
 import "../styles/page.css";
