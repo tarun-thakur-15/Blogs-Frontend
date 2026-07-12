@@ -262,7 +262,7 @@ export default function CompanyHeader({
 
       // Optional: refetch user profile or set fullName state
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error("Something went wrong, please try again later");
     } finally {
       setLoading(false);
     }
@@ -289,7 +289,7 @@ export default function CompanyHeader({
       toast.success("Username updated successfully");
       setIsusernameEditing(false);
     } catch (err: any) {
-      toast.error(err.message || "Something went wrong");
+      toast.error(err.message || "Something went wrong, please try again later");
     } finally {
       setusernameLoading(false);
     }

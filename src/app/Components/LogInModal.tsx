@@ -1,5 +1,5 @@
 "use client";
-import { useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect, useEffect } from "react";
 import { Flex, Button, Modal, Form, Input } from "antd";
 import OtpInput from "react-otp-input";
 import Image from "next/image";
@@ -61,7 +61,7 @@ const LogInModal: React.FC<CustomModalProps> = ({
   const [otp, setOtp] = useState("");
   const [saveLoading, setSaveLoading] = useState(false);
   const [otpLoading, setotpLoading] = useState(false);
-  const [countdown, setCountdown] = useState(5);
+  const [countdown, setCountdown] = useState(30);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
   const [showResendMessage, setShowResendMessage] = useState(false);
 
@@ -98,7 +98,7 @@ const LogInModal: React.FC<CustomModalProps> = ({
     setError(false);
     setErrorMessage("");
     form.resetFields();
-    setCountdown(5);
+    setCountdown(30);
     setIsResendDisabled(true);
     setIsModalOpen(false);
   };
@@ -135,6 +135,56 @@ const LogInModal: React.FC<CustomModalProps> = ({
       setErrorMessage(error.message || "Login failed");
     }
   };
+
+  const handleResendOtp = async () => {
+    if (isResendDisabled) return;
+    try {
+      setSendOtpLoading(true);
+      await sendForgotPasswordOtp({ email });
+      setShowResendMessage(true);
+      setCountdown(30);
+      setIsResendDisabled(true);
+      setSendOtpLoading(false);
+
+      // restart the countdown timer
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            setIsResendDisabled(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      // hide "OTP Sent Successfully" message after a few seconds
+      setTimeout(() => setShowResendMessage(false), 3000);
+    } catch (error: any) {
+      setSendOtpLoading(false);
+      setErrorMessage(error?.response?.data?.msg || "Failed to resend OTP");
+    }
+  };
+
+  useEffect(() => {
+    if (formLevel !== 2) return;
+
+    setCountdown(30);
+    setIsResendDisabled(true);
+
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setIsResendDisabled(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer); // cleanup on unmount / formLevel change
+  }, [formLevel]);
   return (
     <>
       <Modal
@@ -239,7 +289,8 @@ const LogInModal: React.FC<CustomModalProps> = ({
                     } catch (error: any) {
                       setSendOtpLoading(false);
                       setErrorMessage(
-                        error?.response?.data?.msg || "Something went wrong.",
+                        error?.response?.data?.msg ||
+                          "Something went wrong, please try again later",
                       );
                     }
                   }}
@@ -323,7 +374,9 @@ const LogInModal: React.FC<CustomModalProps> = ({
                 <span
                   style={{
                     cursor: isResendDisabled ? "not-allowed" : "pointer",
+                    color: isResendDisabled ? "#B3A5A5" : "#0969DA",
                   }}
+                  onClick={handleResendOtp}
                 >
                   Resend
                 </span>
@@ -333,7 +386,7 @@ const LogInModal: React.FC<CustomModalProps> = ({
         ) : formLevel === 3 ? (
           <Flex className="sign-in-modal--feilds" vertical>
             <div className="sign-in-modal--header">
-              <h2>Create your new password...</h2>
+              <h2>Create your new password</h2>
             </div>
             <Form
               name="resetPassword"

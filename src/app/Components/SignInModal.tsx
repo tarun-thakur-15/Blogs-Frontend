@@ -1,22 +1,24 @@
 "use client";
-import { useState, useLayoutEffect, useEffect } from "react";
+import { useState, useEffect } from "react"; // removed useLayoutEffect
 import { Flex, Button, Modal, Form, Input } from "antd";
 import OtpInput from "react-otp-input";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { signUpUser, verifyUser, resedOtp } from "../services/api";
-// CSS
 import "../styles/signin.css";
-// IMAGES
 import Logo from "../../../public/images/logo.svg";
 import UserIcon from "../../../public/images/user.svg";
 import Email from "../../../public/images/set-email.svg";
 import SuccessGif from "../../../public/images/success.gif";
+
 interface CustomModalProps {
   isModalOpen?: boolean;
   setIsModalOpen?: any;
   showLoginModal?: any;
 }
+
+const RESEND_COOLDOWN = 30; // seconds — single source of truth
+
 const SignInModal: React.FC<CustomModalProps> = ({
   isModalOpen,
   setIsModalOpen,
@@ -30,27 +32,23 @@ const SignInModal: React.FC<CustomModalProps> = ({
   const [error, setError] = useState(false);
   const [enteredOtp, setEnteredOtp] = useState("");
   const router = useRouter();
-  const [countdown, setCountdown] = useState(5);
+  const [countdown, setCountdown] = useState(RESEND_COOLDOWN);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
   const [showResendMessage, setShowResendMessage] = useState(false);
   const [emailForOtp, setEmailForOtp] = useState("");
 
-  // Initialize the form
   const [form] = Form.useForm();
 
   const handleCancel = () => {
     setIsModalOpen(false);
-
     setEnteredOtp("");
-
     setError(false);
     setTimeout(() => {
       document.body.classList.remove("modal-opened");
     }, 300);
     setFormLevel(0);
     setErrorMessage("");
-    form.resetFields();
-    setCountdown(5);
+    setCountdown(RESEND_COOLDOWN);
     setIsResendDisabled(true);
     setIsModalOpen(false);
   };
@@ -58,18 +56,16 @@ const SignInModal: React.FC<CustomModalProps> = ({
   const onFinish = async (values: any) => {
     try {
       setLoading(true);
-      // Map form fields to our SignUpSchema:
       const signUpData = {
-        fullName: values.name, // our schema expects fullName
-        username: values.username, // username remains the same
-        email: values.mail, // our schema expects email (not "mail")
-        password: values.password, // password remains the same
+        fullName: values.name,
+        username: values.username,
+        email: values.mail,
+        password: values.password,
       };
       const response = await signUpUser(signUpData);
-    
+
       setLoading(false);
       setEmailForOtp(values.mail);
-      // For now, we move to the OTP verification step (formLevel 1)
       setFormLevel(1);
     } catch (error: any) {
       setLoading(false);
@@ -77,17 +73,15 @@ const SignInModal: React.FC<CustomModalProps> = ({
     }
   };
 
-  // OTP verification submission handler
   const onOtpVerify = async () => {
     try {
       setOtpLoading(true);
-      // Create the payload for verifyUser: our schema expects username and otp
       const payload = {
         email: form.getFieldValue("mail"),
         otp: String(enteredOtp),
       };
       const response = await verifyUser(payload);
-   
+
       setOtpLoading(false);
       window.location.href = "/lekhan/home";
     } catch (error: any) {
@@ -97,43 +91,48 @@ const SignInModal: React.FC<CustomModalProps> = ({
     }
   };
 
-  // Enable/disable Verify button based on OTP length (assuming 6 digits)
   useEffect(() => {
     setDisable(enteredOtp.length !== 6);
   }, [enteredOtp]);
 
-  // Resend OTP handler
   const onResendOtp = async () => {
+    if (isResendDisabled) return;
     try {
       setOtpLoading(true);
       const payload = {
         email: form.getFieldValue("mail"),
       };
       const response = await resedOtp(payload);
-      
+
       setOtpLoading(false);
       setShowResendMessage(true);
-      // Restart the countdown for resending OTP
-      setCountdown(30);
+      setCountdown(RESEND_COOLDOWN);
       setIsResendDisabled(true);
+
+      setTimeout(() => setShowResendMessage(false), 3000);
     } catch (error: any) {
       setOtpLoading(false);
       setErrorMessage(error.message || "Failed to resend OTP");
     }
   };
 
-  // When the component mounts or when the countdown changes,
-  // disable the Resend button until countdown reaches zero.
-  useLayoutEffect(() => {
-    if (formLevel === 1 && countdown > 0) {
-      const timer = setInterval(() => {
-        setCountdown((prev) => prev - 1);
-      }, 1000);
-      return () => clearInterval(timer);
-    } else if (countdown === 0) {
-      setIsResendDisabled(false);
-    }
-  }, [formLevel, countdown]);
+  // Single clean interval, starts when entering OTP screen or after a resend
+  useEffect(() => {
+    if (formLevel !== 1) return;
+
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setIsResendDisabled(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [formLevel, isResendDisabled]); // reruns when a resend restarts the cooldown
 
   return (
     isModalOpen && (
@@ -150,8 +149,6 @@ const SignInModal: React.FC<CustomModalProps> = ({
         onCancel={handleCancel}
         footer={null}
       >
-       
-        {/* Sign-Up Form */}
         {formLevel === 0 ? (
           <Flex className="sign-in-modal--feilds" vertical>
             <div className="sign-in-modal--header">
@@ -162,14 +159,8 @@ const SignInModal: React.FC<CustomModalProps> = ({
                 name="name"
                 rules={[
                   { required: true, message: "Please enter your name!" },
-                  {
-                    min: 3,
-                    message: "Name must be at least 3 characters long!",
-                  },
-                  {
-                    pattern: /^[A-Za-z\s]+$/,
-                    message: "Name can only contain letters and spaces!",
-                  },
+                  { min: 3, message: "Name must be at least 3 characters long!" },
+                  { pattern: /^[A-Za-z\s]+$/, message: "Name can only contain letters and spaces!" },
                 ]}
               >
                 <Input placeholder="Your name" prefix={<UserIcon />} />
@@ -178,14 +169,8 @@ const SignInModal: React.FC<CustomModalProps> = ({
                 name="username"
                 rules={[
                   { required: true, message: "Please enter your username!" },
-                  {
-                    min: 3,
-                    message: "Username must be at least 3 characters long!",
-                  },
-                  {
-                    pattern: /^[^\s]+$/,
-                    message: "Username cannot contain spaces!",
-                  },
+                  { min: 3, message: "Username must be at least 3 characters long!" },
+                  { pattern: /^[^\s]+$/, message: "Username cannot contain spaces!" },
                 ]}
               >
                 <Input placeholder="Enter username" prefix={<UserIcon />} />
@@ -194,28 +179,16 @@ const SignInModal: React.FC<CustomModalProps> = ({
                 name="mail"
                 rules={[
                   { required: true, message: "Please enter your email!" },
-                  {
-                    type: "email",
-                    message: "The input is not a valid email!",
-                  },
+                  { type: "email", message: "The input is not a valid email!" },
                 ]}
               >
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  prefix={<Email />}
-                />
+                <Input type="email" placeholder="Enter your email" prefix={<Email />} />
               </Form.Item>
               <Form.Item
                 name="password"
-                rules={[
-                  { required: true, message: "Please enter your password!" },
-                ]}
+                rules={[{ required: true, message: "Please enter your password!" }]}
               >
-                <Input.Password
-                  placeholder="Enter your password"
-                  prefix={<Email />}
-                />
+                <Input.Password placeholder="Enter your password" prefix={<Email />} />
               </Form.Item>
               <Form.Item>
                 <Button type="primary" htmlType="submit" loading={loading}>
@@ -225,12 +198,10 @@ const SignInModal: React.FC<CustomModalProps> = ({
               </Form.Item>
             </Form>
             <p>
-              Already have an account?{" "}
-              <span onClick={showLoginModal}>Login</span>
+              Already have an account? <span onClick={showLoginModal}>Login</span>
             </p>
           </Flex>
         ) : formLevel === 1 ? (
-          // OTP Verification Form
           <Flex className="sign-in-modal--feilds" vertical>
             <div className="sign-in-modal--header">
               <h2>Enter OTP</h2>
@@ -249,13 +220,7 @@ const SignInModal: React.FC<CustomModalProps> = ({
                   shouldAutoFocus={true}
                   renderInput={(props) => <input {...props} />}
                 />
-                {error ? (
-                  <p className="ant-form-item-explain-error">
-                    OTP is Incorrect!
-                  </p>
-                ) : (
-                  ""
-                )}
+                {error ? <p className="ant-form-item-explain-error">OTP is Incorrect!</p> : ""}
               </div>
               <Form.Item>
                 <Button
@@ -270,26 +235,15 @@ const SignInModal: React.FC<CustomModalProps> = ({
               </Form.Item>
             </Form>
             {showResendMessage ? (
-              <p style={{ textAlign: "center", color: "#0969da" }}>
-                {" "}
-                OTP Sent Successfully
-              </p>
+              <p style={{ textAlign: "center", color: "#0969da" }}> OTP Sent Successfully</p>
             ) : (
               ""
             )}
             <p>
               Did not receive an OTP?{" "}
-              {formLevel === 1 && countdown > 0 ? (
+              {countdown > 0 ? (
                 <span>
-                  <span
-                    style={{
-                      color: "#b3a5a5",
-                      cursor: isResendDisabled ? "not-allowed" : "pointer",
-                    }}
-                    onClick={!isResendDisabled ? onResendOtp : undefined}
-                  >
-                    Resend OTP
-                  </span>{" "}
+                  <span style={{ color: "#b3a5a5", cursor: "not-allowed" }}>Resend OTP</span>{" "}
                   <span style={{ cursor: "text" }}>in {countdown} seconds</span>
                 </span>
               ) : (
@@ -297,6 +251,7 @@ const SignInModal: React.FC<CustomModalProps> = ({
                   onClick={onResendOtp}
                   style={{
                     cursor: isResendDisabled ? "not-allowed" : "pointer",
+                    color: isResendDisabled ? "#b3a5a5" : "#0969DA",
                   }}
                 >
                   Resend
@@ -307,13 +262,12 @@ const SignInModal: React.FC<CustomModalProps> = ({
         ) : (
           <>
             <Image className="success-gif" src={SuccessGif} alt="success" />
-            <p className="success-text">
-              Your account has been successfully created
-            </p>
+            <p className="success-text">Your account has been successfully created</p>
           </>
         )}
       </Modal>
     )
   );
 };
+
 export default SignInModal;
