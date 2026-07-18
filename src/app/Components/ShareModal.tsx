@@ -77,13 +77,13 @@ export default function ShareModal({
     <Modal
       isOpen={isShareModalOpen}
       onRequestClose={closeShareModal}
-      className={`modal-content ${isShareModalAnimating ? "animate-open" : "animate-close"} !relative`}
+      className={`modal-content ${isShareModalAnimating ? "animate-open" : "animate-close"} relative!`}
       overlayClassName="modal-overlay"
       style={customStyles}
       ariaHideApp={false}
     >
       {/* Wrap modal content in a container that stops propagation */}
-      <div onClick={(e) => e.stopPropagation()} className="relative w-full h-full !p-8 bg-white rounded-lg flex-col justify-center md:justify-start items-start gap-8 inline-flex">
+      <div onClick={(e) => e.stopPropagation()} className="relative w-full h-full p-8! bg-white rounded-lg flex-col justify-center md:justify-start items-start gap-8 inline-flex">
         {/* Close Icon */}
         <button
           onClick={handleClose}
@@ -93,7 +93,7 @@ export default function ShareModal({
         </button>
 
         <div className="flex-col justify-start items-start gap-2 inline-flex">
-          <h2 className="text-[#202020] text-xl font-bold leading-[30px] font-libre">
+          <h2 className="text-[#202020] text-xl font-bold leading-7.5 font-libre">
             Share this blog with your circle!
           </h2>
           <p className="text-[#666666] text-sm font-normal leading-snug font-inter">
@@ -101,7 +101,7 @@ export default function ShareModal({
           </p>
         </div>
         <div className="flex flex-col justify-center items-center gap-6 w-full">
-          <div className="h-9 !pl-3 !pr-1.5 !py-1 bg-slate-100 rounded items-center gap-1 inline-flex overflow-hidden w-full justify-between">
+          <div className="h-9 pl-3! pr-1.5! py-1! bg-slate-100 rounded items-center gap-1 inline-flex overflow-hidden w-full justify-between">
             <input
               type="text"
               value={text}
@@ -116,28 +116,28 @@ export default function ShareModal({
           </div>
           <div className="w-full">
             <div className="flex items-center justify-center w-full">
-              <div className="flex-grow h-px bg-gray-300"></div>
+              <div className="grow h-px bg-gray-300"></div>
               <span className="px-2 text-gray-500 font-inter">OR</span>
-              <div className="flex-grow h-px bg-gray-300"></div>
+              <div className="grow h-px bg-gray-300"></div>
             </div>
           </div>
           <div className="flex justify-center items-center gap-6 w-full flex-wrap">
-            <Link target="_blank" rel="noopener noreferrer" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(text)}`} className="h-12 p-2 bg-slate-100 rounded inline-flex items-center">
+            <Link target="_blank" rel="noopener noreferrer" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(text)}`} className="h-12 p-2! bg-slate-100 rounded inline-flex items-center">
               <FaceBook className="w-8 h-8" />
             </Link>
-            <Link target="_blank" rel="noopener noreferrer" href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(text)}`} className="h-12 p-2 bg-slate-100 rounded inline-flex items-center">
+            <Link target="_blank" rel="noopener noreferrer" href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(text)}`} className="h-12 p-2! bg-slate-100 rounded inline-flex items-center">
               <LinkedIn className="w-8 h-8" />
             </Link>
-            <Link target="_blank" rel="noopener noreferrer" href={`https://www.reddit.com/submit?url=${encodeURIComponent(text)}&title=${encodeURIComponent('Check this out')}`} className="h-12 p-2 bg-slate-100 rounded inline-flex items-center">
+            <Link target="_blank" rel="noopener noreferrer" href={`https://www.reddit.com/submit?url=${encodeURIComponent(text)}&title=${encodeURIComponent('Check this out')}`} className="h-12 p-2! bg-slate-100 rounded inline-flex items-center">
               <Reddit className="w-8 h-8" />
             </Link>
-            <Link target="_blank" rel="noopener noreferrer" href={`https://www.tiktok.com/share?url=${encodeURIComponent(text)}`} className="h-12 p-2 bg-slate-100 rounded inline-flex items-center">
+            <Link target="_blank" rel="noopener noreferrer" href={`https://www.tiktok.com/share?url=${encodeURIComponent(text)}`} className="h-12 p-2! bg-slate-100 rounded inline-flex items-center">
               <Tiktok className="w-8 h-8" />
             </Link>
-            <Link target="_blank" rel="noopener noreferrer" href={`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`} className="h-12 p-2 bg-slate-100 rounded inline-flex items-center">
+            <Link target="_blank" rel="noopener noreferrer" href={`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`} className="h-12 p-2! bg-slate-100 rounded inline-flex items-center">
               <WhatsApp className="w-8 h-8" />
             </Link>
-            <Link target="_blank" rel="noopener noreferrer" href={`mailto:?subject=${encodeURIComponent('Check this out')}&body=${encodeURIComponent(text)}`} className="h-12 p-2 bg-slate-100 rounded inline-flex items-center">
+            <Link target="_blank" rel="noopener noreferrer" href={`mailto:?subject=${encodeURIComponent('Check this out')}&body=${encodeURIComponent(text)}`} className="h-12 p-2! bg-slate-100 rounded inline-flex items-center">
               <Mail className="w-8 h-8" />
             </Link>
           </div>

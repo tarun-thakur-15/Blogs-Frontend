@@ -107,7 +107,7 @@ export default function FaqPageActionsMobile({
   };
 
   const showShareModal = () => {
-    const fullUrl = window.location.origin;
+    const fullUrl = `${window.location.origin}/lekhan`;
     setShareUrl(fullUrl);
     setIsShareModalOpen(true);
     setTimeout(() => {

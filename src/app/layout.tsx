@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     canonical: "https://www.tarunthakur.com/lekhan/", // 👈 update if your final domain is different
   },
   icons: {
-    icon: "/favicon.png", // 👈 make sure you have this in /public
+    icon: "/lekhan-favicon.png",
   },
   openGraph: {
     title: "Lekhan – Write, Read, and Share Blogs",
