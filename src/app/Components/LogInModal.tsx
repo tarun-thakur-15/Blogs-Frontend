@@ -73,6 +73,15 @@ const LogInModal: React.FC<CustomModalProps> = ({
   const [resetLoading, setResetLoading] = useState(false);
   const [emailInput, setEmailInput] = useState("");
 
+  // True whenever any API call in this modal is in flight.
+  // Used to block the user from closing the modal mid-request.
+  const isBusy =
+    saveLoading ||
+    sendOtpLoading ||
+    otpLoading ||
+    otpLoadingforgetpassword ||
+    resetLoading;
+
   useLayoutEffect(() => {
     if (otp.length === 6) {
       setDisable(false);
@@ -90,6 +99,7 @@ const LogInModal: React.FC<CustomModalProps> = ({
   };
 
   const handleCancel = () => {
+    if (isBusy) return;
     setOtp("");
     setTimeout(() => {
       document.body.classList.remove("modal-opened");
@@ -206,6 +216,9 @@ const LogInModal: React.FC<CustomModalProps> = ({
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
+        closable={!isBusy}
+        maskClosable={!isBusy}
+        keyboard={!isBusy}
       >
         {formLevel === 0 ? (
           <Flex className="sign-in-modal--feilds" vertical>
@@ -334,7 +347,7 @@ const LogInModal: React.FC<CustomModalProps> = ({
                   disabled={disable}
                   type="primary"
                   htmlType="submit"
-                  loading={otpLoading}
+                  loading={otpLoadingforgetpassword}
                   onClick={async () => {
                     try {
                       setOtpLoadingforgetpassword(true);

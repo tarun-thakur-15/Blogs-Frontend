@@ -39,7 +39,12 @@ const SignInModal: React.FC<CustomModalProps> = ({
 
   const [form] = Form.useForm();
 
+  // True whenever any API call in this modal is in flight.
+  // Used to block the user from closing the modal mid-request.
+  const isBusy = loading || otpLoading;
+
   const handleCancel = () => {
+    if (isBusy) return;
     setIsModalOpen(false);
     setEnteredOtp("");
     setError(false);
@@ -141,13 +146,16 @@ const SignInModal: React.FC<CustomModalProps> = ({
         centered
         className={
           (formLevel === 2 ? "sign-in-modal success" : "sign-in-modal") +
-          " !w-screen !h-screen !m-0 !p-0 !rounded-none sm:!w-auto sm:!h-auto sm:!m-4 sm:!p-6 sm:!rounded-lg"
+          " w-screen! h-screen! m-0! p-0! rounded-none! sm:w-auto! sm:h-auto! sm:m-4! sm:p-6! sm:rounded-lg!"
         }
         style={{ top: 0 }}
         styles={{ body: { height: "100%", overflowY: "auto", padding: "1rem" } }}
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
+        closable={!isBusy}
+        maskClosable={!isBusy}
+        keyboard={!isBusy}
       >
         {formLevel === 0 ? (
           <Flex className="sign-in-modal--feilds" vertical>
