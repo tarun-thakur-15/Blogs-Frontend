@@ -38,6 +38,7 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: "/lekhan-favicon.png",
+    apple: "/lekhan-favicon.png",
   },
   openGraph: {
     title: "Lekhan – Write, Read, and Share Blogs",
