@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { Flex, Button } from "antd";
 import { useAuthStore } from "../stores/authStore";
@@ -277,11 +277,13 @@ export default function Header() {
         showLoginModal={showLoginModal}
         isModalOpen={isModalOpen}
       />
-      <LogInModal
-        setIsModalOpen={setIsLoginModalOpen}
-        showSignModal={showModal}
-        isModalOpen={isLoginModalOpen}
-      />
+      <Suspense fallback={null}>
+        <LogInModal
+          setIsModalOpen={setIsLoginModalOpen}
+          showSignModal={showModal}
+          isModalOpen={isLoginModalOpen}
+        />
+      </Suspense>
     </header>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
-import { useState, useLayoutEffect, useEffect } from "react";
+import { useState, useLayoutEffect, useEffect, useRef, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { Flex, Button, Modal, Form, Input } from "antd";
 import OtpInput from "react-otp-input";
 import Image from "next/image";
@@ -16,6 +17,7 @@ import "../styles/signin.css";
 import Email from "../../../public/images/set-email.svg";
 import SuccessGif from "../../../public/images/success.gif";
 import { useAuthStore } from "../stores/authStore";
+import GoogleSignInButton from "./GoogleSignInButton";
 interface CustomModalProps {
   isModalOpen?: boolean;
   setIsModalOpen?: any;
@@ -44,7 +46,7 @@ const identifierRules = [
     },
   },
 ];
-const LogInModal: React.FC<CustomModalProps> = ({
+const LogInModalContent: React.FC<CustomModalProps> = ({
   isModalOpen,
   setIsModalOpen,
   showSignModal,
@@ -53,6 +55,10 @@ const LogInModal: React.FC<CustomModalProps> = ({
   const [form] = Form.useForm();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  // Show amber conflict alert when Google callback redirects back with ?googleConflict=1
+  const googleConflict = searchParams.get("googleConflict") === "1";
+  const passwordInputRef = useRef<any>(null);
   const [receivedOtp, setReceivedOtp] = useState<string>("");
   const [formLevel, setFormLevel] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -225,6 +231,25 @@ const LogInModal: React.FC<CustomModalProps> = ({
             <div className="sign-in-modal--header">
               <h2>Log in to your Account</h2>
             </div>
+
+            {/* ── Google Sign-In ── */}
+            <GoogleSignInButton />
+
+            {/* ── OR divider ── */}
+            <div className="auth-divider" role="separator" aria-label="or">
+              <span>OR</span>
+            </div>
+
+            {/* ── 409 conflict alert from Google callback ── */}
+            {googleConflict && (
+              <div className="google-conflict-alert" role="alert">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#d97706" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span>Account with this email already exists using a password. Please log in with your password.</span>
+              </div>
+            )}
+
             <Form
               form={form}
               name="login"
@@ -468,4 +493,13 @@ const LogInModal: React.FC<CustomModalProps> = ({
     </>
   );
 };
+
+const LogInModal: React.FC<CustomModalProps> = (props) => {
+  return (
+    <Suspense fallback={null}>
+      <LogInModalContent {...props} />
+    </Suspense>
+  );
+};
+
 export default LogInModal;

@@ -6,6 +6,7 @@ import Header from "./Components/Header";
 import { Toaster } from "sonner";
 import ProgressBar from "./Components/ProgressBar";
 import AuthHydrator from "./stores/Authhydrator";
+import NextAuthProvider from "./Components/NextAuthProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -75,19 +76,21 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${libreBaskerville.variable} antialiased`}
       >
-        <AuthHydrator />
-        <Toaster
-          position="top-right"
-          richColors
-          toastOptions={{
-            style: {
-              zIndex: 9999999999,
-            },
-          }}
-        />
-        <ProgressBar />
-        <Header />
-        <main>{children}</main>
+        <NextAuthProvider>
+          <AuthHydrator />
+          <Toaster
+            position="top-right"
+            richColors
+            toastOptions={{
+              style: {
+                zIndex: 9999999999,
+              },
+            }}
+          />
+          <ProgressBar />
+          <Header />
+          <main>{children}</main>
+        </NextAuthProvider>
       </body>
     </html>
   );

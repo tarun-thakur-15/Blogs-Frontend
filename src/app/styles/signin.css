@@ -597,3 +597,223 @@
       width: 520px !important;
       justify-self: center;
     }}
+
+/* ═══════════════════════════════════════════════════════════
+   GOOGLE SIGN-IN BUTTON
+   ═══════════════════════════════════════════════════════════ */
+
+.google-btn-wrapper {
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 42px;
+  padding: 0 16px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #3c4043;
+  font-family: var(--font-inter), 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.google-btn:hover:not(:disabled) {
+  background: #f8f9fa;
+  box-shadow: 0 1px 6px rgba(60, 64, 67, 0.18);
+  border-color: #c6c6c6;
+}
+
+.google-btn:active:not(:disabled) {
+  background: #f1f3f4;
+  box-shadow: none;
+}
+
+.google-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.google-btn-icon {
+  flex-shrink: 0;
+}
+
+/* Spinner shown while redirecting to Google */
+.google-btn-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid #dadce0;
+  border-top-color: #4285f4;
+  border-radius: 50%;
+  animation: google-spin 0.7s linear infinite;
+}
+
+@keyframes google-spin {
+  to { transform: rotate(360deg); }
+}
+
+.google-btn-error {
+  font-size: 13px;
+  color: #dc2626;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   OR DIVIDER
+   ═══════════════════════════════════════════════════════════ */
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+  color: var(--Base-5, #8c959f);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--Base-2, #eaeef2);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   GOOGLE CONFLICT ALERT (409 — email already uses password)
+   ═══════════════════════════════════════════════════════════ */
+
+.google-conflict-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  border-radius: 6px;
+  border: 1px solid #fcd34d;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.google-conflict-alert svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   GOOGLE CALLBACK PAGE  (/auth/google/callback)
+   ═══════════════════════════════════════════════════════════ */
+
+.google-callback-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--Base-1, #f6f8fa);
+  padding: 24px;
+}
+
+.google-callback-card {
+  background: #ffffff;
+  border: 1px solid var(--Base-2, #eaeef2);
+  border-radius: 12px;
+  padding: 48px 40px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+}
+
+.google-callback-card--error {
+  border-color: #fecaca;
+}
+
+/* Spinner on loading card */
+.google-callback-spinner {
+  display: inline-block;
+  width: 44px;
+  height: 44px;
+  border: 4px solid #eaeef2;
+  border-top-color: #4285f4;
+  border-radius: 50%;
+  animation: google-spin 0.8s linear infinite;
+  margin-bottom: 24px;
+}
+
+.google-callback-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+}
+
+.google-callback-icon-wrap--success {
+  background: #f0fdf4;
+}
+
+.google-callback-icon-wrap--error {
+  background: #fef2f2;
+}
+
+.google-callback-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--Base-11, #0e1012);
+  margin-bottom: 8px;
+}
+
+.google-callback-subtitle {
+  font-size: 14px;
+  color: var(--Base-6, #57606a);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.google-callback-subtitle--error {
+  color: #b91c1c;
+}
+
+.google-callback-btn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.google-callback-btn--primary {
+  background: #0969da;
+  color: #ffffff;
+}
+
+.google-callback-btn--primary:hover {
+  background: #0860ca;
+  box-shadow: 0 2px 8px rgba(9, 105, 218, 0.3);
+  color: #ffffff;
+}

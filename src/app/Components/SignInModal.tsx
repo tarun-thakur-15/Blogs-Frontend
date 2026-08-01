@@ -5,6 +5,7 @@ import OtpInput from "react-otp-input";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { signUpUser, verifyUser, resedOtp } from "../services/api";
+import GoogleSignInButton from "./GoogleSignInButton";
 import "../styles/signin.css";
 import Logo from "../../../public/images/logo.svg";
 import UserIcon from "../../../public/images/user.svg";
@@ -162,6 +163,15 @@ const SignInModal: React.FC<CustomModalProps> = ({
             <div className="sign-in-modal--header">
               <h2>Signup to get started</h2>
             </div>
+
+            {/* ── Google Sign-In ── */}
+            <GoogleSignInButton />
+
+            {/* ── OR divider ── */}
+            <div className="auth-divider" role="separator" aria-label="or">
+              <span>OR</span>
+            </div>
+
             <Form name="signin" form={form} onFinish={onFinish}>
               <Form.Item
                 name="name"

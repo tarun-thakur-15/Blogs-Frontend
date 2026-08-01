@@ -97,3 +97,11 @@ export interface MeResponse {
   fullname: string;
   profileImage: string;
 }
+
+// Returned by POST /api/google-auth on 200 (login) or 201 (new user registered)
+export interface GoogleAuthResponse {
+  email: string;
+  username: string;
+  fullname: string;
+  profileImage: string;
+}

@@ -19,6 +19,7 @@ import {
   UnreadNotificationCountResponse,
   UploadBlogImageResponse,
   MeResponse,
+  GoogleAuthResponse,
 } from "./schema";
 
 const url = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
@@ -783,6 +784,39 @@ export const logoutUser = async (): Promise<void> => {
     }
   } catch (error) {
     console.error("Logout error:", error);
+    throw error;
+  }
+};
+
+/**
+ * Forward the Google ID token (from NextAuth) to the custom backend.
+ * The backend verifies the token, creates/logs in the user, and sets
+ * an HttpOnly `accessToken` cookie on the response.
+ *
+ * credentials: "include" is CRITICAL — without it the browser won't
+ * store the HttpOnly cookie the backend sets.
+ */
+export const googleAuth = async (idToken: string): Promise<GoogleAuthResponse> => {
+  try {
+    const response = await axios.post(
+      `${url}/google-auth`,
+      { idToken },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true, // 🔥 MUST — backend sets HttpOnly cookie here
+      }
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      // Throw an object so the caller can inspect status and msg separately
+      throw {
+        status: error.response?.status,
+        msg: error.response?.data?.msg || "Failed to authenticate with Google"
+      };
+    }
     throw error;
   }
 };
